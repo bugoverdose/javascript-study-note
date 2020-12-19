@@ -1,0 +1,14 @@
+h1 {
+  color: black;
+  transition: color 0.5s ease-out; /* 글자색 변경시 효과 설정 */
+}
+.btn {
+  cursor: pointer;
+}
+/* 해당 element에 마우스가 닿으면 손가락(누르기) 모양으로 커서 형태 변경 */
+
+.clicked {
+  color: red;
+}
+/* [cascading] h1태그에 대한 color 설정 아래에 clicked클래스에 대한 color 설정 지정 
+=> color 속성값이 중복적용되는 경우 아래 것만 적용되도록 */

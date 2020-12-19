@@ -1,0 +1,24 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": ["<node_internals>/**"],
+      "program":
+        // "${workspaceFolder}/basic_syntax/1_variables.js"
+        // "${workspaceFolder}/basic_syntax/2_data_types.js"
+        // "${workspaceFolder}/basic_syntax/3_function.js"
+        // "${workspaceFolder}/basic_syntax/4_conditional statement.js"
+        // "${workspaceFolder}/functions/1_setInterval.js"
+        "${workspaceFolder}/modern_syntax/1_arrow_function.js"
+      // "${workspaceFolder}/modern_syntax/2_ternary_operator.js"
+    }
+  ]
+}
+// "program"에서 디버깅 진행할 경로 설정.
+// Run : debug console을 열고 [ctrl + F5]
