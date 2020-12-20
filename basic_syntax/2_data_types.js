@@ -15,7 +15,7 @@ console.log("daysOfWeek[100] :", daysOfWeek[100]);
 
 // -------------------------------------------------
 
-// Object : 객체. 중괄호{ }. 각 요소는 key:데이터로 저장하고 쉼표로 구분. Object.key로 지정 가능.
+// Object : 객체. 중괄호{ }. 각 요소는 key:데이터로 저장하고 쉼표로 구분. Object.key로 값 선택 가능.
 const Info = {
   name: "Nico",
   age: 33,

@@ -14,8 +14,9 @@
         // "${workspaceFolder}/basic_syntax/2_data_types.js"
         // "${workspaceFolder}/basic_syntax/3_function.js"
         // "${workspaceFolder}/basic_syntax/4_conditional statement.js"
-        // "${workspaceFolder}/functions/1_setInterval.js"
-        "${workspaceFolder}/modern_syntax/1_arrow_function.js"
+        // "${workspaceFolder}/dictionary/1_setInterval.js"
+        "${workspaceFolder}/dictionary/2_Date.js"
+      // "${workspaceFolder}/modern_syntax/1_arrow_function.js"
       // "${workspaceFolder}/modern_syntax/2_ternary_operator.js"
     }
   ]

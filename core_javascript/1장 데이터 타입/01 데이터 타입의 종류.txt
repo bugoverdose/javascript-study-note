@@ -1,0 +1,23 @@
+Javascript 데이터타입의 종류
+
+Primitive type(기본형, 원시형)
+- Number
+- String
+- Boolean
+- null
+- undefined
+- Symbol [ES6]
+- 등등
+* 할당/연산시 값이 담긴 주소 값을 직접 복제. 
+* 불변성(immutability)
+
+Reference type(참조형)
+- Object 객체
+   - Array 배열
+   - Function 함수
+   - Date 
+   - RegExp 정규표현식
+   - Map, WeakMap [ES6]
+   - Set, WeakSet [ES6]
+   - 등등
+* 할당/연산시 '값이 담긴 주소 값들로 이루어진 묶음'을 가리키는 주소 값을 복제. 
