@@ -9,7 +9,7 @@ Primitive type(기본형, 원시형)
 - Symbol [ES6]
 - 등등
 * 할당/연산시 값이 담긴 주소 값을 직접 복제. 
-* 불변성(immutability)
+* 전부 불변값. 불변성(immutability)을 지님.
 
 Reference type(참조형)
 - Object 객체
@@ -21,3 +21,20 @@ Reference type(참조형)
    - Set, WeakSet [ES6]
    - 등등
 * 할당/연산시 '값이 담긴 주소 값들로 이루어진 묶음'을 가리키는 주소 값을 복제. 
+* 기본적으로 가변값이지만, 설정에 따라 불변성 부여 가능.
+ - 가변성: 복사된 객체 내부의 property를 변경하면 기존 객체도 함께 변화한다는 의미. 
+ - 복사된 객체 자체를 변경(=새로운 데이터를 할당)하면 기존 데이터는 변하지 않음. Primitive 데이터와 동일.
+
+var obj1 = { a:10, b:20 };
+var obj2 = obj1;
+obj2.a = 10;
+obj1.a == 10; // true. 
+obj1 === obj2; // true. 기존 데이터도 함께 변화. (=참조형 데이터의 가변성)
+- obj1와 obj2 모두 여전히 a를 가리킴. 
+- 하지만 a가 다른 데이터를 가리키게 됨에 따라 기존 데이터도 함께 변화.
+
+var obj1 = { a:10, b:20 };
+var obj2 = obj1;
+obj2 = { c:30, d:40 }
+obj1 === obj2;  // false. 기존 데이터인 obj1는 불변. 서로 달라짐.
+- obj1와 obj2가 서로 다른 주소를 가리키게 된 것.

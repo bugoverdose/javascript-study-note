@@ -21,7 +21,7 @@ function underTenSeconds2(seconds) {
 console.log(underTenSeconds1(23));
 console.log(underTenSeconds2(3));
 // 10초 미만인 경우 [01초 02초 03초]처럼 출력, 그 외의 경우 [11초 12초 13초]처럼 출력
-// 둘 다 사실상 동일한 기능의 함수. 다만 조건문은 다른 형식.
+// 둘 다 사실상 동일한 기능의 함수. 다만 다른 형식의 조건문.
 
 // ------------------------------------------
 
