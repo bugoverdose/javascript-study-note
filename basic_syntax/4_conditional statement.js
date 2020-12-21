@@ -35,6 +35,15 @@ if (A) {
 } else {
   console.log("A == '' :", A == "");
 }
+
+// -----------------------------------
+/*
+  == : 동등 연산자. equality operator
+  === : 일치 연산자. identity operator
+*/
+console.log(undefined == null); // true
+console.log(undefined === null); // false
+
 // -----------------------------------
 
 // 피연산자 : 여러 조건들을 합치는 기능
