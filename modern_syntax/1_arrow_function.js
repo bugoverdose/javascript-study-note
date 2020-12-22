@@ -1,12 +1,12 @@
 /*
-  화살표 함수 arrow function 
+  화살표 함수 arrow function  
 */
 
-// 기존문법 : function 함수명(매개변수) { 실행 코드 }
+// 기존 문법(함수 선언식) : function 함수명(매개변수) { 실행 코드 }
 function theName1(firstParameter, secondParameter) {
   console.log(firstParameter);
   return secondParameter;
-}
+} // 위험한 함수 정의 방법.
 
 // arrow function : 함수명 = 매개변수 => { 실행 코드 }
 theName2 = (firstParameter, secondParameter) => {
@@ -20,7 +20,7 @@ console.log(result1, result2);
 
 // -----------------------------------------------
 /*
-  무명 함수 : 함수명만 생략
+  함수 표현식(익명 함수를 변수에 할당)과의 비교.
 */
 
 // 기존문법 : function(매개변수) { 실행 코드 }

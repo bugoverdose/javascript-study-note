@@ -1,7 +1,29 @@
-/* 함수 function : 특정한 기능을 수행하는 코드. 원하는 만큼 사용할 수 있는 부품.
-  내장함수 built-in function : alert 함수, console객체의 log, error, info, warn 등
-  함수가 인자(argument)를 받아들일 수 있도록 준비시키는 것이 바로 매개변수(parameter) */
+/*
+  함수 표현식: 익명함수를 변수에 할당하는 것이 가장 안전함.
+  함수 선언식: 함수명을 정의하면서 선언하는 것은 위험함. (hoisting 문제)
+*/
+// 함수 표현식
+const name1 = function (x, y) {
+  return x + y;
+};
+const name2 = (x, y) => x + y;
+name2(1, 2); // 출력: 3
+// 상대적으로 안전함. 변수 선언 부분만 끌어올려지고, 변수 할당 부분은 남게 됨.
 
+// 함수 선언식
+function name3(x, y) {
+  return x + y;
+}
+// 위험함. 함수 내용 전체가 위로 끌어올려짐. 동명 함수 복수 선언시,
+// 마지막 내용으로 전부 다 덮어쓰여짐 + 에러 메시지도 출력되지 않음.
+
+//-------------------------------------------------------
+
+/* 
+  함수 function : 특정한 기능을 수행하는 코드. 원하는 만큼 사용할 수 있는 부품.
+  내장함수 built-in function : alert 함수, console객체의 log, error, info, warn 등
+  함수가 인자(argument)를 받아들일 수 있도록 준비시키는 것이 바로 매개변수(parameter) 
+*/
 function sayHello(name) {
   console.log("hello " + name); // 매개변수(parameter): name
 }

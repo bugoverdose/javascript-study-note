@@ -1,0 +1,137 @@
+[스코프, 스코프 체인, outerEnvironmentReference]
+
+스코프(scope): 식별자에 대한 유효범위
+ex) 함수 a 내부에서 선언한 변수는 오직 a 내부에서만 접근 가능. 
+    함수 a 외부에서 선언한 변수는 a의 외부 + a의 내부에서도 접근 가능.
+
+JS에서 스코프 경계를 발생시키는 것들 
+- 전역공간 (전역 스코프)
+- 함수 (함수 스코프)
+- 블록 (블록 스코프; [ES6])
+  (다만, var로 선언한 변수에 대해서는 작용하지 않음. 
+   let과 const, class, strict mode에서의 함수 선언 등에서만 작동)
+
+스코프 체인(scope chain): 식별자의 유효범위를 안에서부터 바깥으로 차례로 검색해나가는 과정.
+- LexicalEnvironment의 2번째 수집자료 outerEnvironmentReference에 의해 가능.
+
+------------------------------------------------------------
+스코프 체인(scope chain)
+- outerEnvironmentReference는 현재 호출될 함수가 
+  '선언될 당시'의 LexicalEnvironment를 참조하게 됨.
+
+ex) 함수A 내부에 함수B 선언 + 함수B 내부에 함수C 선언한 경우,
+    함수C의 outerEnvironmentReference는 함수B의 LexicalEnvironment를 참조.
+    함수B의 LexicalEnvironment에 있는 outerEnvironmentReference는 
+      함수B가 선언되던 때, 즉 함수A의 LexicalEnvironment를 참조.
+    최종적으로 전역 컨텍스트의 LexicalEnvironment에 도달하게 됨.
+
+스코프 체인의 구조적 특성
+- outerEnvironmentReference는 연결리스트(linked list) 형태를 띄게 됨.
+- 각 outerEnvironmentReference는 자신이 선언된 시점의 LexicalEnvironment만 참조.
+  가장 가까운 요소부터 차례대로 접근하는 것만 가능. 다른 순서로는 접근 불가.
+=> 결과적으로 여러 스코프에서 동일한 식별자를 선언한 경우, 
+   무조건 스코프 체인 상에서 가장 먼저 발견된 식별자에만 접근 가능.
+
+----------------------  
+<스코프 체인 - 세부 과정>
+var a = 1;
+var outer = function () {
+  var inner = function () {
+    console.log(a); // undefined // inner 함수 내부에서도 변수 a를 
+    var a = 3; // 선언했기 때문에 전역 스코프까지 가지 않고 검색 중단하게 됨  
+  };
+  inner(); 
+  console.log(a); // 1
+};
+outer();
+console.log(a); // 1
+
+1) 전역 컨텍스트 활성화. 전역 컨텍스트의 environmentRecord에는 식별자들이 저장됨 { a, outer }.
+   전역 컨텍스트의 outerEnvironmentReference에는 아무것도 담기지 않음(this: 전역 객체).
+1-1) 전역 스코프에 있는 변수 a와 outer에 1과 함수를 할당. (a=1; outer = function () {~};)
+1-2) outer 함수 호출. 전역 컨텍스트의 코드는 임시 중단.
+
+2) outer 실행 컨텍스트 활성화되면서 outer 함수 내부의 코드들로 이동.
+2-1) outer 실행 컨텍스트의 environmentRecord에 {inner} 식별자 저장.
+2-2) outer 실행 컨텍스트의 outerEnvironmentReference에는 
+      outer 함수가 선언될 당시의 LexicalEnvironment가 담김.
+     outer 함수는 전역 공간에서 선언되었으므로 
+     전역 컨텍스트의 LexicalEnvironment를 참조 복사 [GLOBAL, { a, outer }].
+     - GLOBAL : 실행 컨텍스트의 이름
+     - {a, outer} : environmentRecord의 객체(this:전역 객체)
+2-3) outer 스코프에 있는 변수 inner에 함수 할당.
+2-4) inner 함수 호출. outer 실행 컨텍스트의 코드는 임시 중단.
+
+3) inner 실행 컨텍스트 활성화되면서 inner 함수 내부의 코드들로 이동.
+3-1) inner 실행 컨텍스트의 environmentRecord에 { a } 식별자 저장.
+3-2) inner 실행 컨텍스트의 outerEnvironmentReference에는 
+      inner 함수가 선언될 당시의 LexicalEnvironment가 담김.
+     inner 함수는 outer 함수 내부에서 선언되었으므로 
+     outer 함수의 LexicalEnvironment를 참조 복사 [outer, { inner }].
+     - outer : 실행 컨텍스트의 이름
+     - { inner } : environmentRecord의 객체(this:전역 객체)
+3-3) console.log(a); // undefined 출력
+     원인: inner 컨텍스트의 environmentRecord에는 a라는 식별자가 있음.
+           하지만 아직 a에 할당된 값은 없는 상태(3-4에서 할당).
+3-4) inner 스코프에 있는 변수 a에 3을 할당.
+3-5) inner 함수 실행 종료. inner 실행 컨텍스트는 콜 스택에서 제거.
+     
+4) outer 실행 컨텍스트 재활성화. outer함수 내부에서 중단 시점 바로 다음줄로 이동.
+4-1) console.log(a); // 1 출력
+     활성화된 실행 컨텍스트(outer)의 LexicalEnvironment에 접근.
+       1) environmentRecord에는 {inner} 식별자만 존재. { a }는 없음.
+       2) outerEnvironmentReference [GLOBAL, { a, outer }]의 environmentRecord 탐색.
+          => 전역 LexicalEnvironmet에 식별자 { a }가 존재함.
+             1이라는 값이 할당되어있으니 a = 1 반환. 
+4-2) outer 함수 실행 종료. outer 실행 컨텍스트는 콜 스택에서 제거.
+
+5) 전역 컨텍스트 재활성화. 중단 시점 바로 다음줄로 이동.
+5-1) console.log(a); // 1 출력
+     현재 활성화된 전역 컨텍스트의 environmentRecord에 식별자 { a } 존재.
+     a = 1 출력.
+ 
+cf) <LexicalEnvironment>
+    - environmentRecord
+    - outerEnvironmentReference
+-------- 
+> 전역 컨텍스트 : 전역 스코프에서 생성된 변수에만 접근 가능.
+> outer 컨텍스트 : outer + 전역 스코프에서 생성된 변수에 접근 가능.
+> inner 컨텍스트 : inner + outer + 전역 스코프 모두에 접근 가능.
+: 다른 함수 내부에 있을수록 점차 규모가 작아짐 + 접근 가능한 변수의 수는 증가.
+ 
+변수 은닉화(variable shadowing)
+- 원래는 inner 함수 내부에서도 전역 공간에서 선언한 식별자 a에 접근 가능함.
+- 그러나 문제는 inner 함수 내부에서도 식별자 a를 선언했기 때문에 
+  inner 함수 내부에서 a를 찾자마자 전역 스코프까지 가지 않고 검색 중단.
+- 이는 scope chain 상의 첫번째 인자인 inner scope의 LexicalEnvironment부터 
+  순차적으로 검색할 수밖에 없기 때문에 발생하는 현상. 
+
+var a = 1;
+var outer = function () {
+  var inner = function () {
+    console.log(a); // undefined 출력됨. 전역 스코프에 도달하지 못함.
+    var a = 3; // hoisting에 의해 변수 a 선언 부분만 끌어올려짐. 
+  };
+  inner(); 
+};
+
+------------------------------------------------------------
+전역변수와 지역변수
+- 전역변수(global variable): 전역 스코프에 선언한 변수
+- 지역변수(local variable): 함수 내부에서 선언한 변수
+
+var a = 1; // 전역변수: 전역 스코프에서 선언
+var outer = function () {
+  var inner = function () {  // 지역변수: outer 함수 내부에서 선언
+   var a = 3;  // 지역변수: inner 함수 내부에서 선언
+  };
+  inner();  
+};
+outer();  // 전역변수: 전역 스코프에서 선언
+
+* 코드의 안전성을 위해서는 가급적 전역변수 사용을 최소화해야 함.
+- 동일한 이름의 함수를 전역공간에 복수 선언한 경우, 서로 영향을 미칠 수 있음.
+- 같은 함수명이어도 지역변수로 선언된 함수들은 외부 공간에서는 
+  임의로 사용할 수 없음. 동일한 이름의 함수에 영향 미치지 못함.
+  
+  

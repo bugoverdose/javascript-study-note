@@ -20,7 +20,8 @@
         // "${workspaceFolder}/modern_syntax/2_ternary_operator.js"
         // "${workspaceFolder}/core_javascript/1장 데이터 타입/05 불변 객체(1a 얕은 복사).js"
         // "${workspaceFolder}/core_javascript/1장 데이터 타입/05 불변 객체(2a 깊은 복사).js"
-        "${workspaceFolder}/core_javascript/1장 데이터 타입/06 undefined와 null.js"
+        // "${workspaceFolder}/core_javascript/1장 데이터 타입/06 undefined와 null.js"
+        "${workspaceFolder}/core_javascript/2장 실행 컨텍스트/03b hoisting.js"
     }
   ]
 }
