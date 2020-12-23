@@ -1,13 +1,16 @@
 /* 
-[document.querySelector]
-- 특정 태그를 선택하고 객체로 변환. 
-- innerHTML, style 등을 활용해 더 세부적인 요소 수정 가능해짐.
+  [document.querySelector]
+  - 특정 태그를 선택하고 객체로 변환. 
+  - innerHTML, style 등을 활용해 더 세부적인 요소 수정 가능해짐.
 
-getElement 시리즈에 비해 활용도가 더 높음. 
-- querySelector can find by classes, pseudo-selectors, combinations, etc.
-- ex) document.querySelector("div > span:first-child") 
-  - div 태그의 직접적인 자식인 span태그 중 첫번째를 선택
-  (비교) getElementById는 id로만 찾음. getElementByClass는 class로만 찾는 등. 사용방법이 더 구체적임
+  getElement 시리즈에 비해 활용도가 더 높음. 
+  - querySelector can find by classes, pseudo-selectors, combinations, etc.
+  - ex) document.querySelector("div > span:first-child") 
+    - div 태그의 직접적인 자식인 span태그 중 첫번째를 선택
+    (비교) getElementById는 id로만 찾음. getElementByClass는 class로만 찾는 등. 사용방법이 더 구체적임
+
+  cf) querySelector, getElementByClassName 등은 전부 'Node 선택자'에 해당
+      NodeList : Node 선택자로 선택한 결과들. html element들.
 */
 
 const consoleElement = document.querySelector("#console");

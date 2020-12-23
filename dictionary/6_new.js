@@ -15,7 +15,8 @@ var choco = new Cat("초코", 7);
 // 생성자 함수 Cat을 호출하여 변수 choco에 할당.
 // 호출되는 생성자 함수 Cat 내부의 this는 인스턴스 객체 choco를 가리킴
 
-console.log(choco); // Cat {bark: "meow", name: "초코", age: 7}
+var nabi = new Cat("나비", 5);
+// 생성자 함수 Cat 내부에서의 this는 nabi 인스턴스를 가리킴.
 
-var nabi = new Cat("나비", 5); // 생성자 함수 Cat 내부에서의 this는 nabi 인스턴스를 가리킴.
+console.log(choco); // Cat {bark: "meow", name: "초코", age: 7}
 console.log(nabi); // Cat {bark: "meow", name: "나비", age: 5}

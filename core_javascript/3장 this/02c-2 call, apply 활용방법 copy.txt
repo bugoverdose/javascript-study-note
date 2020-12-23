@@ -1,0 +1,42 @@
+(2) 생성자 내부에서 다른 생성자 호출
+- 생성자 함수 내부에 다른 생성자 함수와 공통된 내용이 있는 경우,
+  call/apply를 통해 다른 생성자를 호출하여 중복 코드 제거 
+
+function Person (name, gender) {
+  this.name = name;
+  this.gender = gender;
+}
+function Student (name, gender, school) {
+  Person.call(this, name, gender);
+  this.school = school;
+}
+function Employee (name, gender, company) {
+  Person.apply(this, [name, gender]);
+  this.company = company;
+}
+
+var John = new Student("John", "male", "SNU");
+var Nick = new Employee("Nick", "male", "Google");
+console.log(John); // Student {name: "John", gender: "male", school: "SNU"}
+console.log(Nick); // Employee {name: "Nick", gender: "male", company: "Google"}
+
+
+// ------------------------------------------------------
+ 
+(3) 여러 인수를 묶어 하나의 배열로 전달하고 싶을 때 - apply 활용
+- 여러 개의 인수를 받는 메서드에 하나의 배열로 인수들 전달하기 위해 활용 가능. 
+
+(예시) 배열에서 최대/최소값을 구하는 방법
+var numArray = [10, 20, 3, 16, 45];
+var max = Math.max.apply(null, numArray);
+var min = Math.min.apply(null, numArray);
+console.log(max, min); // 45 3
+// 여러 인수를 받는 메서드(Math.max/Math.min)에 apply 적용
+// this로는 null값 적용.
+
+// --------
+펼치기 연산자 spreader operator [ES6] : apply 불필요.
+const numArray = [10, 20, 3, 16, 45];
+const max = Math.max(...numArray);
+const min = Math.min(...numArray);
+console.log(max, min); // 45 3

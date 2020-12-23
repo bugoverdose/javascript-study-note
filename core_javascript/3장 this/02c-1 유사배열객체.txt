@@ -1,0 +1,54 @@
+(1) 유사배열객체(array-like object)
+- key값이 0, 1, 2 등 0이상의 정수인 property가 존재하고,
+  length라는 이름의 property의 값이 0, 1, 2 등 0 이상의 정수인 객체.
+- argunments 객체, NodeList도 유사배열객체에 해당
+
+var obj = {
+    0: 'a',
+    1: 'b',
+    2: 'c',
+    length: 3
+};
+
+객체에는 배열 메서드를 직접 적용할 수 없지만,
+유사배열객체의 경우 call/apply 메서드를 이용하면 모든 배열 메서드를 적용 가능.
+
+하지만 이는 call/apply의 취지에서 벗어난 사용방법이므로, Array.from 메서드가 도입됨[ES6]. 
+
+Array.from 메서드: 유사배열객체 등 순회 가능한 모든 종류의 데이터타입을 배열로 전환하는 기능.
+var arr = Array.from(obj);
+console.log(arr); // ["a", "b", "c"]
+ 
+// ------------------------------------------------------
+
+(참고) 지금도 ES5 이하의 환경에서는 실무에서 광범위하게 활용되는 방식들
+
+유사배열객체에 배열 메서드를 적용하는 예시들
+- argunments 객체, NodeList도 동일한 작업 가능. (p.83 참고)
+
+/* call 메서드로 배열 메서드 push 사용. */
+Array.prototype.push.call(obj, 'd'); // 객체 obj에서 마지막 property에 'd' 추가.
+console.log(obj); // {0: "a", 1: "b", 2: "c", 3: "d", length: 4}
+
+/* call 메서드로 배열 메서드 slice 사용. */
+var arr = Array.prototype.slice.call(obj); // 얕은 복사를 통해 객체를 배열로 전환.  
+console.log(arr); // ["a", "b", "c", "d"]
+
+/*
+  array.slice(n, m) : array의 index=n부터 index=m-1까지의 값을 토대로 배열 반환.
+    [10, 20, 30].slice(1, 3); // [20, 30]
+
+  array.slice() :  매개변수가 없으면 원본배열 array에 대한 얕은 복사 수행.
+    [10, 20, 30].slice(); // [10, 20, 30]  
+*/
+
+// -------------------------
+
+  문자열도 배열처럼 index와 length property를 지니기 때문에 
+  call/apply 메서드를 활용해서 일부 배열 메서드들 적용 가능.
+  다만, length property가 읽기 전용이므로 
+       원본 문자열에 변경을 가하는 배열 메서드들은 사용 불가(에러),
+       대상이 반드시 배열이어야하는 메서드도 제대로 적용 불가(concat)
+  (p.84 참고)
+
+// ------------------------------------------------------
