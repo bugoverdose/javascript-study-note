@@ -12,7 +12,8 @@
   - 매개변수2: 이벤트 발생시 실행할 함수
 
   ex) window.addEventListener(이벤트, 함수)    
-  - window 객체: 해당 웹사이트가 열린 브라우저 창에 대한 이벤트를 handle하는 데 사용.
+     - window 객체: 브라우저의 전역객체.
+       웹사이트가 열린 브라우저 창에 대한 이벤트를 handle하는 데 사용 가능.
 */
 
 function handleResize() {

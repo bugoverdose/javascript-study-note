@@ -1,0 +1,39 @@
+[생성자 함수 내부에서의 this]
+생성자 함수로서 호출된 함수의 경우, 
+해당 함수 내부에서의 this는 생성된 각각의 구체적인 인스턴스 자신이 됨.
+
+------------
+생성자 함수: 공통된 성질을 지닌 객체를 생성하는 함수.
+- class: 생성자. 구체적인 인스턴스를 만들기 위한 일종의 틀.
+- instance: 클래스를 통해 만든 객체. 인스턴스.
+
+ex) 인간 클래스에는 모든 인간들의 공통된 속성들이 미리 정해져있음.
+    이를 토대로 매개변수에 인자를 입력하는 것으로 서로 구분되는 
+    개성이 부여된 개별 인스턴스를 생성해내게 되는 것.
+
+new 명령어와 함께 함수를 호출하면 해당 함수는 생성자로서 동작하게 됨.
+  (= JS에서는 함수에 생성자로서의 역할을 부여할 수 있음.)
+
+------------------------------------
+구체적인 인스턴스가 만들어지는 과정
+1) 생성자 함수를 호출(new 함수)
+2)  __proto__라는 prototype property가 있는 객체(인스턴스)를 생성.
+    __proto__는 생성자의 prototype property를 참조함.
+3) 미리 준비된 공통 속성 및 개성을 해당 객체(this)에 부여하게 됨.
+
+-----------
+var Cat = function(name,age){
+    this.bark = 'meow';
+    this.name = name;
+    this.age = age;
+};
+var choco = new Cat('초코', 7); // 생성자 함수 Cat 내부에서의 this는 choco 인스턴스를 가리킴.
+var nabi = new Cat('나비', 5);  // 생성자 함수 Cat 내부에서의 this는 nabi 인스턴스를 가리킴.
+console.log(choco); // Cat {bark: "meow", name: "초코", age: 7} 
+console.log(nabi); // Cat {bark: "meow", name: "나비", age: 5}
+
+(실행결과)
+var choco = new Cat("초코", 7); 
+// 생성자 함수 Cat을 호출하여 변수 choco에 할당.
+// 호출되는 생성자 함수 Cat 내부의 this는 인스턴스 객체 choco를 가리킴
+ 

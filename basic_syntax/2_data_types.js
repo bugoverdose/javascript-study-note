@@ -2,10 +2,16 @@
 // Boolean : true / false. true==1, false==0.
 // Number : 일반적인 숫자.
 
+// -------------------------------------------------
+
 // Float : 소수점을 포함한 숫자. floating number(떠돌이 소숫점). Number와 사실상 동일함.
 const a = 20.5;
 console.log("a :", a);
 
+// 주의사항: https://velog.io/@sgyoon/2019-09-15-01
+console.log(0.1 + 0.2 == 0.3); // false
+console.log(0.1 + 0.2); // 0.30000000000000004
+console.log(0.3); // 0.29999999999999998
 // -------------------------------------------------
 
 // Array : 배열. 대괄호[ ]. array[index]로 특정 요소 지정 가능 (index=0,1,2,...)

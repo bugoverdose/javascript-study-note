@@ -8,6 +8,13 @@ cf) 전역객체: 전역 실행 컨텍스트는 변수 객체를 생성하는 �
      전역 객체(global object; JS 구동 환경이 별도로 제공하는 객체)를 활용함.
      전역 객체 예시: 브라우저의 window, Node.js의 global 객체 등.
      JS 내장 객체(native object)가 아닌 호스트 객체(host object)로 분류됨.
+
+[3장] JS의 모든 변수는 특정 객체의 property로서 동작하게 됨.
+- 변수를 선언하게 되면 특정 객체의 property로 인식됨.
+- 즉, 실행 컨텍스트의 LexicalEnvironment의 property로 인식됨.
+- 전역 컨텍스트의 경우 L.E.는 전역객체를 그대로 참조하게 됨.
+  (GlobalEnv가 전역객체를 참조 => 전역 컨텍스트의 L.E.가 GlobalEnv 참조.)
+
 -------------------------------------------------------
 [environmentRecord와 호이스팅]
 environmentRecord: 현재 컨텍스트와 관련된 코드의 식별자 정보들을 저장.
@@ -24,3 +31,7 @@ environmentRecord: 현재 컨텍스트와 관련된 코드의 식별자 정보�
  - 실제 코드가 적힌 순서대로 모든 명령들이 실행되지 않음.
  - 우선적으로 hoisting 과정에 따라 식별자 정보를 수집하는 명령들만 실행.
  - 그 외의 명령들은 순차적으로 실행.
+
+
+
+

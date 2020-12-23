@@ -1,0 +1,119 @@
+[함수로서 호출할 때 그 함수 내부에서의 this]
+
+<함수 내부에서의 this>
+- 함수에서의 this는 전역객체를 가리킴. (window, global 등)
+- JS 설계상의 오류. 함수로서 호출하는 것은 호출 주체를 명시하지 않고 
+  개발자가 코드에 직접 관여하여 실행한 것. 실행 컨텍스트 활성화 당시, 
+  this가 지정되지 않은 경우 default로 this는 전역 객체를 바라보게 됨.
+
+(핵심) 유일한 차이는 언제나 함수를 객체에서 꺼내서 사용하는지의 여부
+- 함수명() : 함수로서 호출 => this:전역객체
+- 객체1.메서드명(), 객체1['메서드명']() : 메서드로서 호출 => this:객체1
+
+* 함수를 실행하는 당시의 주변 환경은 영향 미치지 않음. => 오히려 혼란 유발.
+  (다른 메서드 내부에서 실행하든, 함수 내부에서 실행하든 전혀 무관)
+
+--------------------------------------
+<메서드 내부함수에서의 this> 
+- 단순히 기존에 선언한 함수를 객체의 property에 할당한 것이 아니라 
+  메서드 내부에서 함수를 선언한 경우에도 오직 호출방식에 따라서만 this 달라짐.
+
+(요약)
+obj1.outer 메서드 내부에서 정의하고 실행된 함수 innerFunc()의 경우,
+(2) 함수로서 호출한 경우 this에는 전역객체가 바인딩됨. (not obj1)
+    즉, 호출 당시 주변 환경(obj1)의 this를 그대로 상속받지 못함. 
+(3) obj2.innerMethod 메서드로서 호출한 경우 this에는 obj2가 바인딩됨.
+
+(이해용)
+var obj1 = {
+    outer: function() {
+        console.log(this); // (1)
+
+        var innerFunc = function() {
+            console.log(this); // (2) (3)
+        }
+        innerFunc(); // (2)                전역객체(Window)
+
+        var obj2 = {
+            innerMethod: innerFunc
+        };
+        obj2.innerMethod(); // (3)         obj2
+    }
+};
+obj1.outer(); // (1)                       obj1
+
+<실행결과>
+(1) obj1.outer() 메서드의 this는 obj1
+  - console.log(this); // 출력: {outer: ƒ} (=== obj1)
+  - obj1.outer() 메서드가 호출됨에 따라서 
+    실행된 console.log(this)는 obj1의 객체 정보인 {outer: ƒ} 출력
+
+(2) 메서드 내부에서 정의 + 호출된 innerFunc() 함수의 this는 전역객체(Window)
+  - console.log(this); // 출력: Window {0: global, …} (즉, 전역객체)
+  - obj1.outer() 메서드 내부에서 정의된 innerFunc() 함수가 호출됨에 따라서 
+    실행된 console.log(this)는 전역객체 Window의 정보 출력
+
+(3) 메서드 내부에서 새로운 객체(obj2) 내부에 정의
+                  + 호출된 obj2.innerMethod() 메서드의 this는 obj2
+  - console.log(this); // 출력: {innerMethod: ƒ} (=== obj2)
+    {innerMethod: ƒ} (=== obj2)
+  - obj1.outer() 메서드 내부에서 obj2.innerMethod 메서드가 호출됨에 따라
+    this에는 obj2가 바인딩됨.
+    obj2.innerMethod 메서드의 값으로는 innerFunc 함수가 할당되어있으므로
+     (2)와 동일한 console.log(this); 코드를 실행하게 되지만, 
+     this에 바인딩된 값인 obj2 객체 정보를 출력. (not 전역객체) 
+
+--------------------------------------
+<메서드의 내부에서 함수를 호출할 때의 this 우회 방법>
+- 상위 스코프의 this값을 저장해놓은 self 변수를 사용.
+- 현재 컨텍스트에 바인딩된 대상이 없다면 즉시 전역객체를 가리키지 않고,
+  (스코프 체인처럼) 직전 컨텍스트의 this를 가리키도록 하는 방법.
+
+(요약)
+(2) 함수로서 호출하는 경우 this는 언제나 전역객체.
+(3) 함수로서 호출할 때 상위 스코프의 this값을 저장해놓은 self 변수를 사용.
+- outer 스코프 내부에서 self라는 변수에 this 값을 저장하고,
+  innerFunc2 함수 내부에서는 this가 아니라 self를 출력하도록 지정.
+- 상위 스코프의 this가 저장된 self 변수는 메서드로 호출되든, 함수로 호출되든 상관 없음.
+
+var obj = {
+    outer: function() {
+        console.log(this); // (1) {outer: ƒ} (=== obj)
+
+        // 함수로서 호출하는 경우 this는 언제나 전역객체.
+        var innerFunc1 = function() {
+            console.log(this); // (2) Window { ... } (=== 전역객체)
+        }
+        innerFunc1();
+
+        // 우회 방법. 
+        var self = this;
+        var innerFunc2 = function() {
+            console.log(self); // (3) {outer: ƒ} (=== obj)
+        };
+        innerFunc2(); 
+    }
+};
+obj.outer(); 
+
+--------------------------------------
+<화살표 함수 [ES6]>
+- this를 바인딩하지 않는 함수: 실행 컨텍스트를 생성할 때 this 바인딩 과정 자체가 빠지게 됨
+- 함수로서 호출될 때 this가 무조건 전역객체만을 바라보는 문제를 해결하고자 도입됨.
+- 메서드 내부에서도 별도의 우회방법 없이 상위 스코프의 this를 그대로 활용 가능.  
+- 다만, ES5 환경에서는 화살표 함수 사용 불가.
+
+var obj = {
+    outer: function() {
+        console.log(this); // (1) {outer: ƒ} (=== obj)
+
+        // 우회 방법. 화살표 함수. 
+        var innerFunc2 = () => {
+            console.log(self); // (2) {outer: ƒ} (=== obj)
+        };
+        innerFunc2(); 
+    }
+};
+obj.outer(); 
+
+
