@@ -9,4 +9,19 @@
 setTimeout(function () {
   console.log(this);
 }, 3000);
-// 3000ms 이후 전역객체 출력 Window { ... }
+// 3000ms 후 전역객체 출력: Window { ... }
+
+// ------------
+var coffeeList = "";
+var addEspresso = (name) => {
+  coffeeList += name;
+  console.log(coffeeList);
+  setTimeout(addAmericano, 1000, "Americano");
+};
+var addAmericano = (name) => {
+  coffeeList += `, ${name}`;
+  console.log(coffeeList);
+};
+setTimeout(addEspresso, 1000, "Espresso");
+// 1000ms 후 출력: Espresso
+// 콜백함수 addEspress에 "Espresso"를 인자로 전달하고, 1000ms 후 호출.

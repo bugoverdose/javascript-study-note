@@ -1,0 +1,25 @@
+[호출 시점]
+콜백함수 callbackFunc의 제어권을 넘겨받은 setInterval함수는
+callbackFunc의 호출시점에 대한 제어권을 지니게 된 것.
+=> setInterval은 스스로의 판단에 따라 적절한 시점에(0.3초마다) callbackFunc를 실행하게 됨.
+---------------------------
+var count = 0;
+var callbackFunc = () => {
+    console.log(count);
+    if(++count > 4) clearInterval(timer); // 전역객체의 count값을 1 증가 + 증가된 결과가 4보다 크면 clearInterval로 timer 함수 종료.
+}
+var timer = setInterval(callbackFunc, 300); // clearInterval로 반복실행 종료 위해 변수에 할당
+// 0 (0.3초)
+// 1 (0.6초)
+// 2
+// 3 
+// 4 (1.5초)
+---------------------------
+callbackFunc 
+- 호출 주체: 사용자
+- 제어권: 사용자
+setInterval(callbackFunc, 300) 
+- 호출 주체: setInterval
+- 제어권: setInterval
+
+

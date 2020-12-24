@@ -1,0 +1,26 @@
+[03 콜백함수는 함수다]
+어떤 객체의 메서드를 콜백함수로 사용하더라도, 해당 메서드는 함수로서 호출됨.
+- 메서드를 선택했을 뿐, 메서드로서 호출된 것이 아님.
+- 메서드였어도 콜백함수로 사용되는 순간 함수를 실행한 것으로 간주됨.
+  - 이 때문에 기본적으로 콜백함수의 this 값은 전역객체.
+  - 제어권을 넘겨받은 함수가 별도로 this 값을 지정해주었다면 해당 값.
+-------------------------------------------------
+<메서드를 콜백함수로 전달한 경우>
+var obj = {
+    vals: [1, 2, 3],
+    logValues: function(v, i){ 
+        console.log(this, `arrayValue:${v}, index:${i}`);
+    }
+};
+
+obj.logValues(10, 20);
+// {vals: [1, 2, 3], logValues: ƒ} "arrayValue:10, index:20" // 그냥 인자1, 인자2.
+// 객체 obj의 메서드로서 호출 => this 값은 obj가 됨.
+
+[4, 5, 6].forEach(obj.logValues);
+// Window { ... } "arrayValue:4, index:0"
+// Window { ... } "arrayValue:5, index:1"
+// Window { ... } "arrayValue:6, index:2"
+// obj.logValues메서드는 콜백함수로서 실행.  
+// 제어권을 넘겨받은 forEach 메서드가 별도의 this값을 콜백함수에게 지정해주지 않았음.
+// 콜백함수는 obj가 아니라 전역객체를 this 값으로 사용.

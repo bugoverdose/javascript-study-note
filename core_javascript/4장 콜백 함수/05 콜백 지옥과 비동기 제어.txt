@@ -1,0 +1,171 @@
+[05 콜백 지옥과 비동기 제어]
+ 
+콜백 지옥(callback hell)
+: 콜백함수를 익명함수로 전달하는 과정이 반복되어,
+  코드의 들여쓰기 수준이 감당하기 힘들 정도로 깊어지는 현상. (verbose)
+- 코드의 가독성 감소. 코드의 유지보수도 힘들어짐.
+- 주로 이벤트, 서버 통신 등 비동기적인 작업을 수행할 때 발생.
+- 과거에 비해 웹의 복잡도가 높아짐에 따라 비동기적인 코드의 비중 증가 
+  => 콜백 지옥에 빠지기 훨씬 더 쉬워짐.
+
+setTimeout(function(name) { 
+  var coffeeList = name;  
+  console.log(coffeeList);
+  setTimeout(function(name) {
+    coffeeList += `, ${name}`;
+    console.log(coffeeList);
+  }, 1000, "Americano");
+}, 1000, "Espresso");
+// Espresso            (1000ms 후 출력)
+// Espresso, Americano (2000ms 후 출력)
+-----------------------
+동기 synchronous 
+- 동기적인 코드는 현재 실행 중인 코드가 완료된 이후에 다음 코드를 실행.
+- CPU의 계산에 의해 즉시 처리가 가능한 대부분의 코드들 
+  처리 시간이 많이 소요되더라도 동기적인 코드인 경우가 있음. 
+  
+-----------------------
+비동기 asynchronous 
+- 비동기적인 코드는 현재 실행 중인 코드의 완료 여부와 무관하게 즉시 다음 코드를 실행.
+- 별도의 요청, 실행 대기, 보류 등과 관련된 코드들
+: 사용자의 요청에 의해 특정 시간이 경과되기 전까지 어떤 함수의 실행을 보류(setTimeout),
+  사용자의 개입으로 특정 이벤트가 발생했을 때 비로고 어떤 함수를 실행하도록 대기(addEventListener),
+  웹브라우저 자체가 별도의 대상을 요청하고 그에 대한 응답이 왔을 때 비로소 어떤 함수를 실행하도록 대기(XMLHttpRequest) 등
+
+-------------------------------------------------
+콜백지옥 해결방법
+(1) 익명함수를 전부 기명함수로 전환 (+모든 함수들을 즉시 실행 함수로 감싸기)
+     - 코드의 가독성 증가. old 문법만으로 구현 가능.
+     - 단점: 일회성 함수들을 전부 변수에 할당하는 것이 번거롭거나, 
+             각각의 코드명을 따라가는 과정이 오히려 헷갈릴 수 있음.
+
+(2) Promise, Generator 등 [ES6], async/await 등 [ES2017]
+    - 전부 일련의 비동기적인 작업들을 동기적으로 처리, 
+      혹은 동기적인 것처럼 표현하기 위해 도입된 장치들.
+
+-----------------------
+(1) 익명함수를 전부 기명함수로 전환
+var coffeeList = "";
+var addEspresso = (name) => {
+  coffeeList += name;
+  console.log(coffeeList);
+  setTimeout(addAmericano, 1000, "Americano");
+};
+var addAmericano = (name) => {
+  coffeeList += `, ${name}`;
+  console.log(coffeeList);
+};
+
+setTimeout(addEspresso, 1000, "Espresso");
+// Espresso            (1000ms 후 출력)
+// Espresso, Americano (2000ms 후 출력)
+
+-------------------------------------------------
+(2-1) Promise 
+new Promise(function (resolve) {
+  setTimeout(function () {
+    var name = "에스프레소";
+    console.log(name);
+    resolve(name);
+  }, 1000);
+})
+  .then(function (prevName) {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        var name = prevName + ", 아메리카노";
+        console.log(name);
+        resolve(name);
+      }, 1000);
+    });
+  })
+  .then(function (prevName) {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        var name = prevName + ", 카페라떼";
+        console.log(name);
+        resolve(name);
+      }, 1000);
+    });
+  });
+// 에스프레소                       (1000ms 후 출력)
+// 에스프레소, 아메리카노           (2000ms 후 출력)
+// 에스프레소, 아메리카노, 카페라떼 (3000ms 후 출력)
+
+--------------------------
+(2-2) Promise + 클로저 활용.
+var addCoffee = function (name) {
+  return function (prevName) {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        var newName = prevName ? `${prevName}, ${name}` : name;
+        console.log(newName);
+        resolve(newName);
+      }, 1000);
+    });
+  };
+};
+addCoffee("에스프레소")()
+  .then(addCoffee("아메리카노"))
+  .then(addCoffee("카페모카"))
+  .then(addCoffee("카페라떼"));
+
+// 에스프레소
+// 에스프레소, 아메리카노
+// 에스프레소, 아메리카노, 카페모카
+// 에스프레소, 아메리카노, 카페모카, 카페라떼
+
+-------------------------------------------------
+(2-3) Promise + async/await 
+var addCoffee = function (name) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve(name);
+    }, 1000);
+  });
+};
+
+var coffeeMaker = async function () {
+  var coffeeList = "";
+  var _addCoffee = async function (name) {
+    coffeeList += (coffeeList ? "," : "") + (await addCoffee(name));
+  };
+  await _addCoffee("에스프레소");
+  console.log(coffeeList);
+  await _addCoffee("아메리카노");
+  console.log(coffeeList);
+  await _addCoffee("카페모카");
+  console.log(coffeeList);
+  await _addCoffee("카페라떼");
+  console.log(coffeeList);
+};
+
+coffeeMaker();
+// 에스프레소                                    (1000ms 후 출력)
+// 에스프레소, 아메리카노                        (2000ms 후 출력)
+// 에스프레소, 아메리카노, 카페모카              (3000ms 후 출력)
+// 에스프레소, 아메리카노, 카페모카, 카페라떼    (4000ms 후 출력)
+
+-------------------------------------------------
+(2-4) Generator 
+var addCoffee = function (prevName, name) {
+  setTimeout(function () {
+    coffeeMaker.next(prevName ? `${prevName}, ${name}` : name);
+  }, 1000); // 1000초마다 next 메서드 반복실행.
+};
+var coffeeGenerator = function* () {
+  var espresso = yield addCoffee("", "에스프레소");
+  console.log(espresso);
+  var americano = yield addCoffee(espresso, "아메리카노");
+  console.log(americano);
+  var mocha = yield addCoffee(americano, "카페라떼");
+  console.log(mocha);
+  var latte = yield addCoffee(mocha, "카페라떼");
+  console.log(latte);
+};
+
+var coffeeMaker = coffeeGenerator();
+coffeeMaker.next(); // 최초로 next 메서드 실행.
+// 에스프레소                                    (1000ms 후 출력)
+// 에스프레소, 아메리카노                        (2000ms 후 출력)
+// 에스프레소, 아메리카노, 카페모카              (3000ms 후 출력)
+// 에스프레소, 아메리카노, 카페모카, 카페라떼    (4000ms 후 출력)

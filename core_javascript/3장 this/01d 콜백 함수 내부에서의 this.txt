@@ -11,9 +11,11 @@
 - setTimeout 함수
   - setTimeout 함수의 콜백함수의 this는 전역함수
 - forEach 메서드
-  - array.forEach 메서드의 콜백함수의 this는 전역함수
+  - array.forEach 메서드는 콜백함수의 this를 별도로 지정 가능.
+  - 별도의 인자로 this를 넘기지 않았으면 콜백함수의 this는 전역함수. 
 - addEventListener 메서드
-  - htmlElement.addEventListener 메서드의 콜백함수의 this는 htmlElement
+  - htmlElement.addEventListener 메서드의 this는 htmlElement,
+    addEventListener 메서드의 콜백함수의 this도 htmlElement (그대로 상속)
 
 --------------------------------------
 setTimeout 함수
@@ -41,13 +43,14 @@ forEach 메서드
 // Window { ... } 4
 // Window { ... } 5
 
-콜백함수를 호출할 대상이 될 this 지정하지 않았음.
-콜백함수 내부에서의 this는 전역객체를 참조하게 됨.
+별도의 인자로 콜백함수의 this를 지정할 수 있지만 지정하지 않았음. 
+자동으로 콜백함수 내부에서의 this는 전역객체를 참조하게 됨.
 
 --------------------------
 addEventListener 메서드
-- 콜백함수를 호출할 때 자신의 this를 상속하도록 정의되어있음.
-- htmlElement.addEventListener 메서드의 this는 htmlElement
+- 콜백함수를 호출할 때 메서드 자신의 this를 상속하도록 정의되어있음.
+- htmlElement.addEventListener 메서드의 this는 htmlElement이므로
+  addEventListener 메서드의 콜백함수의 this도 htmlElement
 
 document.body.innerHTML += '<button id="a">Click Me</button>';
 document.body.querySelector('#a')

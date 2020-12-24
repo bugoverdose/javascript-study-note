@@ -3,9 +3,9 @@
 	 - if-else문 간략 버전. 
    - 문자열 string 내부에서 실행하는 압축 조건문. 
  
-   형식: condition ? 블록1 : 블록2
-    - 블록1: 참인 경우 실행할 블록
-    - 블록2: 거짓인 경우 실행할 블록
+   형식: (condition ? ifTrue : ifFalse)
+    - ifTrue: 참인 경우 실행할 블록
+    - ifFalse: 거짓인 경우 실행할 블록
 */
 function underTenSeconds1(seconds) {
   if (seconds < 10) {

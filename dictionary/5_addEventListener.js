@@ -1,7 +1,8 @@
 /*
-  addEventListener 메서드 
+  addEventListener 메서드
   - 콜백함수를 호출할 때 메서드 자신의 this를 상속하도록 정의되어있음.
-  - htmlElement.addEventListener 메서드의 콜백함수의 this는 htmlElement
+  - htmlElement.addEventListener 메서드의 this는 htmlElement이므로
+    addEventListener 메서드의 콜백함수의 this도 htmlElement
 */
 
 document.body.innerHTML += '<button id="a">Click Me</button>';
