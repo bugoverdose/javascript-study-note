@@ -38,6 +38,8 @@ var obj = {
 
 obj.method(2, 3); // 10 2 3
 // obj.메서드 내부의 this는 객체 obj. (메서드 본인이 담겨있는 객체)
+// this.a == obj.a == 10
 
 obj.method.call({ a: 100 }, 5, 6); // 100 5 6
 // call 메서드를 통해 실행하면 첫번째 인자가 obj.메서드 내부의 this로 지정됨.
+// this.a == {a: 100}.a == 100

@@ -1,0 +1,30 @@
+5) 화살표 함수 arrow function  [ES6]
+- 화살표 함수 내부에는 this 값이 아예 없음. 애초에 실행 컨텍스트를 생성할 때 this 바인딩 과정이 제외됨.
+- 접근하고자 하면 자동으로 스코프체인상 가장 가까운 this에 접근하게 됨
+
+call/apply/bind 적용할 필요 없음. 가장 효과적인 방법.
+
+// ----------------------------------------
+// bind
+var obj2 = {
+      outer: function() {
+            console.log(this);  // {outer: f}
+            var innerFunc = function(){
+                  console.log(this); // {outer: f}
+            }.bind(this);
+            innerFunc();
+      }
+};
+obj2.outer();
+
+// 화살표 함수
+var obj = {
+      outer: function() {
+            console.log(this);  // {outer: f}
+            var innerFunc = () => {
+                  console.log(this); // {outer: f}
+            };
+            innerFunc();
+      }
+};
+obj.outer();

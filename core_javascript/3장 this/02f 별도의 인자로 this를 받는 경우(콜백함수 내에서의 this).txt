@@ -1,0 +1,44 @@
+6) 별도의 인자로 this를 받는 경우(콜백함수 내에서의 this).txt
+- 콜백함수를 인자로 받는 메서드들 중 일부는 인자로 this 값을 지정받기도 함.
+- 다양한 배열 메서드(forEach 등), [ES6]의 Set, Map 등
+
+// ----------------------------------------
+
+// 콜백함수와 함께 this 값을 인자로 받는 메서드들
+
+Array.prototype.forEach(callback[, thisArg]);
+Array.prototype.map(callback[, thisArg]);
+Array.prototype.filter(callback[, thisArg]);
+Array.prototype.some(callback[, thisArg]);
+Array.prototype.every(callback[, thisArg]);
+Array.prototype.find(callback[, thisArg]);
+Array.prototype.findIndex(callback[, thisArg]);
+Array.prototype.flatMap(callback[, thisArg]);
+Array.prototype.from(callback[, thisArg]);
+
+Set.prototype.forEach(callback[, thisArg]);
+Map.prototype.forEach(callback[, thisArg]);
+
+// ----------------------------------------
+
+// forEach 메서드 (배열 메서드 예시)
+var report = {
+      sum: 0,
+      count: 0,
+      add: function() {
+            var args = Array.prototype.slice.call(arguments); // 얕은 복사를 통해 객체를 배열로 전환.  
+            args.forEach(function (entry) {
+                  this.sum += entry;
+                  ++this.count;
+            }, this);
+      },
+      average: function() {
+            return this.sum / this.count;
+      }
+};
+report.add(60, 85, 95);
+console.log(report.sum); // 240
+console.log(report.count); // 3
+console.log(report.average()); // 80
+
+

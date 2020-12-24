@@ -1,2 +1,78 @@
-4) bind 메서드
+4) bind 메서드: 메서드의 호출 주체인 함수를 즉시 실행하지 않고,
+     인자로 넘겨받은 this와 인수들을 토대로 새로운 함수를 return하는 명령. 
+      - call 메서드와 기본 형식 동일. [ES5]에서 추가됨.
+      (1) 함수에 this만 미리 적용 가능
+      (2) 부분 적용 함수 구현도 가능
 
+--------------------------------------------------
+형식: function.prototype.bind(thisArg[, arg1[, arg2[, ...]]])
+      함수.bind({this 객체}, 인자1, 인자2, 인자3, ...);
+
+함수1 = (a, b, c, d) => { ~~ }
+함수2 = 함수1.bind({객체}); // this값만 지정.
+함수2(a1, b1, c1, d1); // 실행할 때는 인자 4개 그대로 받음.
+
+함수3 = 함수1.bind({객체}, a, b); // this 값 + 인자1, 인자2 지정.
+함수3(c1, d1); // 실행할 때는 인자3, 인자4만 지정 가능.
+
+---------------------
+<예시>
+var func = function (a, b, c, d){
+      console.log(this, a, b, c, d);
+};
+func(1, 2, 3, 4); // Window { ... } 1 2 3 4
+
+var bindFunc1 = func.bind({x: 10}); // this값만을 지정.
+bindFunc1(5, 6, 7, 8); // {x: 10} 5 6 7 8
+
+var bindFunc2 = func.bind({x: 100}, 50, 60); // this값 + 첫 인자 2개 지정.
+bindFunc2(70, 80); // {x: 100} 50 60 70 80
+bindFunc2(7, 8); // {x: 100} 50 60 7 8
+--------------------------------------------------
+특성: 함수.name: bound 함수명
+- bind 메서드를 적용하여 생성된 함수는 name property에 접두어 'bound'가 추가됨.
+- call/apply를 적용한 경우보다 코드 추적하기 용이해짐.
+
+console.log(func.name); // func
+console.log(bindFunc1.name); // bound func
+--------------------------------------------------
+<내부함수나 콜백 함수에 '상위 컨텍스트의 this'를 전달하는 방법>
+- self 변수 사용보다 call, apply, bind 메서드를 통해 더 쉽게 우회 가능.
+cf) 화살표 함수를 사용하는 것도 가능
+
+var obj1 = {
+      outer: function() {
+            console.log(this); // {outer: f}
+            var innerFunc = function(){
+                  console.log(this); // {outer: f}
+            };
+            innerFunc.call(this);
+      }
+};
+obj1.outer();
+
+var obj2 = {
+      outer: function() {
+            console.log(this);  // {outer: f}
+            var innerFunc = function(){
+                  console.log(this); // {outer: f}
+            }.bind(this);
+            innerFunc();
+      }
+};
+obj2.outer();
+
+<콜백함수>
+var obj3 = {
+      logThis: function(){
+            console.log(this);
+      },
+      logThisLater1: function(){
+            setTimeout(this.logThis, 1000);
+      },
+      logThisLater2: function(){
+            setTimeout(this.logThis.bind(this), 3000);
+      }
+};
+obj3.logThisLater1(); // Window {...} // 전역객체
+obj3.logThisLater2(); // {logThis: ƒ, logThisLater1: ƒ, logThisLater2: ƒ}
