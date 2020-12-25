@@ -1,0 +1,13 @@
+자바스크립트는 프로토타입(prototype) 기반 언어.
+- 어떤 객체를 원형(prototype)으로 삼고, 이를 복제(참조)하는 방식으로
+  클래스 기반 언어의 상속과 유사한 결과를 구현함.
+
+[프로토타입의 개념 이해]
+var instance = new Constructor();
+
+[핵심 도식]
+  [Constructor] - [Constructor.prototype]
+new |               /
+  [instance.__proto__]
+
+

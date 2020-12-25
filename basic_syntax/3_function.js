@@ -18,7 +18,31 @@ function name3(x, y) {
 // 마지막 내용으로 전부 다 덮어쓰여짐 + 에러 메시지도 출력되지 않음.
 
 //-------------------------------------------------------
+// 접근권한 제어. 클로저와 return
+var outer = function () {
+  var a = 1;
+  var inner = function () {
+    return ++a;
+  };
+  return inner();
+};
+var outer2 = outer();
+console.log(outer2()); // 2
+console.log(outer2()); // 3
+// outer의 지역변수 a: 1 => 2 => 3. 전역스코프에서 접근 + 조작 가능.
+/*
+  > outer 함수는 전역스코프, 즉 외부로부터 철저하게 격리된 닫힌 공간.
+  > 외부에서는 노출되어 있는 outer 함수를 실행할 수만 있을 뿐,
+    outer 함수 내부에는 어떠한 개입도 할 수 없음. 
+    다만, 지역변수 a와 같이 outer 함수가 return한 정보에는 접근 + 변경 가능
+  
+  > outer 함수에서 inner함수를 return하기 때문에
+    outer 함수의 지역변수인 a의 값을 외부에서도 읽을 수 있게 됨.
+  > 즉, 함수 내부의 특정 변수들을 return함으로써 외부 스코프에서의 접근 권한 부여 가능.
 
+  참고: 5장 클로저/03b 접근 권한 제어(정보 은닉).txt
+*/
+// ------------------------------------------------------
 /* 
   함수 function : 특정한 기능을 수행하는 코드. 원하는 만큼 사용할 수 있는 부품.
   내장함수 built-in function : alert 함수, console객체의 log, error, info, warn 등

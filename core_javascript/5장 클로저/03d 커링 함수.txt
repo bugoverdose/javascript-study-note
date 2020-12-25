@@ -1,0 +1,86 @@
+커링 함수 currying function
+- 여러 개의 인자를 받는 함수를 하나의 인자만 받는 함수로 나눠서
+  순차적으로 호출될 수 있도록 체인형태로 구성한 것.
+- 화살표 함수로 가독성 높게 구현 가능.
+- ex) redux
+
+1) 매개변수가 대체로 비슷하고 일부만 변하는 경우에 사용 (fetch함수 등)
+2) 지연실행(lazy execution)이 필요할 때 사용.
+
+특성
+- 한번에 하나의 인자만 전달
+- 중간 과정상의 함수를 실행한 결과는 그 다음 인자를 받기 위해 대기만 할 뿐
+  마지막 인자가 전달되어야 비로소 원본 함수가 실행됨.
+- 각 단계에서 받은 인자들은 마지막 단계에서 한번에 모두 참조됨.
+  메모리에 차곡차곡 쌓였다가 함수가 실행되면서 인자들을 전부 동시에 GC가 수거해감.
+
+cf) 함수형 프로그래밍의 지연실행: 원하는 시점까지 지연시켰다가 함수를 실행시키는 경우 
+
+(비교) 부분적용함수
+- 여러개의 인자 전달 가능
+- 실행결과를 재실행할 때 원본함수가 무조건 실행됨.
+
+------------------------------------------------------------
+<커링함수> 마지막 인자까지 전부 다 넣어야 한번에 실행됨.
+var curry2 = function (func) {
+  return function (a) {
+    return function (b) {
+      return func(a, b);
+    };
+  };
+};
+
+var getMax2 = curry2(Math.max)(10);
+console.log(getMax2(8)); // 10
+console.log(getMax2(25)); // 25
+
+var getMin2 = curry2(Math.min)(10);
+console.log(getMin2(8)); // 8
+console.log(getMin2(25)); // 10
+// 즉 인자 2개를 전부 다 넣어야만 결과 실행
+
+------------------------------------------
+<화살표 함수로 표현된 커링함수>
+ - currySexy와 curryVerbose는 동일한 내용
+
+var currySexy = (func) => (a) => (b) => (c) => (d) => (e) => func(a, b, c, d, e);
+
+var curryVerbose = function (func) {
+  return function (a) {
+    return function (b) {
+      return function (c) {
+        return function (d) {
+          return function (e) {
+            return func(a, b, c, d, e);
+          };
+        };
+      };
+    };
+  };
+};
+
+var getMax5 = curryVerbose(Math.max);
+console.log(getMax5(8)(10)(20)(30)(50)); // 50
+
+var getmin5 = curryVerbose(Math.min);
+console.log(getmin5(8)(10)(20)(30)(50)); // 8
+ 
+------------------------------------------------------------
+<fetch 함수 + 커링함수 활용> 
+ - url을 받아 해당 url에 HTTP 요청을 하는 함수 (서버에 정보를 요청하는 함수)
+ - baseUrl 등 공통적인 요소는 미리 기억해놓고, 특정한 값만으로 서버를 요청.
+
+var getInformation = baseUrl => path => id => fetch(baseUrl + path + '/' + id)
+
+var imageUrl = "http://imageAddress.com/"; 
+
+var getImage = getInformation(ImageUrl);
+var getBackground = getImage('background'); // "http://imageAddress.com/background"
+var getIcon = getImage('icon'); // "http://imageAddress.com/icon"
+
+var background1 = getBackground(101); // "http://imageAddress.com/background/101"
+var background2 = getBackground(102); // "http://imageAddress.com/background/102"
+var icon1 = getIcon(301); // "http://imageAddress.com/icon/301"
+var icon2 = getIcon(302); // "http://imageAddress.com/icon/302"
+
+ 

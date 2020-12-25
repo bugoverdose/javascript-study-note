@@ -1,0 +1,61 @@
+[02 클로저와 메모리 관리]
+메모리 소모는 클로저의 본질적인 특성
+메모리 누수: 개발자가 의도하지 않았음에도 어떤 값이 
+             참조카운트가 0이 되지 않아 GC의 수거대상이 되지 않는 경우.
+
+<메모리 소모 관리법: 식별자에 null 할당하여 메모리 해제>
+클로저는 필요에 의해 함수의 지역변수를 유지, 메모리를 소모시키기 때문에 발생.
+=> 필요성이 사라진 시점부터 더 이상 메모리를 소모하지 않도록 설정.
+- 식별자에 참조형이 아닌 기본형 데이터(ex. null)을 할당하여 참조를 끊음.
+- 참조카운트가 0이 되므로 GC의 수거대상이 됨. => 메모리 회수됨.
+
+-----------------------------------------------------------
+(1) return에 의한 클로저의 메모리 해제
+var outer = function(){
+  var a = 1;
+  var inner = function(){
+    return ++a;  
+  };
+  return inner();  
+};
+var outer2 = outer();
+console.log(outer2()); 
+console.log(outer2()); 
+outer = null; // outer 식별자의 inner 함수 참조를 끊음.
+
+-------------
+(2) setInterval에 의한 클로저의 메모리 해제 
+(function (){
+  var a = 0;  
+  var intervalId = null;
+  var inner = function(){
+    if (++a >= 10) {
+      clearInterval(intervalId);
+      inner = null;    // inner 식별자의 함수 참조를 끊음.
+    }
+    console.log(a); 
+  };
+  intervalId = setInterval(inner, 1000);
+})(); 
+
+-------------
+(3) addEventListener에 의한 클로저의 메모리 해제 
+ 
+(function (){
+  var count = 0;  
+  var button = document.createElement('button');
+  button.innerText = 'click';
+
+  var clickHandler = function(){
+    console.log(`clicked ${++count} times`); 
+    if (count >= 10) {
+      button.removeEventListener('click', clickHandler);
+      clickHandler = null; // clickHandler 식별자의 함수 참조를 끊음.
+    }
+  }
+
+  button.addEventListener('click', clickHandler); 
+    document.body.appendChild(button); 
+})();
+// clicked 10 times 
+// 11번째부터는 클릭해도 아무것도 출력되지 않음. 이벤트 자체를 없애버림.

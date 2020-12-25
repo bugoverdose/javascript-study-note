@@ -6,13 +6,16 @@
 
 /*
   함수1 = (a, b, c, d) => { ~~ }
-  함수2 = 함수1.bind({객체}); // this값만 지정. 
+  함수2 = 함수1.bind({thisArg}); // {thisArg} 객체에 this값만 지정. 
   함수2(a1, b1, c1, d1); // 실행할 때는 인자 4개 그대로 받음.
   console.log(함수2.name); // 출력: bound 함수1
 
-  함수3 = 함수1.bind({객체}, a, b); // this 값 + 인자1, 인자2 지정.
+  <부분 적용 함수 구현방법> 
+  함수3 = 함수1.bind({thisArg}, a, b); // this 값 + 인자1, 인자2 지정.
   함수3(c1, d1); // 실행할 때는 인자3, 인자4만 지정 가능.
   console.log(함수3.name); // 출력: bound 함수1
+
+  cf) thisArg로 null 값 적용시, 현재 실행되는 스코프를 this값으로 지정.
 */
 var func = function (a, b, c, d) {
   console.log(this, a, b, c, d);
@@ -22,9 +25,14 @@ func(1, 2, 3, 4); // Window { ... } 1 2 3 4
 var bindFunc1 = func.bind({ x: 10 }); // this값만을 지정.
 bindFunc1(5, 6, 7, 8); // {x: 10} 5 6 7 8
 
+// 부분 적용 함수
 var bindFunc2 = func.bind({ x: 100 }, 50, 60); // this값 + 첫 인자 2개 지정.
 bindFunc2(70, 80); // {x: 100} 50 60 70 80
 bindFunc2(7, 8); // {x: 100} 50 60 7 8
+
+// thisArg로 null 값 적용시, 현재 실행되는 스코프를 this값으로 지정.
+var bindFunc3 = func.bind(null, 10, 20);
+bindFunc3(30, 40); // Window {...} 10 20 30 40
 
 // --------------------------------------------------
 /*

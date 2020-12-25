@@ -1,0 +1,131 @@
+[클로저를 활용한 접근권한 제어 방법]
+1) 함수에서 지역변수 및 내부함수 등을 생성
+2) 외부에 접근권한을 주고자 하는 대상들로 구성된 참조형 데이터를 return
+   - 대상이 여럿일 때는 객체/배열, 대상이 하나일 때는 함수를 return
+   - 내부에서만 사용할 정보들은 그대로 return하지 않으면 됨.
+
+==> return한 변수들은 공개멤버(public member)가 되고, 
+    그렇지 않은 변수들은 비공개 멤버(private member)가 됨.
+
+--------------------------------------
+정보 은닉(information hiding)
+- 모듈의 내부로직에 대해 외부로의 노출을 최소화하여 
+  모듈 간의 결합도를 낮추고 유연성을 높이고자 하는 것.
+
+접근권한
+- public: 외부에서 접근 가능
+- private: 내부에서만 사용. 외부에 노출되지 않음.
+- protected
+
+JS는 기본적으로 변수 자체에 접근 권한 직접 부여 불가.
+다만, 클로저를 활용하면 return을 통해 접근권한 제어 가능 (closure : 폐쇄성)
+
+--------------------------------------
+var outer = function(){
+  var a = 1;
+  var inner = function(){
+    return ++a;  
+  };
+  return inner();  
+};
+var outer2 = outer();
+console.log(outer2()); // 2  
+console.log(outer2()); // 3  // a: 1 => 2 => 3
+
+> outer 함수는 전역스코프, 즉 외부로부터 철저하게 격리된 닫힌 공간.
+> 외부에서는 노출되어 있는 outer함수를 실행할 수만 있을 뿐,
+  outer 함수 내부에는 어떠한 개입도 할 수 없음. 
+  다만, 지역변수 a와 같이 outer 함수가 return한 정보에는 접근 + 변경 가능
+  
+> outer 함수에서 inner함수를 return하기 때문에
+  outer 함수의 지역변수인 a의 값을 외부에서도 읽을 수 있게 됨.
+> 즉, 함수 내부의 특정 변수들을 return함으로써 외부 스코프에서의 접근 권한 부여 가능.
+
+----------------------------------------------------------
+----------------------------------------------------------
+<클로저로 변수를 보호한 객체 생성 방법: 함수 생성 + 객체 return>
+- return되는 객체 publicMembers에는 run메서드와 moved 변수만 존재.
+  - moved 변수는 getter 부여 때문에 읽기만 가능. 조작은 불가능.
+  - playerId 변수는 return되지 않아 조작불가 + 읽는 것조차 불가능.
+- Object.freeze를 통해 객체의 run 메서드를 변경하는 것도 방지.
+
+var createCar = function() {
+    var playerId = Math.ceil(Math.random()*100000); // 비공개 멤버 지정.
+    var moved = 0;
+
+    var publicMembers = {
+        get moved() {
+            return moved; // getter 부여 (읽기 전용 속성)
+        },
+        run: function(){
+            var dice = Math.ceil(Math.random()*6);
+            moved += dice;
+            console.log(`${playerId}의 주사위 눈금은 ${dice}, 총 이동거리는 ${moved}`);
+        }
+    };
+    Object.freeze(publicMembers);
+    return publicMembers;
+};
+var car = createCar();
+
+car.run(); // 5295의 주사위 눈금은 3, 총 이동거리는 3
+car.run(); // 5295의 주사위 눈금은 5, 총 이동거리는 8
+console.log(car.playerId); // undefined
+console.log(car.moved); // 8
+
+car.playerId = 33333; // 무시됨 
+car.moved = 100; // 무시됨  
+car.run(); // 5295의 주사위 눈금은 5, 총 이동거리는 13
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------
+----------------------------------------------------------
+<비교1> 일반적인 방법으로 객체 생성시, 내부의 모든 값들에 자유롭게 접근 가능
+var car = {
+    playerId: Math.ceil(Math.random()*100000),
+    moved: 0, 
+    run: function(){
+        var dice = Math.ceil(Math.random()*6);
+        this.moved += dice;
+        console.log(`${this.playerId}의 주사위 눈금은 ${dice}, 총 이동거리는 ${this.moved}`);
+    }
+};
+car.run(); // 9209의 주사위 눈금은 3, 총 이동거리는 3
+car.run(); // 9209의 주사위 눈금은 5, 총 이동거리는 8
+car.run(); // 9209의 주사위 눈금은 5, 총 이동거리는 13
+
+car.playerId = 33333; // 임의로 값 변경 가능. 신분위조.
+car.moved = 100; // 임의로 값 변경 가능. 치팅. 
+car.run(); // 33333의 주사위 눈금은 5, 총 이동거리는 105  // 변경됨.
+
+---------------------------------------------------
+<비교2> Object.freeze의 필요성
+Object.freeze를 사용하지 않는 경우, car.run 메서드를 다른 내용으로 덮어쓰기 가능
+
+var createCar = function() {
+    var playerId = Math.ceil(Math.random()*100000); // 비공개 멤버 지정.
+    var moved = 0;
+
+    return {
+        get moved() {
+            return moved; // getter 부여 (읽기 전용 속성)
+        },
+        run: function(){
+            var dice = Math.ceil(Math.random()*6);
+            moved += dice;
+            console.log(`${playerId}의 주사위 눈금은 ${dice}, 총 이동거리는 ${moved}`);
+        }
+    };
+};
+var car = createCar();
+car.run(); // 5295의 주사위 눈금은 3, 총 이동거리는 3
+
+car.run = function(){console.log("asbasd");}
+car.run(); // asbasd

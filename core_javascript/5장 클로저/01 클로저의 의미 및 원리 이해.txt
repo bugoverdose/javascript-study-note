@@ -1,0 +1,170 @@
+[01 클로저의 의미 및 원리 이해]
+
+클로저 Closure <핵심>
+: 어떤 함수 A에서 선언한 변수 a를 참조하는 내부함수 B를 외부로 전달할 경우,
+  A의 실행 컨텍스트가 종료된 이후에도 변수 a가 사라지지 않는 현상.
+
+: 지역변수를 참조하는 내부함수가 외부로 전달된 경우,
+  외부함수의 L.E.에서 해당 지역변수가 가비지 컬렉팅되지 않는 현상.
+  - 코드 전체 흐름에서 해당 지역변수를 여전히 필요로 할 수 있으므로 발생.
+  - 문제: 더 이상 필요하지 않게 되어도 여전히 유지. 메모리 소모 가능.
+
+- 가비지 컬렉터의 특성과 관련된 일반적인 현상
+- 함수형 프로그래밍 언어의 보편적 특성. Javascript 고유의 개념은 아님.
+-----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------
+cf) 클로저에 대한 다양한 설명들
+1) 함수를 선언할 때 만들어지는 유효범위가 사라진 후에도 호출 가능한 함수.
+2) 이미 생명주기 상 끝난 외부 함수의 변수를 참조하는 함수.
+3) 자신이 생성될 때의 스코프에서 알 수 있었던 변수들 중 
+   언젠가 자신이 실행될 때 사용할 변수들만을 기억하여 유지시키는 함수.
+---------------------
+스코프체인 기본
+> A에서는 내부함수 B에서 선언한 내부변수에 접근 불가. 
+> B에서는 외부함수 A에서 선언한 변수에 접근 가능. 
+
+-----------------------------------------------------------
+<내부함수에서 외부 함수의 변수를 참조하는 경우(1) 클로저X> 
+ - outer의 L.E.에 속하는 변수들(a, inner) 모두 가비지 컬렉터의 수집대상이 됨. 
+
+var outer = function(){
+  var a = 1;
+  var inner = function(){
+    console.log(++a); // a를 1만큼 증가시키고, 그 값을 출력
+  };
+  inner();
+};
+outer(); // 2
+
+<실행 결과>
+console.log(++a);
+ inner 함수 내부에서는 a 찾을 수 없음. 
+  => O.E.를 통해 상위 컨텍스트 outer의 L.E.에 접근.
+ outer의 a = 1를 활용. => 2 출력
+
+inner();
+ 2를 출력하면, outer 함수의 실행컨텍스트 종료됨.
+ L.E.에 저장된 식별자들(a, inner)에 대한 참조가 지워짐.
+ a와 inner의 값들은 가비지 컬렉터의 수집대상이 됨. 
+
+-----------------------------------------------------------
+<내부함수에서 외부 함수의 변수를 참조하는 경우(2) 클로저 발생> 
+ - outer의 L.E.에 속하는 변수들(a, inner) 중
+   a는 가비지 컬렉터의 수집대상에서 제외됨. (outer2에서 여전히 필요)
+
+var outer = function(){
+  var a = 1;
+  var inner = function(){
+    return ++a;  
+  };
+  return inner();  
+};
+var outer2 = outer();
+console.log(outer2()); // 2
+console.log(outer2()); // 3
+
+<실행 결과>
+var outer2 = outer();
+ outer 함수의 실행컨텍스트 종료될 때 outer2 변수는 inner함수를 참조.
+ inner 함수는 outer 함수의 L.E.를 필요로 하기 때문에 
+ outer 함수는 가비지 컬렉터의 수집대상에서 제외됨.
+
+console.log(outer2()); 
+ inner 함수는 O.E.를 통해 상위 컨텍스트 outer의 L.E.에 접근.
+ outer의 a = 1에 접근하여 활용. => 2 반환. 
+ 
+ (핵심) outer 함수의 실행컨텍스트 종료되지만, 
+        앞으로도 outer2 함수 실행시 inner 함수가 필요함.
+ - outer의 L.E.에 저장된 식별자들(a, inner) 중 inner에 대한 참조만 지워짐.
+   a의 값은 가비지 컬렉터의 수집대상에서 제외됨. (inner 함수에서 필요하므로)
+
+console.log(outer2()); 
+ inner 함수는 O.E.를 통해 상위 컨텍스트 outer의 L.E.에 접근.
+ outer의 a = 2에 접근하여 활용. => 3 반환.
+ 
+-----------------------------------------------------------
+<다양한 클로저 사례들>
+ - 지역변수를 참조하는 내부함수를 외부에 전달.
+
+(1) 외부객체 window의 메서드(setInterval/setTimeout)에 전달할 
+    콜백함수 내부에서 지역변수를 참조
+(function (){
+  var a = 0; // 클로저
+  var intervalId = null;
+  var inner = function(){
+    if (++a >= 10) {
+      clearInterval(intervalId);
+    }
+    console.log(a); // 클로저
+  };
+  intervalId = setInterval(inner, 1000);
+})(); 
+// 1초 간격으로 1 2 3 ... 10 출력.
+
+-------------
+(2) 외부객체 DOM의 메서드(addEventListener)에 등록할 
+    handler 함수 내부에서 지역변수를 참조
+(function (){
+  var count = 0; // 클로저
+  var button = document.createElement('button');
+  button.innerText = 'click';
+  button.addEventListener('click', function(){
+    console.log(`clicked ${++count} times`); // 클로저
+  }); 
+    document.body.appendChild(button); 
+})();
+// clicked 1 times
+// clicked 2 times
+// clicked 3 times // 클릭할 때마다 count의 값은 1 증가.
+-----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+<참고>
+- '함수와 그 함수가 선언될 당시의 lexical environment의 상호관계에 따른 현상'
+A closure is the combination of a function bundled together (enclosed) 
+with references to its surrounding state (the lexical environment). 
+A closure gives you access to an outer function’s scope from an inner function. 
+In JavaScript, closures are created every time a function is created, at function creation time.
+(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
+
+cf) '선언될 당시의 LexicalEnvironment' = outerEnvironmentReference
+- 컨텍스트 A에서 선언한 내부함수 B의 실행컨텍스트가 활성화되는 시점에는
+  B의 O.E.(=A의 L.E.)에 접근이 가능해짐. 
+
+---------------------
+LexicalEnvironment (복습)
+1) environmentRecord: 현재 컨텍스트와 관련된 식별자 정보들을 저장.
+    - 매개변수명, 변수명, 선언한 함수명 등의 식별자 정보들.
+2) outerEnvironmentReference
+    - 바로 직전 컨텍스트의 LexicalEnvironment 정보 참조.
+     (=O.E.는 해당 함수가 선언된 위치의 LexicalEnvironment를 참조)
+----------------------
+클로져의 기타 정의들
+- 자신을 내포하는 함수의 컨텍스트에 접근할 수 있는 함수.
+- 함수가 특정 스코프에 접근할 수 있도록 의도적으로 그 스코프에서 정의하는 것.
+- 자유변수가 있는 함수와 자유변수를 알 수 있는 환경의 결합.
+- 로컬 변수를 참조하고 있는 함수 내의 함수.
+
+

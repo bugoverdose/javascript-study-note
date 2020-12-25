@@ -1,0 +1,133 @@
+[부분 적용 함수]
+
+부분 적용 함수 partially applied function
+- n개이 인자를 받는 함수에 미리 m개의 인자를 넘겨받고,
+  나중에 나머지 n-m개의 인자를 받으면 기존 함수처럼 실행되는 함수.
+
+- 여러개의 인자 전달 가능
+- 실행결과를 재실행할 때 원본함수가 무조건 실행됨.
+
+(비교) 커링함수
+- 한번에 하나의 인자만 전달
+- 중간 과정상의 함수를 실행한 결과는 그 다음 인자를 받기 위해 대기만 할 뿐
+  마지막 인자가 전달되어야 비로소 원본 함수가 실행됨.
+
+------------------------------------------------------------
+bind 메서드만으로도 간단하게 부분적용 함수 구현 가능.
+  단점: 무조건 this 값을 특정 값으로 변경해야 함. 범용성 떨어지게 됨.
+
+(복습) bind 메서드와 부분 적용 함수.
+var func = function (a, b, c, d) {
+  console.log(this, a, b, c, d);
+};
+var bindFunc1 = func.bind(null, 10, 20); // thisArg로 null 값 적용시, 현재 실행되는 스코프를 this값으로 지정.
+bindFunc1(30, 40); // Window {...} 10 20 30 40 
+
+var bindFunc2 = func.bind({ x: 100 }, 50, 60); // this값 + 첫 인자 2개 지정.
+bindFunc2(70, 80); // {x: 100} 50 60 70 80 
+
+------------------------------------------------------------
+<범용적인 부분 적용 함수 구현> 클로저 활용
+
+var partial = function () {
+    var originalPartialArgs = arguments;
+    var func = originalPartialArgs[0];
+    if (typeof func !== 'function'){
+        throw new Error('첫번째 인자가 함수가 아닙니다.');
+    }
+    return function(){
+        var partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
+        var restArgs = Array.prototype.slice.call(arguments);
+        return func.apply(this, partialArgs.concat(restArgs));
+    };
+};
+// 인자1: 원본함수, 인자2부터는 미리 적용할 인자들 순서대로 전달.
+// 부분적용함수에는 나머지 인자들을 받아 원본함수를 호출.
+// 장점: 실행 시점의 this를 그대로 반영.
+// 단점: 미리 적용할 인자를 순서대로 적용해야 함. 
+
+[활용]
+var func = function (a, b, c, d) {
+  console.log(this, a, b, c, d);
+};
+var funcPartial = partial(func, 10, 20);
+console.log(funcPartial(30, 40)); 
+// Window {...} 10 20 30 40
+
+var dog = {
+    name: '강아지',
+    greet: partial(function(a, b){
+        return a + this.name + b;
+    }, '왈왈 ')
+};
+dog.greet('입니다.'); 
+// "왈왈 강아지입니다"
+
+------------------------------------------------------------
+<범용적인 부분 적용 함수 구현> 클로저 + Symbol.for 메서드 활용
+
+var partial2 = function () {
+  var originalPartialArgs = arguments;
+  var func = originalPartialArgs[0];
+  if (typeof func !== 'function'){
+      throw new Error('첫번째 인자가 함수가 아닙니다.');
+  }
+  return function(){
+      var partialArgs = Array.prototype.slice.call(originalPartialArgs, 1);
+      var restArgs = Array.prototype.slice.call(arguments);
+      for (var i = 0; i < partialArgs.length; i++){
+          if (partialArgs[i] === Symbol.for('EMPTY_SPACE')){
+              partialArgs[i] = restArgs.shift();
+          }
+      }
+      return func.apply(this, partialArgs.concat(restArgs));
+  };
+};
+var _ = Symbol.for('EMPTY_SPACE');
+
+[활용]
+var func2 = function (a, b, c, d, e, f, g, h, i, j) {
+  console.log(this, a, b, c, d, e, f, g, h, i, j);
+};
+var funcPartial2 = partial2(func2, 1, _, _, 4, _, 6, _, 8, _, _);
+console.log(funcPartial2(2, 3, 5, 7, 9, 10)); 
+// Window {...} 1 2 3 4 5 6 7 8 9 10
+
+var funcPartial3 = partial2(1, 2, 3);
+// '첫번째 인자가 함수가 아닙니다.'
+
+var funcPartial4 = partial2(func2, _, _, _, 4444); // 맨 뒤의 인자들은 _ 생략가능.
+console.log(funcPartial4(10, 20, 30, 50, 60, 70, 80, 90, 100)); 
+// Window {...} 10, 20, 30, 4444, 50, 60, 70, 80, 90, 100
+
+------------------------------------------------------------
+디바운스(debounce)
+- 짧은 시간 동안 동일한 이벤트가 많이 발생할 경우,
+  이를 전부 처리하지 않고 처음 또는 마지막에 발생한 이벤트에 대해 한번만 처리
+- frontend 성능 최적화에 도움을 주는 기능.
+- scroll, wheel, mousemove, resize 등에 적용하기 용이.
+- Lodash 등의 라이브러리 없이도 최소한의 기능은 간단하게 구현 가능.
+
+var debounce = function (eventName, func, wait){
+    var timeoutId = null;
+    return function (event){
+        var self = this;
+        console.log(eventName, '이벤트 발생');
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(func.bind(self, event), wait);
+    };
+};
+// eventName, func, wait, timeoutId 모두 클로저로 처리됨.
+
+var  moveHandler = function (e){
+    console.log("move event 처리");
+};
+var  wheelHandler = function (e){
+    console.log("wheel event 처리");
+};
+document.body.addEventListener('mousemove', debounce('move', moveHandler, 1000));
+document.body.addEventListener('mousewheel', debounce('wheel', wheelHandler, 1500));
+// "mouse 이벤트 발생" x30번 출력 
+// "mouse event 처리" 1초 후 출력
+// "wheel 이벤트 발생" x50번 출력 
+// "wheel event 처리" 1.5초 후 출력

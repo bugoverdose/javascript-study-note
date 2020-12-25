@@ -1,0 +1,9 @@
+[constructor, prototype, instance]
+
+var instance = new Constructor();
+
+[핵심 도식]
+  [Constructor] - [Constructor.prototype]
+new |               /
+  [instance.__proto__]
+
