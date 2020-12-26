@@ -6,8 +6,66 @@
 var instance = new Constructor();
 
 [핵심 도식]
-  [Constructor] - [Constructor.prototype]
-new |               /
-  [instance.__proto__]
+  [Constructor].[prototype]
+new |             /
+  [instance].(__proto__)
+
+0) 생성자함수(Constructor)는 prototype이라는 property를 지님.
+1) Constructor를 new 연산자와 함께 호출하면
+2) Constructor에서 정의된 내용을 바탕으로 새로운 인스턴스(instance)가 생성됨.
+3) 이때 instance에는 __proto__라는 property가 자동으로 부여됨.
+4) instance.__proto__는 Constructor.prototype을 참조하며, 생략가능함.
+
+* prototype: 생성자함수에 의해 생성될 인스턴스가 사용할 메서드가 저장된 객체
+* __proto__: 인스턴스에 숨겨진 객체. 인스턴스가 사용할 메서드가 실제로 저장됨.
+ 
+--------------------------------
+prototype
+ : 함수를 정의하면 자바스크립트가 해당 함수에 자동으로 생성시키는 property
+ : 해당 함수를 new 연산자와 함께 생성자 함수로 사용할 경우,
+   생성되는 인스턴스는 prototype을 참조하여 __proto__를 자동으로 지니게 됨.
+ : 생성자함수의 prototype에 어떤 메서드/property가 존재한다면,
+   인스턴스에서도 __proto__를 통해 해당 메서드/property에 자유롭게 접근 가능해짐.
+
+-----------------
+__proto__ 
+ : 접근하고자 하는 경우 instance.__proto__가 아니라, 
+   ObjectPrototypeOf() 혹은 Object.create()를 활용하는 것이 권장됨.
+ : 생략가능한 property. 생략하도록 정의되어 자바스크립트의 구조가 만들어짐.
+ : 'dunder proto (dunder = double underscore)'
+
+-----------------
+var Constructor = function (name){
+  this.name = name;
+};
+var instance = new Constructor("New Instance");
+Constructor.prototype == instance.__proto__; // true
+
+----------------------------------------------------------------
+constructor: 원본이 되는 생성자함수 Constructor를 참조.
+           : 인스턴스로부터 생성자 정보를 알아내는 유일한 수단.
+
+- 생성자함수.prototype 내부의 constructor 프로퍼티는 생성자함수 자신을 참조.
+- 인스턴스.__proto__ 내부의 constructor 프로퍼티는 원본 생성자함수 참조.
+=> 즉, 서로 동일한 대상(Constructor)을 참조.
+
+cf) 인스턴스의 constructor값에 다른 대상을 대입하는 경우,
+    인스턴스의 원형이나 데이터 타입은 자체에는 전혀 영향을 미치지 않음.
+(출력되는 constructor.name 값만 변경될 뿐, 대입된 값을 원형으로 삼도록 변화하지 않음)
+ - 읽기 전용 속성이 부여된 경우에는 값 변경 불가(기본형 리터럴 변수: number, string, boolean)
+ - 이러한 특성은 클래스 상속을 모방하는 데 활용됨 [7장]
+
+----------------------------------------------------------------
+<생성자함수 Constructor를 의미>
+instance.constructor (== instance.__proto__.constructor)
+== Constructor
+== Constructor.prototype.constructor
+== Object.getPrototypeOf(instance).constructor
+
+<prototype 객체에 접근 가능한 주체들>
+1) instance 
+    == instance.__proto__
+2) Constructor.prototype
+    == Object.getPrototypeOf(instance)
 
 

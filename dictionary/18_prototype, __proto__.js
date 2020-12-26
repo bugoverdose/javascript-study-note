@@ -1,5 +1,4 @@
-[constructor, prototype, instance]
-
+/*
 var instance = new Constructor();
 
 [핵심 도식]
@@ -30,51 +29,54 @@ __proto__
    ObjectPrototypeOf() 혹은 Object.create()를 활용하는 것이 권장됨.
  : 생략가능한 property. 생략하도록 정의되어 자바스크립트의 구조가 만들어짐.
  : 'dunder proto (dunder = double underscore)'
+*/
 
-----------------------------------------------------------------
-var Person = function(name){
+// ----------------------------------------------------------------
+var Person = function (name) {
   this._name = name;
 };
 
 // 생성자함수 Person의 prototype에 getName 메서드 지정
-Person.prototype.getName = function(){
+Person.prototype.getName = function () {
   return this._name;
-}; 
+};
 
 // Person의 john 인스턴스 생성
 var john = new Person("John");
 
-Person.prototype === john.__proto__; 
-// true 
+Person.prototype === john.__proto__;
+// true
 // prototype과 __proto__는 서로 같은 객체.
 
-------------------------------
+// ------------------------------
+/*
 <__proto__는 생략가능한 property>
 1) __proto__를 생략해도 제대로 __proto__의 메서드 사용 가능.
 2) 오히려 생략해야 메서드의 this값이 제대로 인스턴스를 가리키게 됨.
-
+*/
 var john = new Person("John");
-john.getName(); 
+john.getName();
 // John
 
----------------
+/*
 <__proto__는 생략하지 않는 경우 문제 발생>
 - 메서드로서 호출되기 때문에 this값은 인스턴스 자체를 가리키지 않게 됨.
-
+*/
 var john = new Person("John");
-john.__proto__.getName(); 
+john.__proto__.getName();
 // undefined
 // 원인: getName의 this값은 john이 아니라 john.__proto__가 되기 때문임.
 
-----------------------------------------------------------------
+// ----------------------------------------------------------------
+/*
 <Constructor와 instance의 디렉토리 구조>
 - 콘솔창에서 짙은 색은 열거가능, 즉 접근 가능. (method1000, property1000)
 - 옅은 색은 enumerable: false, 즉 열거불가, 접근 불가. (constructor, __proto__)
-
-var Constructor = function (name){
+*/
+var Constructor = function (name) {
   this.name = name;
 };
-Constructor.prototype.method1000 = function(){};
+Constructor.prototype.method1000 = function () {};
 Constructor.prototype.property1000 = "Constructor Prototype Property";
 console.dir(Constructor);
 /*
@@ -106,4 +108,3 @@ Constructor
 */
 
 Constructor.prototype == instance.__proto__; // true
- 

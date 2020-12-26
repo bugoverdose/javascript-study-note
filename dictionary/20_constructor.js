@@ -1,0 +1,89 @@
+/*
+  [constructor 프로퍼티]
+  - constructor: 원본이 되는 생성자함수 Constructor를 참조.
+               : 인스턴스로부터 생성자 정보를 알아내는 유일한 수단.
+
+  - 생성자함수.prototype 내부의 constructor 프로퍼티는 생성자함수 자신을 참조.
+  - 인스턴스.__proto__ 내부의 constructor 프로퍼티는 원본 생성자함수 참조.
+  => 즉, 서로 동일한 대상(Constructor)을 참조.
+*/
+var arr = [1, 2];
+Array.prototype.constructor === Array; // true
+arr.__proto__.constructor === Array; // true
+arr.constructor === Array; // true
+
+var arr2 = new Array(3, 4);
+console.log(arr2); // [3, 4]
+
+// -----------------------------------------------------------
+// constructor 접근 방법들
+
+var Person = function (name) {
+  this.name = name;
+};
+var p1 = new Person("사람1");
+var p2 = new Person.prototype.constructor("사람2");
+var p3 = new p1.__proto__.constructor("사람3");
+var p4 = new p1.constructor("사람4");
+var p1Proto = Object.getPrototypeOf(p1);
+var p5 = new p1Proto.constructor("사람5");
+
+[p1, p2, p3, p4, p5].forEach(function (p) {
+  console.log(p, p instanceof Person);
+});
+// Person {name: "사람1"} true
+// Person {name: "사람2"} true
+// Person {name: "사람3"} true
+// Person {name: "사람4"} true
+// Person {name: "사람5"} true
+
+// ------------------------------------------------------------
+/*
+cf) constructor 값의 변경
+- 인스턴스의 constructor값에 다른 대상을 대입하는 경우,
+  인스턴스의 원형이나 데이터 타입은 자체에는 전혀 영향을 미치지 않음.
+  (출력되는 constructor.name 값만 변경될 뿐, 대입된 값을 원형으로 삼도록 변화하지 않음)
+- 읽기 전용 속성이 부여된 경우에는 값 변경 불가(기본형 리터럴 변수: number, string, boolean)
+- 클래스 상속에 활용 [7장]
+*/
+var NewConstructor = function () {
+  console.log("this is a new constructor");
+};
+var dataTypes = [
+  1, // Number & false
+  "string", // String & false
+  true, // Boolean & false
+  {}, // NewConstructor & false
+  [], // NewConstructor & false
+  function () {}, // NewConstructor & false
+  /test/, // NewConstructor & false
+  new Number(), // NewConstructor & false
+  new String(), // NewConstructor & false
+  new Boolean(), // NewConstructor & false
+  new Object(), // NewConstructor & false
+  new Array(), // NewConstructor & false
+  new Function(), // NewConstructor & false
+  new RegExp(), // NewConstructor & false
+  new Date(), // NewConstructor & false
+  new Error(), // NewConstructor & false
+];
+
+dataTypes.forEach(function (d) {
+  d.constructor = NewConstructor;
+  console.log(`${d.constructor.name} & ${d instanceof NewConstructor}`);
+});
+// 긱 요소의 constructor 프로퍼티에 대해 NewConstructor 함수를 값으로 대입.
+
+1, // Number & false
+  "string", // String & false
+  true, // Boolean & false
+  // constructor의 값 변경되지 않았음.
+
+  {}; // NewConstructor & false
+// constructor.name이 NewConstructor로 변경됨, 즉 값 변경 가능.
+
+/*
+ d instanceof NewConstructor // false
+ - constructor값이 변경되든, 변경되지 않았든 false 값 출력.
+ - constructor값을 변경해도 이미 생성된 인스턴스의 원형이나 데이터 타입은 변하지 않음을 알 수 있음.
+*/
