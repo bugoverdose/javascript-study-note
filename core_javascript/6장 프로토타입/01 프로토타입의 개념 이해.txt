@@ -4,6 +4,7 @@
 
 [프로토타입의 개념 이해]
 var instance = new Constructor();
+instance.__proto__ == Constructor.prototype; // true
 
 [핵심 도식]
   [Constructor].[prototype]

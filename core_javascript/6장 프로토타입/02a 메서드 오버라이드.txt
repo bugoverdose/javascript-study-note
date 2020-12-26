@@ -1,3 +1,57 @@
 [메서드 오버라이드] 
+- 인스턴스에서 생성자함수로부터 넘겨받은 메서드(혹은 property)와 
+  동일한 이름의 메서드를 정의하여, __proto__의 메서드에 접근하기 힘들어지는 현상.
 
+- 인스턴스 자체에 새로운 메서드가 생성되는 것.
+- 생성자함수의 prototype와 인스턴스의 __proto__는 그대로 유지.
+
+인스턴스에서 특정 메서드에 접근하는 방식 
+(1단계) instance.methodName : 인스턴스에서 검색          : 
+(2단계) instance.__proto__.methodName : 인스턴스.__proto__에서 검색
+
+=> 메서드 오버라이딩은 1단계에 동명의 메서드를 별도로 생성하는 것,
+   이 때문에 __proto__의 메서드에 접근 불가능해짐.
+
+instance.methodName == instance.__proto__.methodName; // false 
+Constructor.prototype.methodName == instance.__proto__.methodName; // true
+// 메서드 오버라이드 후에는 instance.methodName라는 값이 별도로 생성되는 것.
+// 원래 세 가지는 완전히 동일한 값을 가리켰음
+
+-------------
+var Person = function(name){ // 생성자함수 Person 정의.
+    this.name = name;
+};
+Person.prototype.getName = function(){ // 생성자함수에 getName 메서드 추가.
+    return this.name;
+};
+var john = new Person("John"); // 인스턴스 john 생성.
+
+console.log(john.getName()); // "John" 
+john.getName == john.__proto__.getName; // true
+Person.prototype.getName == john.__proto__.getName; // true
+
+
+john.getName = function() {
+    return "오버라이드된 메서드";
+};
+console.log(john.getName()); // "오버라이드된 메서드" 
+john.getName == john.__proto__.getName; // false
+Person.prototype.getName == john.__proto__.getName; // true
+
+-----------------------------------
+<메서드 오버라이딩 결과>
+- 우회법을 통해 인스턴스.__proto__의 메서드에 접근하는 것은 여전히 가능
+- call/apply 메서드 등을 통해 this 값 지정하면 쉽게 가능.
+
+console.log(john.getName()); 
+// "오버라이드된 메서드" 
+// john.__proto__getName()이 아닌 별개의 메서드에 접근하게 됨.
+
+console.log(john.__proto__.getName()); 
+// undefined
+// 문제: john.__proto__를 this 값으로 사용하게 됨.
+ 
+console.log(john.__proto__.getName.call(john)); 
+// "John"
+// john을 this값으로 설정해주면 __proto__의 메서드 활용 가능.
 

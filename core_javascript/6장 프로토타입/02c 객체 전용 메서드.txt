@@ -1,0 +1,58 @@
+<핵심>
+1) 어떤 데이터타입든 생성자 함수를 통해 생성됨(null, undefined 제외).
+2) 어떤 생성자 함수든 프로퍼티로 prototype 객체를 지니게 됨.
+3) prototype은 무조건 객체이므로 프로토타입 체인의 최상단에는 Object.prototype이 위치하게 됨.
+(예외) Object.create(null) 사용시, Object.prototype의 메서드에 접근불가능하지만 
+                                   성능상 이점을 지닌 가벼운 객체 생성 가능.
+                                   
+- Object.prototype 내부에는 어떤 데이터타입에서도 활용 가능한 범용적인 메서드들만 존재함.
+  - toString, hasOwnProperty, valueOf, isPrototypeOf 등
+
+- Object.prototype 내부에 새로운 메서드를 추가하는 경우,
+  객체만이 아니라 모든 종류의 데이터타입들에서 해당 메서드 사용 가능해짐.
+
+---------------------------------------------
+[객체 전용 메서드]
+객체에서만 사용가능한 메서드를 만들고 싶다면 Object.prototype 활용 불가.
+- Object에 스태틱 메서드(static method)로 직접 부여해야함.
+- this 사용 불가: 대상 인스턴스를 인자로 직접 대입해야 함.
+   - 생성자 함수 Object와 인스턴스(객체 리터럴) 사이에는 this를 통한 연결이 불가능함.
+     즉, 인스턴스.메서드에서 인스턴스가 곧 this가 되는 방식으로 this 사용 불가.
+
+cf) 만약 객체 외의 모든 데이터타입들에서 해당 메서드가 사용가능해도 괜찮다면
+    Object.prototype에 직접 새로운 메서드를 추가하면 될 것. 아무런 문제 없음.
+
+---------------------------------------------
+(예외) Object.create(null)로 __proto__가 없는 객체를 생성하는 경우,
+       유일하게 Object.prototype의 메서드에 접근불가능한 객체 생성 가능.
+   
+이러한 방식으로 객체를 생성하는 경우, 일반적인 데이터에 반드시 존재하던
+내장 메서드 및 property들이 제거되기 때문에
+기본 기능에 제약 발생하지만 오히려 무게가 가벼워져 성능상 이점을 지니게 됨.
+
+var _proto = Object.create(null);
+console.dir(_proto);
+/*
+Object
+  No properties
+*/
+
+console.dir({a:1});
+/*
+Object
+  a: 1
+  __proto__:
+    constructor: ƒ Object()
+    hasOwnProperty: ƒ hasOwnProperty()
+    isPrototypeOf: ƒ isPrototypeOf()
+    propertyIsEnumerable: ƒ propertyIsEnumerable()
+    toLocaleString: ƒ toLocaleString()
+    toString: ƒ toString()
+    valueOf: ƒ valueOf()
+    __defineGetter__: ƒ __defineGetter__()
+    __defineSetter__: ƒ __defineSetter__()
+    __lookupGetter__: ƒ __lookupGetter__()
+    __lookupSetter__: ƒ __lookupSetter__()
+    get __proto__: ƒ __proto__()
+    set __proto__: ƒ __proto__()
+*/

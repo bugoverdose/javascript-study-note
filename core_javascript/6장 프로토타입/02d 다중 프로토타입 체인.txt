@@ -1,3 +1,58 @@
 [다중 프로토타입 체인]
+ __proto__를 연결해나가는 식으로 무한대로 체인 관계 이어나갈 수 있음.
+ => 다른 데이터타입에서만 사용 가능한 메서드들이 활용가능해짐.
+ => 다른 언어들의 클래스와 비슷하게 동작하는 구조 구현 가능.
 
+------------------------------------------------
+유사배열객체 생성자함수의 prototype이 
+배열의 인스턴스를 바라보도록 만들면 배열 메서드 사용 가능해짐 
 
+var arrayLikeConstructor = function(){
+    var args = Array.prototype.slice.call(arguments);
+    for (var i = 0; i < args.length; i++){
+        this[i] = args[i];
+    }
+    this.length = args.length;
+};
+
+var arrayLikeInstance = new arrayLikeConstructor(100, 80, 85, 95);
+console.log(arrayLikeInstance);
+/* 
+arrayLikeConstructor {0: 100, 1: 80, 2: 85, 3: 95, length: 4}
+  0: 100
+  1: 80
+  2: 85
+  3: 95
+  length: 4
+  __proto__:
+    constructor: ƒ ()
+    __proto__: Object
+*/
+
+<생성자함수의 prototype이 배열을 바라보게 만들면 배열 메서드 사용 가능해짐>
+arrayLikeInstance.__proto__ = []; // 혹은 arrayLikeConstructor.prototype = [];
+console.log(arrayLikeInstance);
+/* 
+arrayLikeConstructor(4) [100, 80, 85, 95]
+  0: 100
+  1: 80
+  2: 85
+  3: 95
+  length: 4
+  __proto__: Array(0)
+    length: 0
+    __proto__: Array(0)
+      // 배열 관련 메서드들.
+*/
+
+(이해)
+arrayLikeConstructor.prototype = [];에 따라
+[]에 연결된 프로토타입 체인이 arrayLikeConstructor와 연결되게 됨.
+
+                                          [Object] -- [Object.prototype] 
+                                         new |               /
+                          [Array] -- [Array.prototype] (.__proto__)
+                          new |      /
+  [arrayLikeConstructor] --- [ ]
+new |             /
+  arrayLikeInstance   

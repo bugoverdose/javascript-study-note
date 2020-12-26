@@ -1,0 +1,37 @@
+01 
+0) 생성자함수(Constructor)는 prototype이라는 property를 지님.
+1) Constructor를 new 연산자와 함께 호출하면
+2) Constructor에서 정의된 내용을 바탕으로 새로운 인스턴스(instance)가 생성됨.
+3) 이때 instance에는 __proto__라는 property가 자동으로 부여됨.
+4) instance.__proto__는 Constructor.prototype을 참조하며, 생략가능함.
+-------------------
+* prototype: 생성자함수에 의해 생성될 인스턴스가 사용할 메서드가 저장된 객체.
+* __proto__: 인스턴스에 숨겨진 객체. 인스턴스가 사용할 메서드가 실제로 저장됨.
+=> 인스턴스는 Constructor.prototype의 메서드를 자유롭게 호출하여 사용 가능.
+-------------------
+*constructor : 원본이 되는 생성자함수(Constructor)를 참조.
+             : 인스턴스를 생성한 생성자함수를 알아내는 수단.
+- 생성자함수.prototype.constructor == 생성자함수(Constructor)
+- 인스턴스(.__proto__).constructor == 생성자함수(Constructor)
+
+------------------------------------------------
+02
+프로토타입 체이닝: __proto__ 내부의 __proto__를 거슬러올라가는 과정
+- 순차적으로 각 prototype을 검색해나가면서, 각 prototype의 메서드들 전부 사용 가능. 
+
+(1단계) instance.methodName : 인스턴스에서 검색         
+(2단계) instance.__proto__.methodName : 인스턴스.__proto__에서 검색
+(3단계) instance.__proto__.__proto__.methodName
+  ... 
+cf) 메서드 오버라이드
+
+1) 어떤 데이터타입이든 생성자 함수를 통해 생성됨(null, undefined 제외).
+2) 어떤 생성자 함수든 property로 prototype 객체를 지니게 됨.
+3) prototype은 객체이므로 프로토타입 체인의 최상단에는 Object.prototype이 위치하게 됨.
+(예외) Object.create(null) 사용시, Object.prototype의 메서드에 접근불가능하지만 
+                                   성능상 이점을 지닌 가벼운 객체 생성 가능.
+
+Object.prototype 내부에 새로운 메서드를 추가하는 경우,
+객체만이 아니라 모든 종류의 데이터타입들에서 해당 메서드 사용 가능해짐.
+
+

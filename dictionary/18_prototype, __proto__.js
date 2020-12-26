@@ -1,5 +1,18 @@
 /*
+<핵심>
+1) 어떤 데이터타입든 생성자 함수를 통해 생성됨(null, undefined 제외).
+2) 어떤 생성자 함수든 프로퍼티로 prototype 객체를 지니게 됨.
+3) prototype은 무조건 객체이므로 프로토타입 체인의 최상단에는 Object.prototype이 위치하게 됨.
+(예외) Object.create(null) 사용시, Object.prototype의 메서드에 접근불가능하지만 
+                                   성능상 이점을 지닌 가벼운 객체 생성 가능.
+                                   
+Object.prototype 내부에 새로운 메서드를 추가하는 경우,
+객체만이 아니라 모든 종류의 데이터타입들에서 해당 메서드 사용 가능해짐.
+*/
+
+/*
 var instance = new Constructor();
+instance.__proto__ == Constructor.prototype; // true
 
 [핵심 도식]
   [Constructor] - [Constructor.prototype]

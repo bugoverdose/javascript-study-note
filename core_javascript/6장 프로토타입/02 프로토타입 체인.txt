@@ -1,6 +1,58 @@
 [프로토타입 체인]
 
-[메서드 오버라이드]
-[프로토타입 체인]
-[객체 전용 메서드의 예외사항]
-[다중 프로토타입 체인]
+배경지식: 모든 객체의 __proto__에는 Object.prototype이 연결되어있음.
+=> ex) Array.prototype도 객체이므로 객체의 내부 구조(__proto__)가 그대로 존재.
+=> ex) 배열.toString처럼 배열에서 Object.prototype의 메서드 사용 가능.
+
+Number, String, Boolean, Array 등 JS의 모든 데이터타입들은
+prototype.__proto__을 통해 Object.prototype에 접근 가능.
+ex) Array.prototype.__proto__ == Object.prototype; // true 
+
+-----------------------------------------
+<메서드 오버라이드>
+- 인스턴스에서 생성자함수로부터 넘겨받은 메서드(혹은 property)와 
+  동일한 이름의 메서드를 정의하여, __proto__의 메서드에 접근하기 힘들어지는 현상.
+
+- 인스턴스 자체에 새로운 메서드가 생성되는 것.
+- 생성자함수의 prototype와 인스턴스의 __proto__는 그대로 유지.
+
+인스턴스에서 특정 메서드에 접근하는 방식 (프로토타입 체이닝)
+(1단계) instance.methodName : 인스턴스에서 검색   
+(2단계) instance.__proto__.methodName : 인스턴스.__proto__에서 검색
+(3단계) instance.__proto__.__proto__.methodName
+  ... 
+-----------------------------------------
+<프로토타입 체인>
+- 어떤 데이터의 __proto__ 프로퍼티 내부에 __proto__ 프로퍼티가 연쇄적으로 이어진 것
+- 프로토타입 체이닝: 프로토타입 체인을 따라가며 검색하는 것
+
+var arr = [1, 2];
+arr.__proto__ == Array.prototype; // true                // arr은 배열
+arr.__proto__.__proto__ == Object.prototype; // true
+// (이해) Array.prototype.__proto__ == Object.prototype; // true // Array.prototype는 객체.
+
+               [Object] --- [Object.prototype] 
+              new |                   /
+  [Array] --- [Array.prototype] (.__proto__)
+new |             /
+  [1,2]  (.__proto__)
+
+-----------------------------------------
+<객체 전용 메서드의 예외사항>
+<핵심>
+1) 어떤 데이터타입든 생성자 함수를 통해 생성됨(null, undefined 제외).
+2) 어떤 생성자 함수든 프로퍼티로 prototype 객체를 지니게 됨.
+3) prototype은 무조건 객체이므로 프로토타입 체인의 최상단에는 Object.prototype이 위치하게 됨.
+(예외) Object.create(null) 사용시, Object.prototype의 메서드에 접근불가능하지만 
+                                   성능상 이점을 지닌 가벼운 객체 생성 가능.
+
+Object.prototype 내부에 새로운 메서드를 추가하는 경우,
+객체만이 아니라 모든 종류의 데이터타입들에서 해당 메서드 사용 가능해짐.
+
+만약 오직 객체에서만 사용가능한 메서드를 만들고 싶다면 Object.prototype 활용 불가.
+- Object에 스태틱 메서드(static method)로 직접 부여해야함.
+- this 사용 불가: 대상 인스턴스를 인자로 직접 대입해야 함.
+
+-----------------------------------------
+<다중 프로토타입 체인>
+
