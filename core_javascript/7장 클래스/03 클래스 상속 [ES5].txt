@@ -1,0 +1,57 @@
+[클래스 상속] 
+과거 문법에서의 상속 구현 방법: 다중 프로토타입 체인
+- 하위클래스로 삼을 생성자함수의 prototype에 상위클래스의 인스턴스를 부여
+- 기본적인 메서드 상속은 가능해짐 BUT 다양한 문제 발생하게 됨. (구조적 안전성 떨어짐)
+
+var Rectangle = function(~){~} // 생성자함수 생성 : 직사각형 
+var Square = function(~){~} // 생성자함수 생성 : 직사각형 + 네 변의 길이 동일
+
+Square.prototype = new Rectangle(); 
+// Square.prototype 객체에 Rectangle의 인스턴스 부여.
+// 즉, Square 클래스가 Rectangle 클래스를 상속하도록 프로토타입 체인 연결.
+
+var square = new Square();
+                      Object - prototype
+                         |    /
+        Rectangle - prototype
+            |      /
+Square - prototype
+  |     /
+  square
+
+console.dir(square);
+// square : Square의 인스턴스
+// square.__proto__ : Square.prototype이면서, Rectangle의 인스턴스  
+// square.__proto__.__proto__ : Rectangle.prototype이면서, Object의 인스턴스
+
+-----------------------------------------------------------
+(문제해결1) <클래스가 구체적인 데이터를 지니지 않게 하는 방법: 클래스의 추상화>
+원리: SubClass.prototype.__proto__가 SuperClass.prototype을 참조
+      SubClass.prototype에는 불필요한 인스턴스 프로퍼티가 남아있지 않도록 설정.
+
+<3가지 접근 방법들. 라이브러리들도 이 접근방법들을 활용>
+1) 인스턴스 생성 이후 클래스.프로토타입의 property들을 일일이 제거(delete) 후,
+   새로운 property를 추가할 수 없도록 Object.freeze(클래스.prototype) 적용.
+
+2) 하위클래스.prototype와 상위클래스.prototype 사이에 빈 생성자 함수(Bridge) 생성
+   => 하위클래스.prototype에 Bridge의 인스턴스를 할당
+
+3) Object.create 활용 : 가장 간단하면서 안전.
+Square.prototype = Object.create(Rectangle.prototype);
+Object.freeze(Square.prototype);
+
+-----------------------------------------------------------
+(문제해결2) <constructor 복구하기>
+SubClass.인스턴스.constructor는 SuperClass를 가리키는 상태
+: SubClass.인스턴스와 SubClass.prototype에 constructor 프로퍼티가 없기 때문에 발생.
+: 즉, 프로토타입 체인상 SuperClass.prototype.constructor가 가장 먼저 등장하기 때문에 SuperClass를 가리키게 됨
+
+해결방법들
+1) SubClass.prototype.constructor가 SubClass를 값으로 지니도록 지정
+2) Bridge.prototype.constructor가 SuperClass를 값으로 지니도록 지정
+
+-----------------------------------------------------------
+(문제해결3) <상위 클래스에의 접근 수단 제공>
+하위클래스의 메서드에서 상위클래스의 메서드 실행결과를 바탕으로 추가적인 작업을 수행하고 싶은 경우,
+1) SuperClass.prototype.method.apply(this, arguments)
+2) 다른 객채 지향 언어들의 클래스 문법 중 'super'를 흉내.

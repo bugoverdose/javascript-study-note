@@ -1,0 +1,55 @@
+[자바스크립트의 클래스]
+생성자함수를 클래스의 일종으로 간주할 경우,
+생성자함수.prototype 객체 내부 요소들이 개별 인스턴스에 상속되는 것과 유사함.
+즉, '프로토타입 체이닝에 의한 참조'는 클래스의 '상속'과 동일하게 동작함.
+
+----------------------------------------------
+<생성자함수의 메서드들: 클래스 관점에서의 분류>
+스태틱 멤버(static member) : static methods & static properties
+- 인스턴스가 참조 불가. (인스턴스에 상속되지 않는 클래스의 메서드와 property들)
+
+프로토타입 메서드(prototype method) / 인스턴스 멤버(instance member)
+- 인스턴스가 참조 가능. (인스턴스에 상속되는 클래스의 메서드와 property들)
+- prototype에 담긴 메서드들. 
+- (실제 커뮤니티들에서 prototype method라고 부름)
+
+                         - static methods: from(), isArray(), of()
+        - static members - static properties: arguments, length. name
+  Array - prototype - prototype methods : push(), map(), forEach() 등 
+new |              
+  [1, 2]
+-----------------------
+<인스턴스에서의 접근 가능 여부>
+          [클래스].[prototype]
+static properties   prototype properties
+static methods      prototype methods
+         X |      / O        
+          [인스턴스]
+
+----------------------------------------------
+<스태틱 메서드, 프로토타입 메서드>
+
+var Rectangle = function (width, height){        // 생성자함수 생성.
+  this.width = width;
+  this.height = height;
+};
+
+Rectangle.prototype.getArea = function(){     // 프로토타입 메서드 추가.
+  return this.width * this.height;
+};
+Rectangle.isRectangle = function(instance){  // 스태틱 메서드 추가.
+  return instance instanceof Rectangle 
+     && instance.width > 0 
+     && instance.height > 0; 
+};
+var rect1 = new Rectangle(3, 4);            // 인스턴스 rect1 생성.
+
+console.log(rect1.getArea()); // 12    
+// 프로토타입 메서드: 인스턴스에서 접근 가능.
+
+console.log(rect1.isRectangle(rect1)); // Error   
+// 스태틱 메서드: 인스턴스에서 접근 불가.
+
+console.log(Rectangle.isRectangle(rect1)); // true 
+// 스태틱 메서드: 생성자함수에서 접근 가능. 
+// this값이 생성자함수 Rectangle가 되도록 지정해야 호출됨.
