@@ -1,0 +1,28 @@
+[개발 환경 설정하기]
+
+Node.js 버전 
+- LTS: 기업을 위해 3년 간 지원하는 버전. 서버를 안정적으로 운영하기 위해 사용. 
+       최신 기능 활용 불가. 짝수 버전만 LTS가 될 수 있음. 
+- Current: 최신 기능. 실험적인 기능들이 들어있어 에러 발생 가능.
+           짝수 버전은 나중에 LTS가 되므로 Current더라도 미리 사용하는 것도 좋음.
+- 홀수 버전: Node.js는 6개월마다 버전을 1씩 올림. 그러나 오직 짝수 버전만 향후 LTS가 됨. 
+
+node -v 
+npm -v 
+echo %PATH% // 에러 발생한 경우, 환경변수 목록 확인하는 명령어
+cf) Node.js 설치시, 노드 패키지 매니저(npm)도 함께 설치됨.
+cf) 윈도우에서도 chocolatey 활용하면 콘솔로 Node 설치 가능
+------------------------------------
+리눅스(우분투) (노마드코더)
+[nvm ls] : 우리 시스템(내 컴퓨터)에 저장되어있는 node.js 버전들 나열.
+[nvm ls-remote] : 사용가능한 모든 node.js 버전들 나열. 저장하지 않은 버전들, minor버전들도 전부 다 포함. 
+[nvm ls-remote --lts] : 사용가능한 모든 node.js 버전들 중 LTS만 나열. 
+
+<node 버전 업데이트> 
+[nvm install 사용하려는 버전] 혹은 [nvm install --lts=사용하려는 lts버전명]
+- nvm install v14.15.3
+- nvm install --lts=erbium  
+------------------------
+<npm 버전 업데이트> 
+npm install -g npm
+npm -v  

@@ -1,0 +1,8 @@
+[서버 외의 노드]
+Node.js는 자바스크립트 런타임.
+서버만이 아니라 웹, 모바일, 데스크톱 앱 개발에도 활용됨. 
+
+<Node.js 기반의 개발도구>
+React(구글), Angular(페이스북). Vue : 모두 Node.js 기반의 웹 프레임워크.
+React Native : 대표적인 모바일 개발 도구. (페이스북, 인스타그램, 핀터레스트, 월마트, 테슬라 등)
+Electron : 데스크톱 개발 도구. (Atom, Slack, Discord, VSC)
