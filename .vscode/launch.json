@@ -34,3 +34,6 @@
 // "program"에서 디버깅 진행할 경로 설정.
 // Run : debug console을 열고 [ctrl + F5]
 // Canceled가 뜨는 경우 Google Chrome의 Console 창에 실행.
+
+// cf) 디버깅 기능들 사용하지 않을 경우
+// node [자바스크립트 파일 경로]로 실행하는 것이 더 효율적
