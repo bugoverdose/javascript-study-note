@@ -1,0 +1,179 @@
+[ES2015+]
+ES2015(=ES6) 이후 매년 새로운 문법이 등장. 현재 ES2020까지 등장.
+babel을 활용하면 구형 브라우저에서도 동작하도록 문법 변환 가능.
+
+-----------------------------------
+<const, let>
+1순위: const - default로 사용.
+2순위: let - 다른 값을 할당해야 하는 상황이 생겼을 때 사용.
+var은 사용 지양. const와 let으로 대체.
+cf) 한번 초기화한 변수에 다른 값을 할당하는 경우는 생각보다 적기 때문에 default로 const 사용.
+
+*const: 한번 값을 할당하면 다른 값을 할당할 수 없음. (1) 다른 값 할당하려고 하면 에러 발생.
+        const로 선언한 변수는 '상수'. (2) 최초에 선언,초기화할 때 값을 할당하지 않아도 에러 발생
+const a = 0;
+a = 1; // 에러(1) Identifier 'a' has already been declared
+const b; // 에러(2) Missing initializer in const declaration => 매우 안전함.
+
+*let: 다른 값 할당 가능. 초기화할 때 값 할당하지 않아도 에러 발생하지 않음 
+let a = 0;
+a = 1;
+let b;
+------------
+[const & let vs var: 스코프 종류가 서로 다름]
+- const, let은 블록 스코프를 지님. 블록 밖에서는 변수에 접근 불가. 
+              => 호이스팅 문제 해결+ 코드 관리 수월해짐
+- var은 함수 스코프를 지님. if문의 블록과 관계없이 접근 가능.
+cf) 블록의 범위는 {중괄호 사이}.
+
+if (true) {
+  var x = 3;
+  const y = 3;
+  let z = 3;
+}
+console.log(x); // 3
+console.log(y); // 에러 (Uncaught ReferenceError: y is not defined)
+console.log(z); // 에러 (Uncaught ReferenceError: z is not defined)
+
+-----------------------------------
+<탬플릿 문자열>
+: `문자열 ${변수}`
+
+-----------------------------------
+<향상된 객체 리터럴(Enhanced Object Literal)>
+Object Literal는 객체를 정의하는 문법. 쉼표로 구분된 [속성:값들]의 리스트.
+[10_Object_Literals.js 내용 참고]
+
+(1) 속성명과 (속성의 값으로 사용하는) 변수명이 동일한 경우 한번만 써도 됨.
+{name:name, age: age} // old
+{name, age} // ES6
+
+(2) 속성으로 함수를 정의할 경우 콜론(:)과 function 키워드 생략 가능.
+const object1 = {
+  oldFunction: function () {
+    console.log("I am oldFunction");
+  },
+  newFunction() {
+    console.log("I am newFunction");
+  },
+};
+object1.oldFunction(); 
+object1.newFunction(); 
+
+(3) 객체 리터럴 내부에서 동적으로 객체의 속성명을 생성 가능해짐.
+const userName = "John";
+const johnObject = {
+  [userName + 1]: "first data",
+  [userName + 2]: "second data",
+  [userName + 3]: "third data",
+};
+console.log(johnObject.John1); // first data
+console.log(johnObject.John2); // second data
+
+-----------------------------------
+<화살표 함수(arrow function)>
+- function 선언 대신 '=>'로 함수 선언.
+- 내부에 return문밖에 없는 경우, 중괄호와 return 생략 가능.
+- this 바인드 방식: 화살표함수를 사용하면 this값을 통해 그대로 상위 컨텍스트에 접근 가능(별도의 우회법 불필요)
+  - 화살표 함수 내부에는 this 값이 없기 때문에 (= 전역객체를 바라보지 않음)
+    화살표함수 내부에서 this값에 접근하고자 하면 
+    자동으로 스코프체인상 가장 가까운 this인 상위컨텍스트의 this값에 접근하게 됨
+  - 즉, 화살표함수는 상위스코프의 this를 자동으로 물려받게 됨 
+
+const add1 = (x, y) => {
+  return x + y;
+};
+const add2 = (x, y) => x + y; // return문만 있으면 중괄호와 return 생략 가능.
+const add3 = (x, y) => x + y;
+const not1 = (x) => !x; // 매개변수 1개면 (소괄호) 생략 가능
+
+----------------------------
+화살표함수는 상위 스코프의 this 값을 그대로 물려받음.
+- 상위 스코프인 logFriends2()의 this 값을 forEach 내부에서 그대로 사용 가능.
+
+var object2 = {
+  name: "john",
+  friends: ["A", "B", "C"],
+  logFriends2() {
+    this.friends.forEach((friend) => {         // this == object2.
+      console.log(this.name, friend);          // this == object2. 
+    }); 
+  },
+};
+object2.logFriends2();
+// john A
+// john B
+// john C
+
+----------------
+(비교) forEach문 내부에서 상위스코프의 this값을 사용하기 위한 우회방법.
+var object1 = {
+  name: "john",
+  friends: ["A", "B", "C"],
+  logFriends1: function () {
+    var self = this;
+    this.friends.forEach(function (friend) {   // this = object1;
+      console.log(self.name, friend); // self = object1 // this = 전역객체
+    });
+  },
+};
+object1.logFriends1();
+// john A
+// john B
+// john C
+
+-----------------------------------
+<구조분해 할당>
+- 객체, 배열로부터 속성, 요소를 간편하게 꺼내는 방법
+- node.js는 모듈 시스템 사용하기 때문에 특히 더 자주 사용함.
+- 객체의 경우 함수의 this 값이 달라지기 때문에 필요한 경우 bind 함수 활용.
+  (참고: 11_destructuring(구조분해 할당).js)
+
+1) 객체의 property와 메서드 꺼내기를 같은 이름의 변수에 대입하기
+    const {속성명, 속성명{속성명}} = 원본 객체
+
+2) 배열의 요소 꺼내서 특정 변수명에 할당하기
+    const [변수명, , 변수명] = 원본 배열
+
+-----------------------------------
+<클래스>
+전부 class안에서 정의됨
+- 생성자함수는 constructor로 생성
+- 스태틱 메서드(클래스 함수)는 static 키워드로 생성
+- class 블록 내부의 다른 함수들은 전부 프로토타입 함수
+
+extends를 통해 다른 클래스를 상속하는 클래스 생성
+
+-----------------------------------
+<Promise> (필수)
+Promise: 즉시 실행하지만, 결과값은 실행이 완료된 후 then, catch 메서드를 통해 나중에 받는 객체.
+- Node.js의 API들은 콜백 대신 Promise 기반으로 재구성됨
+- 콜백지옥 해결
+
+1단계) 프로미스 객체 생성: new Promise
+- 프로미스 객체는 resolve와 reject를 매개변수로 하는 콜백함수 지정
+
+2단계) 프로미스 객체에서 then과 catch 메서드 사용
+- 프로미스 내부에서 resolve 호출시 then 실행.  
+  : resolve에 넣어준 인수를 then의 매개변수로 받을 수 있음.
+  : resolve(인자) => then(매개변수)
+- reject 호출시 catch 실행
+  : reject에 넣어준 인수를 catch의 매개변수로 받을 수 있음.
+  : reject(인자) => error(매개변수)
+- finally는 무조건 실행. 성공/실패 여부와 상관없이 실행됨.
+
+3단계) then/catch 실행 후 다른 then/catch 실행 가능 
+- 이전 then의 return 값을 다음 then의 매개변수로 넘기게 됨.
+=> then에서 new Promise를 return하면 프로미스 수행된 후에 다음 then/catch 호출. 
+- 콜백함수 내부에 new Promise가 구현된 경우(내부적으로 Promise 객체를 가지고 있는 경우)에 사용법 더 간단해짐
+- 각각의 콜백함수에서 매번 따로 에러를 처리할 필요 없이 catch 메서드 하나만으로 처리 가능.
+
+-----------------------------------
+<async/await> [ES2017]
+- Node.js처럼 비동기 위주 프로그래밍에서 특히 많이 사용됨.
+- then, catch가 반복되는 Promise를 더 적은 코드로 사용하기 위한 문법.
+(1) 함수 앞에 async 추가
+(2) Promise 앞에 await 추가: await이 then을 대체
+(3) try/catch 문: try 내부에 await 관련 내용. catch는 에러 처리
+
+modern_syntax/6_1~6_3 참고

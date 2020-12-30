@@ -111,3 +111,45 @@ var Square = class extends Rectangle {
     console.log("size is :", super.getArea());
   }
 };
+
+// ------------------------------------------
+// ------------------------------------------
+/* Nodejs - 2.1.6 참고
+전부 class안에서 정의됨
+- 생성자함수는 constructor로 생성
+- 스태틱 메서드(클래스 함수)는 static 키워드로 생성
+- class 블록 내부의 다른 함수들은 전부 프로토타입 함수
+extends를 통해 다른 클래스를 상속하는 클래스 생성
+*/
+class Human {
+  constructor(type = "human") {
+    this.type = type; // function(type){this.type = type || "human"}과 동일
+  }
+  static isHuman(human) {
+    return human instanceof Human;
+  }
+  breathe() {
+    alert("h-a-a-a-m");
+  }
+}
+
+class child extends Human {
+  constructor(type, firstName, lastName) {
+    super(type);
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+  sayName() {
+    super.breathe();
+    alert(`${this.firstName} ${this.lastName}`);
+  }
+}
+
+const newChild = new child("human", "John", "Wick");
+Human.isHuman(newChild); // true
+// newChild.type == "human"
+newChild.sayName(); // 팝업창으로 "h-a-a-a-m" / "John Wick" 표시됨
+
+const newChild2 = new child("abc", "f.n.", "l.n.");
+// newChild2.type == "abc"
+newChild2.sayName(); // 팝업창으로 "h-a-a-a-m" / "f.n. l.n." 표시됨
