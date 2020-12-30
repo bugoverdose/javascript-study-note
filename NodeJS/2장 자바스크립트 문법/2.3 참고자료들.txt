@@ -1,0 +1,2 @@
+구글 크롬 북마크바: [모던JS] 폴더 확인
+https://developer.mozilla.org/ko/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_6_support_in_Mozilla

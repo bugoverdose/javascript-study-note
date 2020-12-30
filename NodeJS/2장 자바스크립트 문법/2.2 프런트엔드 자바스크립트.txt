@@ -1,2 +1,48 @@
 [Frontend JS]
 서버와 통신하기 위해 프론트엔드에서 사용하는 JS 코드
+
+<AJAX (Asynchronous Javascript And XML)>
+- 비동기적 웹서비스 개발 기법. 
+- 페이지 전환 없이 서버에 요청을 보내고 응답을 받는 기술 (JSON, XML)
+- XMLHttpRequest 객체 혹은 axios, jQuery 등의 라이브러리 활용
+- axios 라이브러리의 경우 axios.get & axios.post을 통해 서버에 GET/POST요청 가능
+(browser/3_AJAX 참고)
+
+GET 요청: 서버로 요청을 보내기만 함.
+POST 요청: 요청을 보내면서 서버로 특정 데이터 전송 가능.
+
+-----------------------------------------
+<FormData>
+- HTML from 태그의 데이터를 동적으로 제어할 수 있는 기능
+- AJAX와 함께 사용됨.
+
+1) FormData 생성자로 form 데이터 객체 생성. 
+const formData = new FormData();
+2) 생성된 객체에 각종 메서드로 데이터 생성, 수정, 제거 
+3) axios.post 등으로 해당 form 데이터 객체를 서버에 전송하면서 POST 요청.
+
+(browser/4_FormData 참고)
+
+-----------------------------------------
+<encodeURIComponent, decodeURIComponent>
+- encodeURIComponent메서드: window객체의 메서드. 
+  - url 주소에 한글이 들어가는 경우, 서버가 한글 주소를 이해하지 못하는 경우 사용.
+  - Node.js에서도 사용 가능.
+  - 한글 주소 부분만 encodeURIComponent 메서드로 감싸면 문자열 변환됨
+- decodeURIComponent 메서드로 변환된 문자열 감싸면 다시 한글로 변환됨.
+
+URL = `https://www.zerocho.com/api/search/${encodeURIComponent('노드')}`
+URL; // "https://www.zerocho.com/api/search/%EB%85%B8%EB%93%9C"
+decodeURIComponent('%EB%85%B8%EB%93%9C'); // "노드"
+
+-----------------------------------------
+<data attribute, dataset>
+frontend(클라이언트)에 민감한 데이터를 보내면 안됨. 클라이언트를 믿으면 안됨.
+다만, 보안과 무관한 데이터는 frontend에 보내도 문제 없음.
+
+Node.js 서버에서 전달받은 데이터는
+Javascript 변수에 저장하거나, html의 데이터속성(data attribute)을 사용하여 작업. (Backend => Frontend)
+
+반대로 dataset에 데이터를 넣으면 HTML 코드에 반영됨(Frontend(js) => Frontend(html))
+
+(dictionary_backend 참고)

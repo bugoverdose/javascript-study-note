@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>axios 라이브러리를 활용한 GET 요청</h1>
+    <h3>1) axios 라이브러리를 부르는 script:src 코드 입력 후</h3>
+    <h3>2) axios.get 함수의 인자로 GET 요청을 보낼 url 주소를 입력</h3>
+    <h4>
+      axios.get의 내부에는 new Promise가 포함. then과 catch 메서드 사용 가능.
+    </h4>
+    <h4>
+      then 메서드의 매개변수 result에는 config, data, headers, request, status,
+      statusText 속성들이 포함된 객체가 담기게 됨.
+    </h4>
+    <h4>result.data에는 서버로부터 받은 데이터가 담기게 됨.</h4>
+
+    <script src="http://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      (async () => {
+        try {
+          const result = await axios.get("https://www.zerocho.com/api/get");
+          console.log(result);
+          console.log(result.data); // {}
+        } catch (error) {
+          console.error(error);
+        }
+      })(); // 즉시 실행으로 위해 (소괄호)로 감싸서 호출.
+
+      /* 기존 Promise 문법
+      axios
+        .get("https://www.zerocho.com/api/get")
+        .then((result) => {
+          console.log(result);
+          console.log(result.data); // {}
+        })
+        .catch((error) => {
+          console.error(error);
+        }); */
+    </script>
+  </body>
+</html>

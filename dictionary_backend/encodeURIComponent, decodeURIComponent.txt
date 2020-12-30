@@ -1,0 +1,10 @@
+<encodeURIComponent, decodeURIComponent>
+- encodeURIComponent메서드: window객체의 메서드. 
+  - url 주소에 한글이 들어가는 경우, 서버가 한글 주소를 이해하지 못하는 경우 사용.
+  - Node.js에서도 사용 가능.
+  - 한글 주소 부분만 encodeURIComponent 메서드로 감싸면 문자열 변환됨
+- decodeURIComponent 메서드로 변환된 문자열 감싸면 다시 한글로 변환됨.
+
+URL = `https://www.zerocho.com/api/search/${encodeURIComponent('노드')}`
+URL; // "https://www.zerocho.com/api/search/%EB%85%B8%EB%93%9C"
+decodeURIComponent('%EB%85%B8%EB%93%9C'); // "노드"

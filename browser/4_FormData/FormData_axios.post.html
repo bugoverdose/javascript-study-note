@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>axios 라이브러리를 활용한 POST 요청</h1>
+    <h3>
+      1) FormData 생성자로 form 데이터 객체 생성. const formData = new
+      FormData();
+    </h3>
+    <h3>
+      2) 생성된 객체에 각종 메서드로 데이터 생성, 수정, 제거
+      <ul>
+        <li>append 메서드 : key-value 형식의 데이터 생성.</li>
+        <li>has 메서드 : 특정 key에 해당하는 value의 존재 여부 확인.</li>
+        <li>get 메서드 : 특정 key에 해당하는 value를 선택.</li>
+        <li>getAll 메서드 : 해당하는 모든 value들 선택.</li>
+        <li>delete 메서드 : 특정 key 제거</li>
+        <li>set 메서드 : 특정 key를 수정.</li>
+      </ul>
+    </h3>
+    <h3>
+      3) axios.post 등으로 해당 form 데이터 객체를 서버에 전송하면서 POST 요청.
+    </h3>
+
+    <script src="http://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      (async () => {
+        try {
+          const formData = new FormData();
+          formData.append("name", "zerocho");
+          formData.append("birth", 1994);
+          const result = await axios.post(
+            "https://www.zerocho.com/api/post/json",
+            formData // 두번째 인자로 formData를 서버에 보내면서 요청.
+          );
+          console.log(result);
+          console.log(result.data); // {}
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    </script>
+  </body>
+</html>

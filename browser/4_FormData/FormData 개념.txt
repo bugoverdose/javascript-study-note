@@ -1,0 +1,36 @@
+FormData
+- HTML from 태그의 데이터를 동적으로 제어할 수 있는 기능
+- AJAX와 함께 사용됨.
+- 1)2)3)은 전부 try문 내부에서 작업.
+
+1) FormData 생성자로 form 데이터 객체 생성. 
+const formData = new FormData();
+
+2) 생성된 객체에 각종 메서드로 데이터 생성, 수정, 제거
+append 메서드 : key-value 형식의 데이터 생성.
+has 메서드 : 특정 key에 해당하는 value의 존재 여부 확인.
+get 메서드 : 특정 key에 해당하는 value를 선택.
+getAll 메서드 : 해당하는 모든 value들 선택.
+delete 메서드 : 특정 key 제거
+set 메서드 : 특정 key를 수정.
+
+3) axios.post 등으로 해당 form 데이터 객체를 서버에 전송하면서 POST 요청.
+
+------------------------------------
+const formData = new FormData();
+
+formData.append("name", "John");
+formData.append("item", "apple");
+formData.append("item", "banana");
+
+formData.has("item"); // true
+formData.has("aKeyThatDoesNotExist"); // false
+
+formData.get("item"); // "apple"
+formData.getAll("item"); // ["apple", "banana"]
+
+formData.delete("name");
+formData.get("name"); // null
+
+formData.set("item", "cake");  // ["apple", "banana"] ==> "cake"
+formData.get("item"); // "cake"

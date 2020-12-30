@@ -1,0 +1,37 @@
+[data attribute, dataset]
+Node.js 서버에서 전달받은 데이터는 
+1) Javascript 변수에 저장하거나
+2) html의 데이터속성(data attribute)을 사용하여 작업. (Backend => Frontend)
+
+모든 태그들의 속성들
+- id="", class=""
+- data-XXX="" : data attributes. 
+  - data-id="1" 
+  - data-user-job="programmer"
+
+data 속성들은 dataset 속성을 통해 Javascript로 쉽게 접근 가능.
+{ id: "1", userJob: "programmer"}
+- 속성명 변화: data-라는 접두어가 사라지고, 자동으로 cammel case 적용 
+
+[예시]
+  <ul>
+    <li data-id="1" data-user-job="programmer">Aero</li>
+    <li data-id="2" data-user-job="designer">Bero</li>
+    <li data-id="3" data-user-job="programmer">Cero</li>
+    <li data-id="4" data-user-job="ceo">Dero</li>
+  </ul>
+  <script>
+    console.log(document.querySelector("li").dataset);
+    /*
+    DOMStringMap
+      id: "1"
+      userJob: "programmer"
+      __proto__: DOMStringMap
+  */
+  </script>
+</data>
+
+-------------------------------------
+반대로 dataset에 데이터를 넣으면 HTML 코드에 반영됨(Frontend(js) => Frontend(html))
+
+
