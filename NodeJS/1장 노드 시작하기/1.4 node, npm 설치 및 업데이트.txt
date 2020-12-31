@@ -12,16 +12,25 @@ npm -v
 echo %PATH% // 에러 발생한 경우, 환경변수 목록 확인하는 명령어
 cf) Node.js 설치시, 노드 패키지 매니저(npm)도 함께 설치됨.
 cf) 윈도우에서도 chocolatey 활용하면 콘솔로 Node 설치 가능
+
 ------------------------------------
-리눅스(우분투) (노마드코더)
+리눅스(우분투)
+nvm : node version manager
 [nvm ls] : 우리 시스템(내 컴퓨터)에 저장되어있는 node.js 버전들 나열.
 [nvm ls-remote] : 사용가능한 모든 node.js 버전들 나열. 저장하지 않은 버전들, minor버전들도 전부 다 포함. 
 [nvm ls-remote --lts] : 사용가능한 모든 node.js 버전들 중 LTS만 나열. 
 
 <node 버전 업데이트> 
 [nvm install 사용하려는 버전] 혹은 [nvm install --lts=사용하려는 lts버전명]
-- nvm install v14.15.3
-- nvm install --lts=erbium  
+- nvm install v14.15.3 
+- nvm install --lts=erbium
+
+[nvm uninstall 삭제하려는 과거 버전]
+- nvm uninstall v12.19.0
+------------------------
+[nvm alias default 버전] : default node version 설정 방법
+nvm install 14.15.3
+nvm alias default 14.15.3
 ------------------------
 <npm 버전 업데이트> 
 npm install -g npm

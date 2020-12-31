@@ -1,21 +1,116 @@
 [Node 내장 객체]
+Node에서 기본적으로 제공해주는 객체들. 별도의 설치 불필요.
 
-global
+1) global
+- node.js의 전역객체 (브라우저의 window 전역객체와 같은 개념)
+- 모든 파일에서 접근 가능.
+- global.console 객체, global.request 함수 모두 global 생략하고 호출 가능.
 
-----------------------------------
-console
-
-----------------------------------
-타이머
-
-----------------------------------
-__filename
-__dirname
-
-----------------------------------
-module
-exports
-require
+cf) global은 전역객체이므로 파일 간 데이터 공유에도 활용 가능
+ex) 파일1에서 module.exports = () => global.message;
+    파일2에서 const A = require('파일1');
+              global.message = "Hello world!";
+              console.log(A()); // "Hello world!" 
+              // 즉 파일2에서 할당한 값을 파일1에서도 접근 가능.
+다만, 유지보수에 어려움 때문에 가급적 모듈 형식으로 데이터 교환하는 것이 이상적.
 
 ----------------------------------
-process
+2) console 객체
+- window.console과 global.console은 거의 유사함
+- console 메서드 예시들.
+
+console.log(내용): 평범한 로그를 콘솔에 표시. 무한하게 인자 받을 수 있음
+console.error(에러 내용): 콘솔에 에러 표시
+
+console.time(레이블) - console.timeEnd(레이블)과 대응
+- 같은 레이블을 가진 time과 timeEnd 사이의 시간을 측정
+
+console.table(배열)
+- 배열의 요소로 객체 리터럴을 넣으면, 객체의 속성들이 테이블 형식으로 표현됨
+
+console.dir(객체, 옵션) : 객체를 콘솔에 표시할 때 사용
+- 첫번째 인자에 콘솔에 표시할 객체 지정
+- 두번째 인자는 옵션. defalt 옵션은 { colors: true, depth: 2 }
+- color 옵션 : true로 하면 콘솔에 색 추가되어 가독성 증가.
+- depth 옵션 : 객체 안의 객체를 몇 단계까지 보여줄 지를 지정(default 값은 2)
+
+console.trace(레이블)
+- 에러가 어디서 발생했는지 추적 가능해짐.
+- 에러 메시지에서 에러 발생한 위치가 자동으로 뜨지 않을 때 사용
+
+----------------------------------
+3) 타이머 기능
+- set~으로 타이머 기능의 함수 실행, clear~로 타이머+함수 실행 취소
+- set~은 ID를 return하게 됨.
+- const timeout = setTimeout(콜백, ms)처럼 변수에 ID를 할당하고,
+  clear~의 인자로 해당 ID를 대입하면 해당 함수 중단 가능.
+
+setTimeout(콜백함수, ms) 
+- 일정 시간 지연 후 콜백함수 실행
+- clearTimeout(ID)
+
+setInterval(콜백함수, ms)
+- 일정 기간을 간격으로 콜백함수 반복 실행
+- clearInterval(ID)
+
+setImmediate(콜백함수)
+- 콜백함수 즉시 실행
+- clearImmediate(ID)
+- setTime(콜백, 0)은 사용 지양.
+
+----------------------------------
+4) 코드가 현재 실행되고 있는 경로를 문자열로 반환
+__filename : 현재 파일명
+__dirname : 현재 디렉토리명
+
+cf) /, \와 같은 경로 구분자 문제 때문에 대체로 path 모듈과 함께 사용함
+
+----------------------------------
+5) module 객체, exports 객체, require 함수
+
+모듈 생성방법
+1) module.exports에 {변수들/함수들}를 객체로 한방에 대입.
+2) exports 객체에 각각의 변수/함수를 하나씩 대입.
+- exports 객체는 module객체의 exports를 참조.
+
+-----------
+require 함수는 객체로서의 attribute을 지님.
+
+<require.cache 객체>
+: require 함수로 불러온 파일의 정보가 저장되는 곳.
+  => 다시 require할 때 새로 불러오지 않고 require.cache 객체의 정보가 재사용됨.
+: property명은 각 파일의 경로(현재 코드가 실행된 파일 + require함수로 가져온 모듈 파일들)
+  - 각 파일의 module 객체를 속성값으로 지님. 
+cf) require.cache 속성을 제거하면 새로 require 가능. 하지만 권장되지 않음.
+
+<require.main 객체>
+: Node.js 실행시 첫 모듈
+- console.log(require.main === module); // true라면 현재 파일이 첫 모듈
+- console.log(require.main.filename); // 첫 모듈의 이름 확인
+
+cf) 순환참조(circular dependency)
+- 두 모듈이 서로를 require하는 경우에 발생
+- 에러 메시지가 발생하지 않으므로 조심해야 함. 찾기 힘든 버그
+
+----------------------------------
+6) process 객체
+- 현재 실행되고 있는 Node 프로세스에 대한 정보가 담기는 객체
+
+process.env : 서버, DB의 비밀번호, API 키 등 
+              서비스의 중요한 키를 저장하는 공간으로 사용 가능.
+- 시스템 환경 변수들이 담겨있는 객체.
+- 별도의 환경 변수를 임의로 저장 가능
+  => 중요한 비밀번호는 process.env의 속성으로 대체 (dotenv 참고)
+
+process.nextTick(콜백함수) : microtask
+: 이벤트 루프가 다른 콜백함수들보다 
+  nextTick의 콜백함수를 우선적으로 처리하도록 만듬.
+: Promise 같은 다른 microtask나 setImmediate보다도 더 먼저 즉시 실행.
+
+process.exit(코드)
+: 실행 중인 Node.js 프로세스를 종료.
+: 서버환경에서 실행시, 서버 자체가 멈추게 됨.
+: 서버 외의 독립적인 프로그램에서 수동으로 Node를 멈추기 위해 사용됨.
+
+process.exit(0); // 정상종료
+process.exit(1); // 비정상종료 - 에러 발생으로 인한 종료

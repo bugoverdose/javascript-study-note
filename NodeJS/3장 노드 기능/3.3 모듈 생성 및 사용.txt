@@ -7,17 +7,20 @@ Node.js는 자체적으로 코드를 모듈로 만들 수 있음
 - 일련의 코드를 재사용하기 위해 함수를 정의하는 것과 마찬가지의 맥락.
 - 대체로 하나의 js파일을 모듈 하나로 만듬. 파일 단위로 모듈 관리.
 
-<모듈 생성 방법[Node]: js 파일 최하단에 module.exports>
-module.exports = 함수 
-module.exports = 변수 
-module.exports = { 변수1: 변수1, 변수2:변수2 } 등
+<모듈 생성 방법[Node]>
+module.exports = 함수;
+module.exports = () => return할 값;
+module.exports = 변수;
+module.exports = { 변수1: 변수1, 변수2:변수2 }; 등
 : 모듈로 사용할 함수, 변수, 함수/변수들의 객체를 module.exports에 저장.
+: js 파일 최하단에 위치할 필요 없음
 
-<모듈 사용 방법[Node]: js 파일 최상단에 require 함수>
+<모듈 사용 방법[Node]>
 const [사용할 변수/함수명] = require(모듈의 경로) 
 : 불러올 모듈의 경로를 require함수의 인자로 대입.
+: js 파일 최상단에 위치할 필요 없음
 
-(참고. dictionary_backend/module 참고)
+(참고. dictionary_node/module 참고)
 
 ------------------------------------------------
 cf) [ES6] import/export : 자바스크립트 자체 모듈 시스템 문법

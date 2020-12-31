@@ -1,0 +1,30 @@
+module 객체, exports 객체
+
+모듈 생성방법
+1) module.exports에 {변수들/함수들}를 객체로 한방에 대입.
+2) exports 객체에 각각의 변수/함수를 하나씩 대입.
+
+exports ===> module.exports ===> {}
+- exports 객체는 module객체의 exports를 참조.
+- exports 객체에 add 함수를 넣으면 (exports.add = 함수;)
+- 자동으로 module.exports에도 add함수가 추가됨.
+
+-------------------------------
+1) module.exports로 모듈 생성
+const odd = "홀수입니다",
+   even = "짝수입니다";
+module.exports = { odd, even };
+
+2) exports 객체로 모듈 생성
+exports.odd = "홀수입니다";
+exports.even = "짝수입니다";
+
+-------------------------------
+[주의사항들]
+1) 하나의 모듈에서 exports 객체와 module.exports를 함께 사용하지 말 것. 
+   둘 사이의 참조관계가 깨지면 문제 발생.
+2) module.exports에는 어떤 값이든 대입 가능. 
+   exports에는 반드시 객체처럼 property명과 value를 대입해야 함. 
+   (다른 값 대입시 참조 관계가 끊겨 모듈로 기능하지 않게 됨)
+3) exports를 사용할 때는 객체만 사용 가능.
+   => module.exports에 함수를 대입한 경우 exports로 변경불가.
