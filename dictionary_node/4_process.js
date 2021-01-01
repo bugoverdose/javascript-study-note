@@ -1,6 +1,7 @@
 /*
 process 객체
 - 현재 실행되고 있는 Node 프로세스에 대한 정보가 담기는 객체
+- Node.js 내장 객체
 */
 /*
 process.exit(코드)
@@ -41,7 +42,7 @@ console.log(process.platform); // 운영체제 플랫폼 정보. win32, linux, d
 console.log(process.pid); // 현재 process의 ID 값. 복수의 프로세스 서로 구분할 때 사용
 // 11079 (매번 변동)
 
-console.log(process.uptime()); // 프로세스가 시작된 후 흐른 시간. 초 단위
+console.log(process.uptime()); // Node의 실행 시간. 프로세스가 시작된 후 흐른 시간. 초 단위
 // 0.0256685 (매번 변동)
 
 console.log(process.execPath); // Node.js의 경로
