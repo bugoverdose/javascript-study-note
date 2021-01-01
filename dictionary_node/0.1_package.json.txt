@@ -1,0 +1,30 @@
+package.json
+- dependencies : 프로젝트가 실행되기 위해 필요한 패키지들
+                 [npm init] 이후 [npm install 패키지명] 
+
+- scripts : 개발자용 콘솔 명령어 단축키
+
+- devDependencies : 개발자가 필요로 하는 패키지들. 개발용도.
+                    [npm install 패키지명 -D] 
+--------
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "nodemon --exec babel-node index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+
+----------------------------
+cf) nodemon
+[npm install nodemon -D]
+"scripts": {
+    "nodemon --exec babel-node index.js --delay 2"
+  },
+=> index.js를 수정하고 저장할 때마다 실시간으로 서버에 반영됨. (자동으로 서버 재실행)
+=> babel이 실행될 시간을 주기 위해 2초 후에 서버 재시작되도록 설정.

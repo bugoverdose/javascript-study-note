@@ -1,5 +1,7 @@
 /*
 require 함수. 
+- 특정 모듈을 해당 파일로 가져옴.
+- 프로젝트의 파일들에 없는 모듈의 경우, node_modules 폴더에서 찾아서 가져옴.
 - 함수도 객체이므로 require 함수는 객체로서의 attribute을 지님.
 
 <require.cache 객체>

@@ -11,4 +11,9 @@ process.env : 서버, DB의 비밀번호, API 키 등
 - 시스템 환경 변수들이 담겨있는 객체.
 - 별도의 환경 변수를 임의로 저장 가능.
 
+-------------------
+helmet: node.js 앱의 보안에 도움이 되는 middleware
+설치: [npm install helmet]
+사용: import helmet from "helmet";
+      app.use(helmet());
 

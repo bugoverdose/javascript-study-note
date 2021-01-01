@@ -1,0 +1,67 @@
+npm: node.js의 모든 패키지들이 보관되고, 다운로드할 수 있는 중앙집중적인 공간. 
+- express, electron, react 등은 모두 package의 일종.
+  전부 npm(node package manager)을 통해 다운로드 가능.
+
+패키지: 즉 만들려는 웹사이트, 프레임워크 등 현재 프로잭트
+
+-------------------
+package.json
+: npm init으로 생성
+: 패키지에 대한 정보가 json 파일로 담김. 생성 이후 정보들 수정 가능.
+: npm으로 설치한 다른 패키지에 대한 정보도 dependencies에 담김.
+: "scripts" entry에 실행할 명령어들 지정 가능.
+ex) "scripts": {
+      "start": "node index.js" // [npm start] => node index.js 실행
+    }
+
+node_modules
+: require함수를 통해 가져올 수 있는 모듈들 리스트. 
+: 엄청 무겁기 때문에 .gitignore로 github에서 제외
+: [npm install ~]로 생성
+
+package-lock.json
+: package의 보안과 관련. .gitignore로 github에서 제외
+: [npm install ~]로 생성
+
+-------------------------------------------------------
+(1) [npm init]
+- npm으로 project를 initialize하는 명령어.
+- 즉, Package manager로 npm을 사용하는 방법.
+- 패키지에 대한 정보가 담긴 package.json 파일 생성
+  - json 확장자: JS에서 정보를 담는 방식.
+
+package name: (wetube-2019)  
+version: (1.0.0) 
+description: Cloning Youtube with Vanilla JS and NodeJS
+entry point: (index.js) 
+test command: 
+git repository: (https://github.com/Bugod96/wetube-2019) 
+keywords: 
+author: "bugod96"
+license: (ISC) 
+About to write to /home/bugod/wetube-2019/package.json:
+
+Is this OK? (yes) y
+
+-------------------------------------------------------
+Express 프로젝트 생성방법
+[주의] package.json 파일이 존재하는 프로젝트 폴더 내부 콘솔에서 Express를 설치해야 함. 
+
+npm init 이후에 npm install express로 설치
+ => node_modules & package-lock.json 생성됨. => 신경 쓰지 않아도 됨.
+ => package.json에 "dependencies": { "express": "^4.17.1" } 생성 // 버전 4.17.1 이상이라는 의미.
+    
+cf) package.json & 메인 프로젝트 파일들만 있는 상태로 [npm install] 실행시키면 
+    다른 컴퓨터에서도 프로젝트 실행 가능.
+    - 프로젝트 공유할 때 node_modules와 package-lock.json은 불필요.
+
+-------------------------- 
+(2) [npm install express]
+npm notice created a lockfile as package-lock.json. You should commit this file.
++ express@4.17.1
+added 50 packages from 37 contributors and audited 50 packages in 1.921s
+found 0 vulnerabilities
+
+=> node_modules & package-lock.json 생성됨. 
+=> package.json에 "dependencies": { "express": "^4.17.1" } 생성
+ 

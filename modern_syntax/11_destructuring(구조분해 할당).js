@@ -5,6 +5,8 @@
   
   node.js의 모듈 시스템에서 특히 자주 사용됨.
   cf) 객체의 경우 함수의 this 값이 달라지기 때문에 필요한 경우 bind 함수 활용.
+
+https://velog.io/@public_danuel/destructuring-assignment
 */
 // 객체의 property와 메서드 꺼내기를 같은 이름의 변수에 대입하기
 const candyMachine = {

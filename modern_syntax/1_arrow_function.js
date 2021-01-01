@@ -1,7 +1,8 @@
 /*
 <화살표 함수(arrow function)>
 - function 선언 대신 '=>'로 함수 선언.
-- 내부에 return문밖에 없는 경우, 중괄호와 return 생략 가능.
+- 내부에 코드가 1줄밖에 없는 경우, 중괄호도 생략 가능.
+- return문밖에 없으면 return 키워드도 생략 가능.
 */
 const add1 = (x, y) => {
   return x + y;
