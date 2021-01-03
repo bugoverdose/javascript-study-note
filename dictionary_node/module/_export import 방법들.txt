@@ -1,0 +1,45 @@
+(TIP) import 방법 구분은 암기 필요X
+VSC에는 모듈을 사용하려고 하면 어떻게 import할 수 있는지 알려주는 자동완성 기능도 존재.
+코드에 모듈명 입력 후 아래 리스트 중 하나를 클릭하면 import해주는 코드 자동 생성.
+
+----------------------------
+(1) default로 export한 경우
+[파일1] export default [내보낼 객체 / 함수, 변수 등]
+[파일2] import [내보내진 객체 / 함수, 변수 등] from "[파일1 경로]"; 
+
+[app.js]  export default app;          // app 객체 내보내기
+[init.js] import app from "./app";     // app.js의 app 객체 가져오기
+
+--------------------------------------
+(2) 그 자체로 export한 경우
+[파일1] export const [내보낼 코드] = express.Router();
+[파일2] import { [내보내진 코드] } from "[파일1 경로]";
+        import { 모듈1, 모듈2, 모듈3 } from "[파일1 경로]";
+
+[router.js] export const userRouter = express.Router();
+[app.js]    import { userRouter } from "./router";
+ 
+
+
+
+------------------------------
+(실전)
+[userController.js]
+export const join = (req, res) => res.send("This is Join"),
+  login = (req, res) => res.send("This is Login"),
+  logout = (req, res) => res.send("This is Logout");
+
+[golbalRouter.js]
+import express from "express";
+import { join, login, logout } from "../controllers/userController"; 
+import routes from "../routes";
+
+const golbalRouter = express.Router();
+ 
+golbalRouter.get(routes.join, join);
+golbalRouter.get(routes.login, login);
+golbalRouter.get(routes.logout, logout); 
+
+export default golbalRouter;
+
+

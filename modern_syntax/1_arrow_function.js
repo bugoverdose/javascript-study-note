@@ -2,7 +2,10 @@
 <화살표 함수(arrow function)>
 - function 선언 대신 '=>'로 함수 선언.
 - 내부에 코드가 1줄밖에 없는 경우, 중괄호도 생략 가능.
-- return문밖에 없으면 return 키워드도 생략 가능.
+
+implicit return
+- return문밖에 없는 경우 중괄호 + return 키워드 생략 가능.
+- 만약 중괄호를 사용하는 경우, return 키워드 생략 불가.
 */
 const add1 = (x, y) => {
   return x + y;
@@ -66,8 +69,8 @@ console.log(
 
 //  -----------------------------------------------------------------
 /*
-  실행 코드에 return문밖에 없는 경우.
-  - 화살표 함수의 경우 중괄호 생략 & return 생략 가능.
+  실행 코드에 오직 return문밖에 없는 경우.
+  - 화살표 함수에서는 중괄호 & return 생략 가능.
 */
 
 // 기존문법 : function(매개변수) { return ~~ }
@@ -79,3 +82,8 @@ console.log("add3(2, 3) :", add1(2, 3));
 // arrow function : (매개변수) => 실행 코드
 const add4 = (num1, num2) => num1 + num2;
 console.log("add4(2, 3) :", add2(2, 3));
+
+// 만약 중괄호를 사용하는 경우, return 키워드 생략 불가.
+const add5 = (num1, num2) => {
+  return num1 + num2;
+};

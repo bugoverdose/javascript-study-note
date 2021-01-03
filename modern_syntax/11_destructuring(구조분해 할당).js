@@ -8,6 +8,16 @@
 
 https://velog.io/@public_danuel/destructuring-assignment
 */
+
+// (1) 기존 문법
+const searchingBy = req.query.term;
+
+// (2) 구조분해할당 [ES6]
+const {
+  query: { term: searchingBy },
+} = req;
+
+//---------------------------------
 // 객체의 property와 메서드 꺼내기를 같은 이름의 변수에 대입하기
 const candyMachine = {
   status: {
