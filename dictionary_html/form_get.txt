@@ -1,0 +1,37 @@
+형식) (URL)?term=abc&query2=123&query3=456
+=> [req.query] = {term:'abc', query2: '123', query3: '456'}
+
+컨트롤러로 query에 접근하기 위해서는 method="get"이어야 함. 
+- URL에 정보 추가됨. 해당 데이터를 바탕으로 요청을 보냄.
+- POST는 안됨. 주소에 표시되지 않음.
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+1) Pug 파일에서 form 생성 - 사용자로부터 데이터를 받기
+- action=routes.search로 데이터 전달
+- name="term" input에 입력된 query 데이터의 명칭.
+
+[header.pug]
+    .header__column
+        form(action=routes.search, method="get")
+            input(type="text", placeholder="Search by term...", name="term")
+
+------------------------------------------------------------------
+2) controller에서 데이터 받고 보내기.
+- term query 받아서 작업한 후
+- searchingBy 데이터 보내기
+
+[videoController.js]
+export const search = (req, res) => {
+  const {
+    query: { term: searchingBy },
+  } = req;                                                    // const searchingBy = req.query.term;과 동일(destructuring)
+  res.render("search", { pageTitle: "Search", searchingBy }); // searchingBy: searchingBy와 동일 (Object Literals)
+};
+
+------------------------------------------------------------------
+3) Pug 파일에서 searchingBy 데이터 받기
+[search.js]
+    .search__header
+        h3 Searching for #{searchingBy}
+

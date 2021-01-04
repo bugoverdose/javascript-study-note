@@ -1,0 +1,56 @@
+1단계) bodyparser middleware가 있어야 post method로 받아진 form의 데이터 활용 가능
+
+[app.js]
+import bodyParser from "body-parser";
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+---------------
+2단계) pug 탬플릿 
+[join.pug]
+block content
+    .form-container
+        form(action=routes.join, method="post")
+            input(type="text", name="name", placeholder="Full Name")
+            input(type="email", name="email", placeholder="Email")
+            input(type="password", name="password", placeholder="Password")
+            input(type="password", name="password2", placeholder="Verify Password")
+            input(type="submit", value="Create Account")
+        include partials/socialLogin
+
+---------------
+3단계) 컨트롤러: get & post 메서드에 따라 콜백함수 2가지 구분.
+- 실질적으로 res.render를 통해 pug 템플릿 사용
+- form 데이터 작업하는 로직 구현. 
+- res.redirect로 이동
+
+[userController.js]
+import routes from "../routes";
+
+export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
+export const postJoin = (req, res) => {
+  const {
+    body: { name, email, password, password2 },
+  } = req; // post로 전달받는 데이터들은 req에 담기게 됨.
+  if (password != password2) {
+    res.status(400); // 서로 다른 비밀번호를 입력했으면 bad request 화면 뜨도록 설정.
+  } else {
+    // To DoL 사용자 등록
+    // Log the user in
+    res.redirect(routes.home); // 제대로 했으면 "/"으로 이동. 즉, redirect해주기.
+  }
+};
+
+---------------
+4단계) Router를 get & post 메서드로 구분. 각각 다른 콜백함수. route은 동일. 
+- 컨트롤러를 사용하여 사용자에게 보여줌.
+
+[golbalRouter.js]
+import { getJoin, postJoin } from "../controllers/userController";
+import routes from "../routes";
+
+const golbalRouter = express.Router();
+
+golbalRouter.get(routes.join, getJoin); 
+golbalRouter.post(routes.join, postJoin);
+
