@@ -14,8 +14,11 @@
 [router.js] export const userRouter = express.Router();
 [app.js]    import { userRouter } from "./router";
  
+--------------------------------------
+(3) export하지 않은 경우, 파일 전체 import
 
-
+[db.js] const db = mongoose.connection;
+[init.js] import "./db";
 
 ------------------------------
 (실전)
