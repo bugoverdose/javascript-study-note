@@ -1,4 +1,23 @@
 /*
+ async : 함수 내부를 단계별로 실행되도록 하는 방법. 잠시 기다리게 만드는 방법.
+ await : 기다려줘야 하는 녀셕 지정. 다음에 실행되어야 할 코드들이 전부 기다려줌.
+ (중요) try-catch문을 사용해서 에러를 받아줘야 함. 
+  - 디폴트로 에러를 받아내지 못하기 때문 => 에러 발생시 앱 전체가 다 깨지게 됨.
+  - 기본적으로 await 코드가 성공적으로 끝나지 않고 에러가 떠도, 바로 다음 코드로 진행됨.
+ */
+export const home = async (req, res) => {
+  try {
+    const video_db = await Video.find({}); // 데이터베이스의 모든 비디오 찾아오기. 그동안 await.
+    res.render("home", { pageTitle: "Home", video_db }); // await이 끝나면 실행.
+  } catch (error) {
+    console.log(error);
+    res.render("home", { pageTitle: "Home", video_db: [] }); // 에러가 발생한 경우 빈 배열이 되도록 지정
+  }
+};
+
+// -------------------------------------------------------
+/*
+  이론
   async/await [ES2017]
   - then, catch가 반복되는 Promise를 더 적은 코드로 사용하기 위한 문법.
   - await이 then을 대체
