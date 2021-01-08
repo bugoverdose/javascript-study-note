@@ -1,0 +1,12 @@
+path 모듈
+- nodejs에서 파일과 디렉토리를 '절대경로'로 만들어주는 방법
+- 특정 파일 위치에서의 상대경로가 아니라 컴퓨터/서버 자체를 기준으로 하는 절대경로
+
+const path = require("path");   // import path from "path"
+const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js"); // 해당 디렉토리로 가져오기
+const OUTPUT_DIR = path.join(__dirname, "static");  // static이라는 폴더로 내보내기
+
+// __dirname : 현재 디렉토리명
+// path.resolve : for a file
+// path.join : for a directory
+
