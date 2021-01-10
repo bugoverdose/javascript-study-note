@@ -1,0 +1,45 @@
+body-parser
+- 사용자가 웹사이트로 전달하는 정보들을 검사하는 middleware
+- request로 받은 form, body 정보를 얻을 수 있게 해줌.
+
+body-parser.옵션: 전송하는 데이터의 형식을 서버가 이해할 수 있도록 서버 설정(configure).
+- body-parser.json : json 데이터를 서버에 보낼 때 필요
+- body-parser.urlencoded : html form을 서버에 보낼 때 필요
+
+--------------------------------
+helmet
+- node.js 앱의 보안에 도움이 되는 middleware
+
+--------------------------------
+morgan
+- application에서 발생하는 모든 일들을 logging하는 middleware
+  log: 무슨 일이 어디서 일어났는지 기록을 남기는 등
+- app.use(morgan("dev"));
+
+--------------------------------
+cookie-parser
+- cookie를 전달받아서 작업할 수 있도록 만들어주는 middleware
+  사용자 인증 같은 곳에서 쿠키를 검사할 때 사용해야 함.
+- session을 다루기 위해 사용자가 form에 입력한 ID, password 등을 쿠키에 저장할 것.
+
+쿠키 : 요청이 일어날 때마다 브라우저는 자동으로 쿠키를 서버로 전송해줌.
+: 클라이언트(웹브라우저)에 저장할 수 있는 정보들.
+: 서버에 무언가를 요청할 때 자동으로 전송될 정보들.
+: 모든 요청(request)에 대해 클라이언트에서 백엔드로 전송될 정보들.
+- Application > Storage > Cookies
+
+--------------------------------
+Passport
+- 사용자 인증을 구현시켜주는 middleware
+- facebook, google-oauth, instagram, twitter, kakao, github 등
+- 다른 모듈을 지원해주는 모듈.
+
+authentication 원리
+1) 쿠키를 생성하여 브라우저에 저장 (set the cookies on the browser)
+2) 해당 쿠키를 통해 User ID 등의 정보를 얻어냄.
+3) Passport는 브라우저로부터 자동으로 쿠키를 가져와서, 
+4) 인증이 완료된 User 객체를 Controller들에 넘겨주게 됨. (req.user 객체 = 현재 로그인된 사용자)
+
+passport-local-mongoose
+- User 모델에 사용자 기능(user functionality)를 추가하는 모듈.
+- 비밀번호 변경, 확인, 생성, 암호화 등의 기능 제공.
