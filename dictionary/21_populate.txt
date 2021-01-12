@@ -1,0 +1,51 @@
+populate() : 객체를 가져오는 함수. type이 ObjectId인 field에 대해서만 사용 가능.
+
+============================================== 
+
+(1) Video.findById : 해당 id에 부합하는 특정 데이터를 Video 모델에서 찾아냄.
+: video.creator에 id 값만 대입.
+
+const video = await Video.findById(id) 
+console.log(video);
+{
+  views: 0, comments: [], _id: 5ffd7abde0029d04340dde7c, fileUrl: 'uploads/videos/1d44f1b2703bd98b4a85a4a4c85a0e26',   title: 'first title', description: 'first des',
+  creator: 5ffc55d5adbf3b4d52e0bb5c,
+  createdAt: 2021-01-12T10:32:29.897Z, __v: 0 
+}
+
+============================= 
+
+(2) populate() : video.creator에 전체 객체 대입됨.
+
+const video = await Video.findById(id).populate("creator") 
+console.log(video);
+{
+  views: 0, comments: [], _id: 5ffd7abde0029d04340dde7c, fileUrl: 'uploads/videos/1d44f1b2703bd98b4a85a4a4c85a0e26',   title: 'first title', description: 'first des',
+  creator: {
+    videos: [ 5ffd7abde0029d04340dde7c ],
+    comments: [],
+    _id: 5ffc55d5adbf3b4d52e0bb5c,
+    name: 'a',
+    email: 'a@a',
+    __v: 1, 
+    avatarUrl: 'uploads/avatars/1bf6435fc31b2a6f770edfccfbe2148f'
+  }
+  createdAt: 2021-01-12T10:32:29.897Z, __v: 0 
+}
+
+===========================================================
+===========================================================
+
+(1) 문제점: userDetail.pug로 현재 로그인된 user 객체(req.user)를 그대로 전달.
+export const getMe = (req, res) => {
+  res.render("userDetail", { pageTitle: "User Detail", user: req.user });
+  console.log(req.user);
+}; 
+
+(2) 해결: populate을 통해 user객체에서 videos 배열의 각 요소를 객체화한 후 전달.
+    => 각 video의 특정 속성 값들(파일주소, name, views 등) 활용 가능해짐
+export const getMe = async (req, res) => {
+  const user = await User.findById(req.user.id).populate("videos");
+  res.render("userDetail", { pageTitle: "User Detail", user });
+  console.log(user);
+}; 

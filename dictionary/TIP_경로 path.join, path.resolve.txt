@@ -1,0 +1,31 @@
+(실전) 상대경로와 절대경로 : 파일이 깨지는 문제 해결
+
+[getMe] vs [userDetail]
+- http://localhost:4000/me : globalRouter
+- http://localhost:4000/users/5ffc55d5adbf3b4d52e0bb5c : userRouter
+
+img(src=user.avatarUrl)
+videoFile: item.fileUrl
+=> 상대경로 : 경로의 차이에 따라 이미지 파일이 깨지게 됨. 
+- /me에서만 읽어짐. /users/id에서는 깨지게 됨. 
+
+img(src=`/${user.avatarUrl}`)
+videoFile: `/${item.fileUrl}`
+=> 절대경로 : 둘 다 localhost:4000부터 시작. 이미지 파일 동일하게 표시.
+
+======================================================
+
+1) 절대경로 : '/파일경로'
+- root 폴더(C:\ or /) 혹은 Node.js 프로세스가 실행되는 위치를 기준으로 표현한 경로.
+- path.resolve : C:\ 혹은 /을 만나면 앞의 경로 무시. 절대경로
+
+2) 상대경로 : '파일경로'
+- 현재 파일을 기준으로 표현한 경로. 
+- .(현재 파일과 같은 경로) & ..(한 단계 상위 경로)를 활용하여 표현.
+- path.join : C:\ 혹은 /을 만나면 상대경로로 처리
+
+path.join("/a", "/b", "c");    // '/a/b/c'
+path.resolve("/a", "/b", "c"); // '/b/c'
+
+path.join('..', "/b", '.', "c");    // '../b/c'
+path.resolve('..', "/b", '.', "c"); // '/b/c'
