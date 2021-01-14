@@ -26,6 +26,22 @@ export const getEditVideo = async (req, res) => {
 
 // -------------------------
 
+export const postRegisterView = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    video.views += 1;
+    video.save(200); // 성공
+    res.status;
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
 const getVideo = async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
