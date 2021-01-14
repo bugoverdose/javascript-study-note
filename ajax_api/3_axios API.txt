@@ -1,0 +1,136 @@
+axios
+: http request요청을 더 섹시하게 할 수 있게 해줌.
+: status code에 접근하는 등 활용성 넓음.
+<-> (비교) fetch("url") : 매뉴얼한 방법. 간단하지만 활용성 떨어짐.
+
+====================================================================
+
+1단계) route 등록
+[routes.js]
+const ADD_COMMENT = "/:id/comment";
+const routes = {
+  addComment: ADD_COMMENT,
+}
+
+===================
+
+[apiRouter.js] 
+apiRouter.post(routes.addComment, postAddComment);
+
+===================
+ 
+[videoController.js]
+// 객체 활용 위해 populate("comments") 추가.
+export const videoDetail = async (req, res) => {    
+  const {
+    params: { id },
+  } = req;
+  try {
+    const video = await Video.findById(id)
+      .populate("creator")
+      .populate("comments");
+    res.render("videoDetail", { pageTitle: video.title, video }); // video 정보를 videoDetail.pug로 전송.
+  } catch (error) {
+    res.redirect(routes.home); // DB에 없는 비디오로 접속하려고 하면 home으로 redirect됨.
+  }
+};
+
+// postAddComment 추가.
+export const postAddComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment },  // axios로부터 데이터를 전달받는 위치
+    user,
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    const newComment = await Comment.create({
+      text: comment,
+      creator: user.id,
+    });
+    video.comments.push(newComment.id);
+    video.save();
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+===================
+[models/Comment.js] 참고 
+const CommentSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: "Text is required",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+});
+
+===================
+
+[videoDetail.pug] 백엔드는 일반적인 form과 동일하게 동작.
+.video__comments 
+    form.add__comment#jsAddComment
+        input(type="text", placeholder="Add a comment")
+    ul.video__comments-list
+        each comment in video.comments
+            li
+                span=comment.text 
+
+====================================================================
+====================================================================
+
+2단계) form에 axios 설정
+[addComment.js] 
+import axios from "axios";
+
+const addCommentForm = document.getElementById("jsAddComment");
+
+const sendComment = async (comment) => {
+  const videoId = window.location.href.split("/videos/")[1];
+  const response = await axios({
+    url: `/api/${videoId}/comment`, // request를 보내는 곳
+    method: "POST",
+    data: { comment }, // input으로 받은 comment를 데이터로 보내기.
+  });
+  console.log(response);
+};
+
+const handleSubmit = (event) => {
+  event.preventDefault(); // 새로고침되지 않도록. (form의 디폴트 이벤트 발생하지 않도록)
+  const commentInput = addCommentForm.querySelector("input");
+  const comment = commentInput.value;
+  sendComment(comment); // input으로 submit받은 값에 대한 작업
+  commentInput.value = ""; // 다시 input은 빈 공간으로
+};
+
+const init = () => {
+  addCommentForm.addEventListener("submit", handleSubmit); // form을 submit하는 이벤트가 발생했을 때 실행.
+};
+
+if (addCommentForm) {
+  init();
+}
+
+-----------------------------
+=> comment 데이터는 req.body.comment로 전달받음.
+
+[videoController.js] 
+export const postAddComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment }, // req.body.comment: axios로부터 comment 데이터를 전달받는 위치
+    user,
+  } = req;
+  ~~
+}
+
+====================================================================

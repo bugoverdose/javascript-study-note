@@ -1,4 +1,11 @@
 populate() : 객체를 가져오는 함수. type이 ObjectId인 field에 대해서만 사용 가능.
+- older to newer 순으로 정렬됨.
+
+cf) reverse : 배열 메서드. 리스트의 순서를 정반대로. newer to older
+ul.video__comments-list#jsCommentList
+    each comment in video.comments.reverse()
+        li
+            span=comment.text 
 
 ============================================== 
 
@@ -49,3 +56,11 @@ export const getMe = async (req, res) => {
   res.render("userDetail", { pageTitle: "User Detail", user });
   console.log(user);
 }; 
+
+===========================================================
+===========================================================
+
+> 복수의 populate 설정하려면 그대로 앞뒤로 붙여서.
+const video = await Video.findById(id)
+      .populate("creator")
+      .populate("comments");

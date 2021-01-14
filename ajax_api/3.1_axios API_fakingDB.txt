@@ -1,0 +1,62 @@
+1) axios의 status code에 따라 fake로 댓글 추가. (addComment)
+- status code가 200이면 DB에 성공적으로 추가되었을 것이라고 간주.
+  => 사용자에게 추가된 결과 보여주기.
+
+2) axios의 status code에 따라 fake로 댓글 수 값도 증가. (increaseNumber)
+- span#jsCommentNumber에 대입된 숫자 값을 가져와서 증가시키기.
+
+====================================================================
+
+[addComment.js] 
+import axios from "axios";
+
+const addCommentForm = document.getElementById("jsAddComment");
+const commentList = document.getElementById("jsCommentList");
+const commentNumber = document.getElementById("jsCommentNumber");
+
+const increaseNumber = () => {
+  commentNumber.innerHTML = parseInt(commentNumber.innerHTML, 10) + 1;
+};
+
+const addComment = (comment) => {
+  const li = document.createElement("li");
+  const span = document.createElement("span");
+  span.innerHTML = comment;
+  li.appendChild(span);
+  commentList.prepend(li); // 맨 처음에 추가. append는 맨 끝에 추가.
+  increaseNumber();
+};
+
+const sendComment = async (comment) => {
+  const videoId = window.location.href.split("/videos/")[1];
+  const response = await axios({
+    url: `/api/${videoId}/comment`, // request를 보내는 곳
+    method: "POST",
+    data: { comment }, // input으로 받은 comment를 데이터로 보내기.
+  });
+  if (response.status === 200) {
+    addComment(comment);
+  }
+};
+
+===========================
+
+[videoDetail.pug] <li> <span>에 대응되도록
+.video__comments 
+    if video.comments.length === 1
+        span.video__comment-number 
+            span#jsCommentNumber 1      // 댓글 수 faking을 위해 변경 필요.
+            |comment
+    else
+        span.video__comment-number
+            span#jsCommentNumber=video.comments.length
+            |comments
+    form.add__comment#jsAddComment
+        input(type="text", placeholder="Add a comment")
+    ul.video__comments-list#jsCommentList
+        each comment in video.comments.reverse()
+            li
+                span=comment.text 
+
+====================================================================
+ 

@@ -1,0 +1,82 @@
+fetch("url") 
+: 매뉴얼한 http request요청 방법. 
+: method로 GET 혹은 POST로 지정 (디폴트 값은 GET)
+- 데이터베이스를 변경할 필요가 없으면 get
+- 데이터베이스를 변경해야 한다면 post
+
+- fetch 완료시 개발자도구 > Network창에서 fetch타입의 파일 생성됨.
+
+====================================================================
+
+fetch API 만들기 과정 - 비디오 끝까지 볼 때마다 조회수 증가 기능
+1단계) route 등록
+2단계) fetch함수 실행
+
+=========================================
+
+[기본 원리] hit the url behind the scenes
+http://localhost:4000/api/:id/view에 접속할 때마다 콜백함수 registerView 실행.
+=> DB에 접속하여 해당 비디오(:id)의 조회수 값 증가.
+
+ex) fetch("http://localhost:4000/api/:id/view") 
+=> 실행될 때마다 비디오(:id)의 조회수 값 증가. 브라우저에서 실행하여 확인가능.
+
+====================================================================
+
+1단계) route 등록 
+[routes.js]
+const API = "/api"; 
+const REGISTER_VIEW = "/:id/view";
+
+const routes = {
+  ~~
+  registerView: REGISTER_VIEW,
+ 
+};
+
+[apiRouter.js] 
+apiRouter.post(routes.registerView, postRegisterView);
+// 데이터베이스를 변경하기 위해서는 반드시 post
+
+===================
+ 
+[videoController.js]
+export const postRegisterView = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    video.views += 1;
+    video.save();
+    res.status(200);
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+=========================================
+
+2단계) fetch함수 실행
+[videoPlayer.js]
+const registerView = () => {
+  const videoId = window.location.href.split("/videos/")[1];
+  fetch(`/api/${videoId}/view`, { method: "POST" }); // apiRouter.post이므로 POST 지정.
+};
+// window.location.href == "http://localhost:4000/videos/:id"
+// window.location.href.split("/videos/") == ["http://localhost:4000", ":id"]
+
+const handleEnded = () => {
+  ~~
+  registerView();       // 비디오 끝났을 때 데이터베이스의 조회수도 1 증가.
+};
+
+const init = () => {
+ ~~
+ videoPlayer.addEventListener("ended", handleEnded);
+ ~~
+};
+
+====================================================================
