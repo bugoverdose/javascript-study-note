@@ -1,10 +1,10 @@
-<video src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4", 
+<video src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
    controls=true> 
 </video>
 -------------
 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
 
-<middleware 관련>
+<middlewares>
 app.use(helmet());
 app.use(function (req, res, next) {
   res.setHeader(
@@ -12,4 +12,9 @@ app.use(function (req, res, next) {
     "script-src 'self' https://archive.org"
   );
   return next();
-}); // helmet update에 따라 html video 태그 사용할려면 필요해진 코드.
+}); 
+// helmet update에 따라 html video 태그 사용할려면 필요해진 코드.
+
+===================
+
+cf) 세부 방법들은 wetube 참고

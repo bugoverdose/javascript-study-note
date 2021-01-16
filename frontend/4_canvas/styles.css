@@ -1,0 +1,61 @@
+/* @import "reset.css"; */
+
+body {
+  background-color: #f1f2f3;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 10px;
+}
+
+canvas {
+  height: 500px;
+  width: 500px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.controls {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls .controls__buttons {
+  margin-bottom: 20px;
+}
+
+.controls__buttons button {
+  all: unset;
+  cursor: pointer;
+  background-color: white;
+  padding: 5px 0px;
+  width: 100px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.controls .controls__colors {
+  display: flex;
+  justify-content: space-between;
+}
+
+.controls__colors .controls__color {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.controls .controls__range {
+  margin-bottom: 20px;
+}

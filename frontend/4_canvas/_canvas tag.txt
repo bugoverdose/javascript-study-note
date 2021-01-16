@@ -1,0 +1,65 @@
+canvas는 context를 지니는 html 태그.
+- context : canvas element 내부의 pixel들을 조작할 수 있는 방법.
+- https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+
+중요: canvas 태그는 2가지 크기값을 지님
+1) css size : 사용자 눈에 보이는 크기.
+2) pixel modifier의 size : canvas.width & canvas.height를 css size에 맞도록 지정. 
+
+----------------------
+그림판 관련 주요 속성 및 메서드들
+- context.fillStyle
+> context.beginPath() : create the starting point of a line // 'path' = line
+> context.moveTo(x, y) : Moves the starting point. (x, y) coordinates.
+> context.lineTo(x, y) : Connects the path with a straight line. Creates a line.
+> context.strokeStyle : 브러시 색상 값. stroke()할 때의 색깔. 
+> context.lineWidth : 브러시 두께 값. stroke()할 때의 두께.
+> context.stroke() : 실제로 path 위치의 pixel값 변경. 색칠. Strokes the current sub-paths with the current stroke style.
+- context.fill()
+
+===============================================
+const canvas = document.querySelector("#jsCanvas");
+const context = canvas.getContext("2d");
+
+// 1단계) pixel modifier의 size 지정. (css size와 동일하게 설정)
+canvas.width = 500;
+canvas.height = 500;
+
+// 2단계) path의 기본 색상 및 굵기
+context.strokeStyle = "black";
+context.lineWidth = 2.5;
+
+// 3단계) MouseEvent에 따라 메서드들 실행.
+let painting = false; // canvas가 색칠되고 있는지의 여부.
+
+const startPainting = (event) => {
+  painting = true;
+  console.log(event);
+};
+
+const onMouseMove = (event) => {
+  const x = event.offsetX;
+  const y = event.offsetY;
+  // offsetX, offsetY : canvas 내의 위치 정보. (MouseEvent.offsetX)
+  // clientX, clientY : 브라우저 전체 범위 내의 위치 정보.
+
+  if (!painting) {
+    context.beginPath(); // 클릭하지 않는 동안에는 path의 시작점을 설정.
+    context.moveTo(x, y); // path의 시작점 재설정. (사용되지 않을 뿐 계속 path 생성)
+  } else {
+    context.lineTo(x, y); // 클릭하면 실제로 path 연결. Creates a line.
+    context.stroke(); // 실제로 path 위치의 pixel값 변경. 색칠.
+  }
+};
+
+const stopPainting = () => {
+  painting = false;
+};
+
+if (canvas) {
+  // 현재 웹페이지에 canvas가 존재하는 경우 실행.
+  canvas.addEventListener("mousedown", startPainting); // mousedown: 마우스를 누르는 이벤트
+  canvas.addEventListener("mousemove", onMouseMove); // mousemove: 마우스를 움직이는 이벤트
+  canvas.addEventListener("mouseup", stopPainting); // mouseup: 마우스를 떼는 이벤트
+  canvas.addEventListener("mouseleave", stopPainting); // mouseleave: 마우스가 캔버스를 떠나는
+}
