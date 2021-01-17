@@ -1,0 +1,30 @@
+[HTTP는 메서드 vs Socket은 이벤트]
+
+HTTP 메서드들: get, post, put, patch, delete 
+- Router 필요.
+- ex) app.get("/", (req, res) => res.render("home"));
+
+Socket 이벤트: connection 등
+- websocket은 페이지 없이 오직 연결만이 존재함.
+- 클라이언트와 서버 모두 event를 보낼 수도 받을 수도 있음.
+- 서버가 이벤트 A를 보냈을 때 클라이언트가 이벤트 A에 listen하고 있었으면 반응.
+- ex) io.on("connection", 이벤트 핸들링 콜백함수);
+
+=========================================
+[server.js] Backend / Server
+const app = express();
+const server = app.listen(PORT, handleListening); 
+const io = socketIO(server); 
+
+io.on("connection", () => console.log("Connected!!!"));
+------------------------
+[views/home.pug] Frontend
+    body
+        h1 Hello!
+        script(src="/socket.io/socket.io.js")
+
+[브라우저 콘솔: http://localhost:4000/]
+io.connect("/")
+Socket {receiveBuffer: Array(0), sendBuffer: Array(0), ids: 0, acks: {…}, flags: {…}, …}
+
+// => VSC 콘솔에는 "Connected!!!" 출력

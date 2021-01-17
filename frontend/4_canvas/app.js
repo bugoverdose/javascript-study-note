@@ -5,7 +5,7 @@ const context = canvas.getContext("2d");
 canvas.width = 500;
 canvas.height = 500;
 
-// 2단계) path의 기본 색상 및 굵기
+// 2단계) path를 stroke할 때의 기본 색상 및 굵기
 context.strokeStyle = "black";
 context.lineWidth = 2.5;
 

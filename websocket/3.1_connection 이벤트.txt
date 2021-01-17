@@ -1,0 +1,34 @@
+connection 이벤트
+- io.on("connection", (socket) => {~~} );
+- 클라이언트가 연결될 때마다 서버는 'socket'을 받게 됨
+- auto reconnection 기능이 자체적으로 구현되어있음.
+  : 서버가 죽었다 다시 살아나면 연결이 끊겼던 클라이언트들과 자동으로 다시 연결됨.
+
+======================
+socket 객체
+- HTTP의 request 객체 같은 것. 
+- 각 클라이언트와의 연결 그 자체.
+- id 값을 지님.
+
+[server.js] Backend
+const server = app.listen(PORT, handleListening); // express 서버를 server 변수에 값으로 할당
+const io = socketIO(server); // HTTP 서버 위에 WebSocket 서버 동작 => http://localhost:4000/socket.io/socket.io.js로 접근 가능해짐.
+
+let sockets = [];
+
+io.on("connection", (socket) => {
+  sockets.push(socket.id);
+});
+
+setInterval(() => console.log(sockets), 1000); 
+// 연결된 클라이언트가 1명 증가할 때마다 각 socket의 id들의 배열 1초마다 출력
+
+-------------------------
+[static/index.js] Frontend
+io.connect("/");                 // 웹소켓 연결
+-----------
+[views/home.pug]
+    body 
+        script(src="/socket.io/socket.io.js")   // 서버와 클라이언트 연결 위해 필요.
+        script(src="/index.js")
+-------------------------

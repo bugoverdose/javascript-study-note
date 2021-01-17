@@ -1,0 +1,51 @@
+websocket app 개발을 도와주는 도구들
+- 둘 다 그 자체로 WebSocket 클라이언트면서 동시에 WebSocket 서버.
+- 백엔드와 프론트엔드 양쪽에 설치해야 함.
+  cf) http://localhost:4000/socket.io/socket.io.js 
+      : SocketIO 백엔드와 프론트엔드가 서로 대화할 수 있도록 해주는 frontend 코드.
+
+1) socket.io
+- 공식문서 & api 모두 잘 정리되어있음.
+- beginner friendly.
+ - Real-time analytics
+ - Instant messaging and chat
+ - Binary streaming : send any blob back and forth: image, audio, video.
+ - document collaboration
+
+2) ws
+- ws is a simple to use, blazing fast, and thoroughly tested WebSocket client and server implementation.
+- a Node.js WebSocket library
+- ws도 별도의 커뮤니티가 있기는 함. 기본적으로 취향 차이.
+
+==================================================
+==================================================
+[SocketIO 셋업 원리]
+- 구글 크롬은 HTTP 이해 가능 BUT WS는 이해 불가. 서로 전혀 다른 protocol
+  : http://localhost:4000/로만 접근 가능
+
+- HTTP 서버 위에 WebSocket 서버가 구동되도록 세팅.
+  : http://localhost:4000/로 여전히 접근 가능
+  : http://localhost:4000/socket.io/socket.io.js로도 접근 가능해짐 
+    - SocketIO 백엔드와 프론트엔드가 서로 대화할 수 있도록 해주는 frontend 코드.
+  - 서로 다른 traffic이기 때문에 같은 port 위에 두 서버가 동작하도록 설정 가능.
+  - WS와 HTTP는 같은 서버에 공존 가능.
+
+======================================
+[server.js] Before : only HTTP
+const PORT = 4000;
+const app = express();
+~~~
+app.listen(PORT, handleListening);    // express 서버 구동 (HTTP)
+
+===================
+[server.js] After : WS on top of HTTP
+const PORT = 4000;
+const app = express();
+~~~
+const server = app.listen(PORT, handleListening);    // express 서버를 server 변수에 값으로 할당 
+const io = socketIO(server);   
+// 인자로 express 서버(HTTP) 대입. => HTTP 서버 위에 WebSocket 서버 동작
+
+======================================
+
+
