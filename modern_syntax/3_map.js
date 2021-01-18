@@ -1,15 +1,38 @@
 /*
-   map 메서드: 배열의 각 요소에 대해 콜백함수를 실행하고, 
-               그 결과로 새로운 배열을 return하는 메서드
+  map 메서드: array의 각 요소에 대해 콜백함수를 실행하고, 
+              그 실행결과들로 새로운 array을 return하는 메서드
 
-   배열.map(콜백함수)
-    - 콜백함수: function(배열의 현재 요소의 value, index) { ~~ }
+  배열.map((매개변수) => ~~~ })
+  - 배열의 각 item을 매개변수로 받아 함수를 실행하고,
+    각 실행결과에 따라 return된 값들로 새로운 array 반환
 */
+const foods = ["curry", "ramen", "meat"];
+const foodsMap = foods.map((current) => {
+  return `${current} is delicious`;
+});
+console.log(foods); // ["curry", "ramen", "meat"]
+console.log(foodsMap); // ["curry is delicious", "ramen is delicious", "meat is delicious"]
 
-// to be added - React movie app
+// -----------------------------------------
+// React : dynamic component generation
+let foods = [
+  { id: 1, name: "kimchi", spiciness: 4 },
+  { id: 2, name: "ramen", spiciness: 5 },
+  { id: 3, name: "curry", spiciness: 1 },
+]; // 데이터 객체들의 배열. 각 객체는 매개변수 dish에 담기게 됨.
 
+// map메서드로 동적으로 생성된 Food 컴포넌트들의 배열이 return됨. {컴포넌트 배열}
+const App = () => {
+  return (
+    <div>
+      <h1>I am App Component</h1>
+      {foods.map((dish) => (
+        <Food key={dish.id} fav={dish.name} spiciness={dish.spiciness} />
+      ))}
+    </div>
+  );
+};
 // -----------------------
-
 /*
   [세부구조]
    Array.prototype.map(callbackFunc, thisArg)

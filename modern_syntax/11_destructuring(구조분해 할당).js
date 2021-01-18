@@ -9,6 +9,28 @@
 https://velog.io/@public_danuel/destructuring-assignment
 */
 
+// React : 구조분해할당으로 매개변수 props 객체에서 props.fav와 props.spiciness 꺼내기
+const Food = ({ fav, spiciness }) => {
+  return (
+    <h2>
+      {fav}'s spiciness is {spiciness}
+    </h2>
+  );
+};
+const App = () => {
+  return (
+    <div>
+      <h1>I am App Component</h1>
+      <Food fav="kimchi" spiciness={4} />
+      <Food fav="ramen" spiciness={5} />
+      <Food fav="curry" spiciness={3} />
+      <Food fav="soup" spiciness={1} />
+    </div>
+  );
+};
+export default App;
+
+// ------------------------------------------------------------
 // (1) 기존 문법
 const searchingBy = req.query.term;
 
