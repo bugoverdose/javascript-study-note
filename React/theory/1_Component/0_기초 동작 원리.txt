@@ -1,0 +1,34 @@
+React 동작 원리
+- ReactDOM.render(컴포넌트, html element)
+  : App.js에서 return하는 element를 index.html의 id="root" 태그 사이로 전달. 
+- virtual DOM : 소스코드에는 html 코드가 존재하지 않음.
+
+1) App.js : App 컴포넌트를 만들어서 내보내기
+2) index.js : App 컴포넌트를 index.html의 id="root" 태그들 사이로 render
+3) index.html : id="root" 태그 사이에 App 컴포넌트(html element)를 받게 됨.
+
+==========================
+[src/App.js]
+import React from "react";
+const App = () => <div>I am a Component</div>;
+export default App;
+
+-----------------------------
+[src/index.js]
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+
+ReactDOM.render(<App />, document.getElementById("root"));
+
+-----------------------------
+[public/index.html]
+ <div id="root"></div>
+
+=================================================================================
+virtual DOM (virtual document object model)
+- 페이지 소스코드에는 기존의 index.html 파일 자체만 보여줌.
+  - 태그들 사이에 render된 컴포넌트들 보이지 않음.
+- 소스코드에는 존재하지 않음. React가 나중에 생성해내는 것.  
+- React가 빠른 이유는 이처럼 소스코드에 존재하지 않기 때문에. 
+=================================================================================

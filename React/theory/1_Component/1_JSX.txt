@@ -1,0 +1,29 @@
+Component 
+1) 컴포넌트는 HTML 코드(JSX Element)를 return하는 함수 (function component)
+2) 컴포넌트명은 대문자로 시작해야 함. App, Food, Potato 등
+3) 컴포넌트도 함수이기 때문에 인자를 받는 방식으로 정보 전달받을 수 있음. (props)
+- React는 컴포넌트를 꾸밀 수도, 데이터를 보여주도록 할수도 있음.
+
+===========================
+[컴포넌트 사용 방법] <App /> 형식. html 태그처럼 App 컴포넌트를 사용해야 함.
+
+[App.js] 
+const App = () => {
+  return (
+    <div>
+      <h1>I am a Component</h1>;     // JSX.Element
+    </div>
+  );
+};
+export default App;             // App은 JSX.Element를 반환하는 함수
+---------------------------
+[index.js] 
+import App from "./App";
+ReactDOM.render(<App />, document.getElementById("root"));
+
+===========================
+cf) JSX : HTML inside of Javascript
+- 컴포넌트를 마치 html인 것처럼 사용.
+- React에서만 사용되는 개념.
+
+=======================================================================

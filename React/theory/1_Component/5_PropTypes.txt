@@ -1,0 +1,32 @@
+PropTypes
+- 특정 컴포넌트가 제대로 된 prop들을 전달받고 있는지 확인하는 방법. 
+- prop 전달 관련 실수 예방. 실수한 경우 브라우저 콘솔에서 Warning 확인 가능.
+  ex) 잘못된 데이터타입을 전달, isRequired인데 누락, prop명 실수 등 
+- https://reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper
+  - 구체적인 설정 방법들.
+
+==============================================================
+[npm i prop-types]
+
+// prop을 전달받을 컴포넌트의 propTypes 속성에 configure.
+Component.propTypes = {
+	prop1: PropTypes.데이터타입, 
+    prop2: PropTypes.데이터타입.isRequired, 
+}
+==============================================================
+[App.js]
+import PropTypes from "prop-types";
+
+const Food = ({ fav, spiciness }) => {
+  return (
+    <h2>
+      {fav}'s spiciness is {spiciness}
+    </h2>
+  );
+};
+
+Food.propTypes = {
+  name: PropTypes.string.isRequired,
+  spiciness: PropTypes.number.isRequired,
+};
+==============================================================

@@ -1,0 +1,21 @@
+[create-react-app]
+- 셋업 과정 자동화 : webpack, babel, 다른 파일에 넣기 등의 작업 완전 생략.
+- react에서 사용하는 최신 코드를 브라우저가 이해할 수 있도록 컴파일해주는 기능.
+- requirements: node, npm, npx
+===========================================
+[Set Up]
+1) npx create-react-app <프로젝트명>
+- 외부 터미널에서 실행 (주의: npm이 아님)
+
+2) git init 
+- 해당 프로젝트 내부에서 실행 (주의: git clone과 반대 순서) 
+
+3) github 사이트에서 repo 생성
+- 이미 만든 프로젝트명과 repo 이름 동일하게 하는 것을 권장. (혼란 예방)
+- URL 복사
+
+4) git remote add origin <repoURL>
+
+===========================================
+[npm install prop-types]
+

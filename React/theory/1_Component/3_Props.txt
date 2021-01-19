@@ -1,0 +1,48 @@
+Props
+- 컴포넌트의 prop으로 넣는 값들은 해당 컴포넌트에서 매개변수 props 객체로 받게 됨.
+- Reusable Component. 특정 값을 prop에 대입하여 재사용 가능.
+
+================================
+<Component prop1=value prop2={value}/> 
+- html에서 속성=값과 동일 형식.
+- 특정 prop에 특정 value을 전달하면서 컴포넌트 사용.
+  - value들은 string, boolean, array, number 등 가능.
+  - 문자열 외에는 전부 {중괄호} 사이에 넣어야 함.
+- prop:value들은 하나의 객체로 묶여서 컴포넌트에 인자로 전달됨.
+
+================================
+const Component = (props) => <h1>{props.prop1} & {props.prop2}</h1>;
+- 기본적으로 매개변수 props에 객체가 전달됨.
+- {prop} : 특정 prop의 값을 JSX에서 인식하려면 {중괄호} 사이에 대입해야 함.
+
+<실전> destructuring
+const Component = ({prop1, prop2}) => <h1>{prop1} & {prop2}</h1>;
+
+================================================================
+================================================================
+[예시]
+[App.js]
+const Food = ({ fav, spiciness }) => {    // 구조분해할당으로 props의 prop들 선택
+  return (
+    <h2>
+      {fav}'s spiciness is {spiciness}
+    </h2>
+  );
+};
+const App = () => {
+  return (
+    <div>
+      <h1>I am App Component</h1>
+      <Food fav="kimchi" spiciness={4} />     // prop명과 value는 자유
+      <Food fav="ramen" spiciness={5} />      // 문자열 외에는 {중괄호} 사이에
+      <Food fav="curry" spiciness={3} />
+      <Food fav="soup" spiciness={1} />
+    </div>
+  );
+};
+export default App;
+-------------
+[index.js]
+import App from "./App";
+ReactDOM.render(<App />, document.getElementById("root"));
+================================================================ 

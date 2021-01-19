@@ -1,3 +1,3 @@
-# javascript-study-note
+# Javascript Study Note
 
-Vanilla JS study notes (written in Korean)
+Vanilla JS, Node, and React study notes

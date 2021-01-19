@@ -1,0 +1,28 @@
+[npx create-react-app 프로젝트명] 실행 결과
+
+1) package.json에 자동으로 커맨드들 + 기초 설정들 생성됨.
+- npm start & npm build만 필요.
+- npm start : 컴파일 + run server. 
+  : 코드 수정시 브라우저에 자동 반영. 새로고침 불필요.
+
+[package.json]
+  "scripts": {
+    "start": "react-scripts start",   
+    "build": "react-scripts build",   
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+
+--------------------------------------
+2) 기본 폴더 구조
+- node_modules : npm init 불필요.
+- public : 소스코드에 보여지는 내용들 위주.
+  - index.html
+  - manifest.json : PWA를 위한 파일.
+- src : CSS & JS 파일들
+  - App.js & index.js가 기초 
+
+--------------------------------------
+3) 그 외 .gitignore, .eslintcache 등 기초 셋업들 이미 실행되어있음.
+
+==============================================
