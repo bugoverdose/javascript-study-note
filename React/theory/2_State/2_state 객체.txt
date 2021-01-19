@@ -7,8 +7,8 @@ cf) dynamic data: data that comes, mutates, changes 등 변화하는 데이터. 
 --------------------------------------
 state 객체의 데이터 사용 방법
 - {this.state.변수명} : 현재 위치한 클래스(=this)의 state의 특정 변수의 값 선택.
-  : render 메서드에서 return되는 html 태그들 사이에 대입할 때만 this.state로 직접 지정.
-- setState 등에서는 current 활용. this.state로 직접 지정하여 변경 금지.
+  : render 메서드에서만 this.state로 직접 지정하여 활용.
+- setState처럼 state를 변경할 때는 current 활용. this.state로 직접 지정하여 변경 금지.
 
 =======================================
 class App extends React.Component {

@@ -1,11 +1,22 @@
 axios
-: http request요청을 더 섹시하게 할 수 있게 해줌.
+: http request요청을 더 섹시하게 할 수 있게 해줌. fetch 위에서 동작.
 : status code에 접근하는 등 활용성 넓음.
 <-> (비교) fetch("url") : 매뉴얼한 방법. 간단하지만 활용성 떨어짐.
 
-====================================================================
+[npm install axios]
 
+[기본 형식] form에 설정
+  const response = await axios({
+    url: `/api/${videoId}/comment`, // request를 보내는 곳
+    method: "POST",
+    data: { comment }, // input으로 받은 comment를 데이터로 보내기.
+  });
+
+=> Controller에는 req.body.comment로 전달
+
+====================================================================
 1단계) route 등록
+
 [routes.js]
 const ADD_COMMENT = "/:id/comment";
 const routes = {
@@ -13,12 +24,10 @@ const routes = {
 }
 
 ===================
-
 [apiRouter.js] 
 apiRouter.post(routes.addComment, postAddComment);
 
 ===================
- 
 [videoController.js]
 // 객체 활용 위해 populate("comments") 추가.
 export const videoDetail = async (req, res) => {    
@@ -75,7 +84,6 @@ const CommentSchema = new mongoose.Schema({
 });
 
 ===================
-
 [videoDetail.pug] 백엔드는 일반적인 form과 동일하게 동작.
 .video__comments 
     form.add__comment#jsAddComment
@@ -87,8 +95,8 @@ const CommentSchema = new mongoose.Schema({
 
 ====================================================================
 ====================================================================
-
 2단계) form에 axios 설정
+
 [addComment.js] 
 import axios from "axios";
 
@@ -120,7 +128,7 @@ if (addCommentForm) {
   init();
 }
 
------------------------------
+=============================
 => comment 데이터는 req.body.comment로 전달받음.
 
 [videoController.js] 

@@ -31,7 +31,8 @@ class App extends React.Component {
 : render 메서드에서 return되는 html 태그들 사이에 대입할 때만 this.state로 직접 지정.
 : 현재 위치한 클래스(=this)의 state의 특정 변수의 값 선택.
 
-- setState 등에서는 current 활용. this.state로 직접 변경 금지.
+- render : 단순히 prop에 값을 대입할 목적일 때는 this.state로 직접 선택. 
+- setState : state값을 변경할 때는 current 활용. this.state로 직접 변경 금지.
 */
 
 // this.state.count. 실전에서는 destructuring으로 꺼내서 사용.
