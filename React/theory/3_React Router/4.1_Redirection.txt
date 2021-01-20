@@ -1,0 +1,49 @@
+props.history.push("/")
+- "/"라우트로 redirection. 
+
+============================================
+state 값이 undefined일 때 "/"으로 redirection.
+- 즉 클릭 없이 해당 route 직접 접근시, Home으로. 
+
+[Detail.js]
+import { render } from "@testing-library/react";
+import React from "react";
+
+class Detail extends React.Component {
+  componentDidMount() {
+    const {
+      history,
+      location: { state },
+    } = this.props;
+    if (state === undefined) {
+      history.push("/"); 
+    }
+  }
+  render() {
+    return <span>Hi</span>;
+  }
+}
+export default Detail;
+
+============================================
+cf) props 객체
+{ history: 
+    action: "POP"
+    block: ƒ block(prompt)
+    createHref: ƒ createHref(location)
+    go: ƒ go(n)
+    goBack: ƒ goBack()
+    goForward: ƒ goForward()
+    length: 14
+    listen: ƒ listen(listener)
+    location: {pathname: "/movie-detail", search: "", hash: "", state: undefined}
+    push: ƒ push(path, state)
+    replace: ƒ replace(path, state)
+    __proto__: Object
+
+  location: { ~ }
+  match: { ~ }
+  staticContext: undefined
+  __proto__: Object
+}
+============================================

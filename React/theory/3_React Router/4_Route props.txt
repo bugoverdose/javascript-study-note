@@ -1,0 +1,107 @@
+Router 내부에 있는 모든 Route들은 디폴트로 props 객체를 지니게 됨. 
+- react-router-dom 자체 기능.
+- props의 속성, 메서드 활용하여 라우트 간 이동, 라우트 간 정보 전달 가능.
+
+1) props.history.push("/") : "/"라우트로 redirection.  
+2) Link to={ pathname: "/route", state: {info} }를 통해
+   특정 라우트로 이동하면서, 해당 라우트의 props.location.state으로 값 전송.
+
+======================================================================
+props 객체
+{ history:                        // props.history : URL 변경 관련. 
+    action: "POP"
+    block: ƒ block(prompt)
+    createHref: ƒ createHref(location)
+    go: ƒ go(n)
+    goBack: ƒ goBack()
+    goForward: ƒ goForward()
+    length: 14
+    listen: ƒ listen(listener)
+    location: {pathname: "/movie-detail", search: "", hash: "", state: undefined}
+    push: ƒ push(path, state)
+    replace: ƒ replace(path, state)
+    __proto__: Object
+
+  location:
+    hash: ""
+    pathname: "/movie-detail"
+    search: ""
+    state: {year: 2021, title: "Deported", summary: "~~", ..., genres: Array(1)}
+    __proto__: Object
+
+  match: { ~ }
+
+  staticContext: undefined
+  __proto__: Object
+}
+=============================================================================  
+[Detail.js]
+class Detail extends React.Component {
+  componentDidMount() {
+    const {
+      history,
+      location: { state },
+    } = this.props;
+    if (state === undefined) {
+      history.push("/");                         // Redirection
+    }
+  }
+  render() {
+    return <span>Hi</span>;
+  }
+}
+export default Detail;
+
+===================================
+[Movie.js]
+import React from "react";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types"; 
+
+const Movie = ({ year, title, summary, poster, genres }) => { 
+  return (
+    <Link
+      to={{
+        pathname: "/movie-detail",
+        state: {                         // send data to [props.location.state]
+          year,
+          title,
+          summary,
+          poster,
+          genres,
+        },
+      }}
+    >
+      <div className="movie">
+        <h3 className="movie__title">{title}</h3>
+          ~~~
+      </div>
+    </Link>
+  );
+};
+
+Movie.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  ~~
+};  
+export default Movie;
+
+===================================
+[App.js]
+import React from "react";
+import { HashRouter, Route } from "react-router-dom"; 
+import About from "./routes/About";
+import Detail from "./routes/Detail";
+import Home from "./routes/Home";
+
+const App = () => (
+    <HashRouter>
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/movie-detail" component={Detail} />
+    </HashRouter>
+);
+export default App;
+
+============================================================================= 

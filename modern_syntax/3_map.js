@@ -2,9 +2,13 @@
   map 메서드: array의 각 요소에 대해 콜백함수를 실행하고, 
               그 실행결과들로 새로운 array을 return하는 메서드
 
-  배열.map((매개변수) => ~~~ })
-  - 배열의 각 item을 매개변수로 받아 함수를 실행하고,
+  배열.map((item, index) => ~~~ })
+  - 매개변수1: 배열의 각 item
+  - 매개변수2: index. 배열에서 각 item의 순서. (선택)
+
+  => 배열의 각 item을 매개변수1로 받아 함수를 실행하고,
     각 실행결과에 따라 return된 값들로 새로운 array 반환
+  => 매개변수2의 경우 key 값으로 활용 가능. (선택)
 */
 const foods = ["curry", "ramen", "meat"];
 const foodsMap = foods.map((current) => {

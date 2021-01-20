@@ -1,0 +1,4 @@
+label 태그의 htmlFor 속성
+- JSX에서는 for 속성 사용 불가: 자바스크립트의 for문과 구분시켜줘야 함.
+HTML: <label for="~">
+JSX: <label htmlFor="~">

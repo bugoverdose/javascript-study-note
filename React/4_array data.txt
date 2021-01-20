@@ -1,0 +1,77 @@
+부모 컴포넌트
+1) render할 때는 평범하게 배열 데이터 그대로 prop으로 전달
+
+자식 컴포넌트
+2) PropTypes.arrayOf
+: genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+
+3) map 메서드 활용하여 배열의 각 요소별로 <li> element 생성
+
+4) map의 두번째 매개변수(index)를 key값으로 활용
+: 배열의 각 요소는 고유성 상실하기 때문에 react에서 컴포넌트 동적 생성시 key 값 필요.
+
+      <ul className="movie__genres">
+      {genres.map((genre, index) => (
+        <li key={index} className="genres__genre">
+          {genre}
+        </li>
+      </ul>
+
+cf) 문자열에도 slice 등 배열 메서드 사용 가능
+      <p className="movie__summary">{summary.slice(0, 140)}...</p>
+================================================================
+[Movie.js]
+import React from "react";
+import PropTypes from "prop-types"; 
+
+Movie.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+}; 
+
+const Movie = ({ title, genres, summary }) => {
+  return (
+    <div className="movie">
+      <h3 className="movie__title">{title}</h3>
+      <ul className="movie__genres">
+      {genres.map((genre, index) => (
+        <li key={index} className="genres__genre">
+          {genre}
+        </li>
+      </ul>
+      ))}
+      <p className="movie__summary">{summary.slice(0, 140)}...</p>
+    </div>
+  );
+};
+
+================================================================
+[App.js]
+import React from "react"; 
+import Movie from "./Movie";
+
+class App extends React.Component {
+  ~~~~
+  render() {
+    const { isLoading, movies } = this.state; 
+    return (
+      <section className="container">
+          <div className="movies">
+            {movies.map((movie) => {
+              return (
+                <Movie
+                  key={movie.id}
+                  title={movie.title}
+                  genres={movie.genres}
+                  summary={movie.summary}
+                />
+              );
+            })}
+          </div>
+      </section>
+    );
+  }
+}
+export default App;

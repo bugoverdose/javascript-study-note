@@ -1,0 +1,121 @@
+[라우트 사이에서 state 값 전달 방법]
+
+Link to 속성을 활용하면 클릭만으로 특정 Route로 prop 전송하면서 해당 페이지 render.
+  - pathname: "/route"
+  - state: { info1: ~, info2: ~, ... }
+
+주의: props.location.state 값 활용시, render 메서드에서 존재 여부 체크 필요함.
+- render() 이후에 componentDidMount가 실행되기 때문에 Redirection으로 해결불가.
+
+============================================================================= 
+1) Home라우트에서 Movie 컴포넌트의 Link 클릭시, /movie-detail로 이동.
+   => Detail 라우트는 렌더링될 때 props.location.state에 state값 전달.
+
+[Movie.js]
+import React from "react";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types"; 
+
+const Movie = ({ year, title, summary, poster, genres }) => { 
+  return (
+    <Link
+      to={{
+        pathname: "/movie-detail", // Detail 라우트로 이동
+        state: {                   // Detail 라우트에 props.location.state 값 전달
+          year,
+          title,
+          summary,
+          poster,
+          genres,
+        },
+      }}
+    >
+      <div className="movie">
+        <img src={poster} alt={title} title={title} />
+        <div className="movie__data">
+          <h3 className="movie__title">{title}</h3>
+          <h5 className="movie__year">{year}</h5>
+          <ul className="movie__genres">
+            {genres.map((genre, index) => (
+              <li key={index} className="genres__genre">
+                {genre}
+              </li>
+            ))}
+          </ul>
+          <p className="movie__summary">{summary.slice(0, 140)}...</p>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+Movie.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
+  poster: PropTypes.string.isRequired,
+  year: PropTypes.number.isRequired,
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+}; // axios객체.data.data.movies의 각 데이터 객체에서 prop으로 받아올 정보 지정.
+
+export default Movie;
+
+-------------------------------------
+2) Detail 라우트에서 this.props.location.state의 값 사용하여 렌더링
+
+[Detail.js]
+import React from "react";
+
+class Detail extends React.Component {
+  componentDidMount() {
+    const {
+      history,
+      location: { state },
+    } = this.props;
+    if (state === undefined) {
+      history.push("/");                // redirection
+    }
+  }
+  render() {
+    const {
+      location: { state },
+    } = this.props;
+    if (state) {
+      return <span>{state.title}</span>;   // state 값이 존재하는 경우 활용하여 렌더링
+    }
+    return null;                      // 없는 경우 렌더링하지 않고 redirection 되도록, 즉 componentDidMount 실행되도록.
+  }
+}
+
+export default Detail;
+
+-------------------------------------
+[App.js]
+import React from "react";
+import { HashRouter, Route } from "react-router-dom"; 
+import About from "./routes/About";
+import Detail from "./routes/Detail";
+import Home from "./routes/Home";
+
+const App = () => (
+    <HashRouter>
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/movie-detail" component={Detail} />
+    </HashRouter>
+);
+export default App;
+============================================================================= 
+cf) props 객체
+{ history: { ~ }
+  location:
+    hash: ""
+    pathname: "/movie-detail"
+    search: ""
+    state: {year: 2021, title: "Deported", summary: "When~~", poster: "https://yts.mx/assets/~~.jpg", genres: Array(1)}
+    __proto__: Object
+  match: { ~ }
+  staticContext: undefined
+  __proto__: Object
+}
+=============================================================================

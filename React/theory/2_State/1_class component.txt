@@ -28,3 +28,6 @@ class App extends React.Component {
 : 클래스이기 때문에 내부에서 state 객체를 만들어서 사용할 수 있음.
 
 ===================================================
+(3) react hook 
+: 더 이상 class component가 아니어도 state 사용 가능.
+: 최신 개념. 2019년도.

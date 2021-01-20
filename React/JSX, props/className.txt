@@ -1,0 +1,4 @@
+className 속성
+- JSX에서는 class 속성 사용 불가: 자바스크립트의 class와 구분시켜줘야 함.
+HTML: <div class="~">
+JSX: <div className="~">    => 브라우저에서는 class로 자동 변환.

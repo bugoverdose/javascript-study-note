@@ -1,0 +1,41 @@
+Link 태그: Router 내부에서만 사용 가능한 태그.
+- to 속성: 문자열(URL), 객체(특정 URL로, 특정 정보 전달) 등 
+- SPA(Single Page Application) 구현 가능하게 해줌.
+- https://reactrouter.com/web/api/Link 
+
+비교)
+- <Link to="/">Home</Link>  
+- <a href="/">Home</a> : a태그를 사용해버리면 이동할 때마다 매번 새로고침시켜버림.
+
+import { Link } from "react-router-dom";     // react-router-dom에서 import 필요
+
+==================================
+[Navigation]
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Navigation = () => (
+  <div>
+    <Link to="/">Home</Link>
+    <Link to="/about">About</Link>
+  </div>
+);
+
+export default Navigation;
+
+=================================
+[App.js]
+import { BrowserRouter, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import About from "./routes/About";
+import Home from "./routes/Home";
+
+const App = () => (
+  <BrowserRouter>
+    <Navigation />
+    <Route path="/" exact={true} component={Home} />
+    <Route path="/about" component={About} />
+  </BrowserRouter>
+);
+
+export default App;

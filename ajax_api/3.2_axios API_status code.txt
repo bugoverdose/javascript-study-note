@@ -1,3 +1,4 @@
+[fakingDB]
 1) axios의 status code에 따라 fake로 댓글 추가. (addComment)
 - status code가 200이면 DB에 성공적으로 추가되었을 것이라고 간주.
   => 사용자에게 추가된 결과 보여주기.

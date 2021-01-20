@@ -1,0 +1,81 @@
+[Detail 라우트의 URL 주소화하는 방법]
+
+1) 라우트에서 path 설정. "/movie/:id" 
+
+[App.js] 
+const App = () => (
+  <>
+    <HashRouter>
+      <Navigation />
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/movie/:id" component={Detail} />
+    </HashRouter>
+    <footer>I am the Footer</footer>
+  </>
+);
+
+export default App;
+
+==============================================================
+2) Home 라우트에서 Movie 컴포넌트로 id값 전달
+
+[Home.js] 
+class Home extends React.Component {
+  ~~
+  render() {
+    const { isLoading, movies } = this.state; 
+    return (
+          <div className="movies">
+            {movies.map((movie) => {
+              return (
+                <Movie
+                  key={movie.id}
+                  id={movie.id}               
+                  title={movie.title}
+                  year={movie.year}
+                  genres={movie.genres}
+                  poster={movie.medium_cover_image}
+                  summary={movie.summary}
+                />
+              );
+            })}
+          </div>
+        )}
+    ); 
+  }
+}
+export default Home;
+
+==============================================================
+3) Home 라우트에서 Movie 컴포넌트의 Link 클릭시, `/movie/:${id}`로 이동
+
+[Movie.js]
+const Movie = ({ id, year, title, summary, poster, genres }) => {
+  // state가 불필요하므로 function component으로. 인자로는 props 구조분해
+  return (
+    <Link
+      to={{
+        pathname: `/movie/:${id}`,
+        state: {
+          year,
+          title,
+          summary,
+          poster,
+          genres,
+        },
+      }}
+    >
+      <div className="movie">
+        ~~~
+      </div>
+    </Link>
+  );
+};
+
+Movie.propTypes = {
+  id: PropTypes.number.isRequired,
+  ~~
+};
+export default Movie;
+==============================================================

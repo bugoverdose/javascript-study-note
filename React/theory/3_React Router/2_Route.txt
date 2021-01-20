@@ -1,0 +1,49 @@
+Route
+- path : URL에 관한 prop
+  - "/:id"처럼 URL에 변수 적용 가능.
+- component : 렌더링할 페이지에 대한 prop
+- exact={true} : path와 완전히 일치할 때만 렌더링되도록.
+
+<Route path="/" exact={true} component={Home} />  : '/'에 접속시 Home.js 페이지로
+<Route path="/about" component={About} />         : '/about'에 접속시 About.js 페이지로
+
+--------------
+cf) :id처럼 URL 내 변수 활용 가능.
+<Route path="/movie/:id" component={Detail} />  
+
+--------------
+Router
+- 특정 URL에 부합하는 모든 Route들을 렌더링해줌.
+- 동시에 복수의 Route를 렌더링하고 싶지 않다면 특정 Route에 exact prop 사용
+
+==========================================
+==========================================
+중복 렌더링 예시
+- "/"로 접근시 <h1>Home</h1>
+- "/intro"로 접근시 <h1>Home</h1> <h1>Intro</h1>
+- "/about"로 접근시 <h1>Home</h1> <h1>About</h1>
+
+=> exact={true}로 예방 가능. <Route path="/" exact={true}>
+---------------------------
+[App.js]
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import About from "./routes/About";
+
+const App = () => (
+  <BrowserRouter>
+    <Route path="/">
+      <h1>Home</h1>
+    </Route>
+    <Route path="/intro">
+      <h1>Intro</h1>
+    </Route>
+    <Route path="/about">
+      <h1>About</h1>
+    </Route>
+  </BrowserRouter>
+);
+
+export default App;
+
+==========================================

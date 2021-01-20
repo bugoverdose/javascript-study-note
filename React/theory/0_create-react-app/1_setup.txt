@@ -17,5 +17,6 @@
 4) git remote add origin <repoURL>
 
 ===========================================
-[npm install prop-types]
+> npm install prop-types
+> npm install react-router-dom
 

@@ -19,9 +19,11 @@
 - public : 소스코드에 보여지는 내용들 위주.
   - index.html
   - manifest.json : PWA를 위한 파일.
-- src : CSS & JS 파일들
-  - App.js & index.js가 기초 
-
+- src : 작업하는 모든 CSS & JS 파일들
+  - components 폴더 : 각 컴포넌트 관련.
+  - routes 폴더 : 각 페이지 관련.
+  - App.js
+  - index.js
 --------------------------------------
 3) 그 외 .gitignore, .eslintcache 등 기초 셋업들 이미 실행되어있음.
 

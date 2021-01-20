@@ -1,0 +1,40 @@
+state 객체
+- 특정 class component에서 사용할 동적 데이터를 넣어두는 공간. 
+- react hook을 통해 class가 아니어도 state 사용 가능해짐.
+
+cf) dynamic data: data that comes, mutates, changes 등 변화하는 데이터. (하드코딩X)
+    => props로는 작업 불가. state 객체 활용 필요. => class component에서만 가능.
+
+--------------------------------------
+state 객체의 데이터 사용 방법
+- {this.state.변수명} : 현재 위치한 클래스(=this)의 state의 특정 변수의 값 선택.
+  : render 메서드에서 return되는 html 태그들 사이에 대입할 때만 this.state로 직접 지정.
+- setState 등에서는 current 활용. this.state로 직접 지정하여 변경 금지.
+
+=======================================
+class App extends React.Component {
+  state = {
+	  count: 0	
+  };
+  add = () => {};
+  minius = () => {};
+  render() {
+    return (
+	  <div>	
+		<h1>The number is {this.state.count}</h1>
+		<button onClick={this.add}>Add</button>
+		<button>Minus</button>
+      </div>
+	);
+  }
+}
+
+=======================================
+cf) button 태그에 onClick prop 제공됨(React). 
+   - eventListener와 불필요.
+   - onClick prop의 값으로 콜백함수 지정.
+   - <button onClick={this.add}> Add </button>
+   
+=======================================
+cf) state의 초기 값들을 굳이 설정할 필요는 없음. 나중에 값 추가 가능.
+    다만, 사용하게 될 state값들의 default 값을 미리 설정해놓는게 good practice.

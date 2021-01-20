@@ -1,0 +1,6 @@
+<img src="https://yts.mx/assets/images/movies/deported_2020/medium-cover.jpg" alt="ALT" title="TITLE">
+- src : 이미지 파일의 주소
+- alt : 이미지 파일이 깨졌을 때 나타나는 문구. 이미지 파일을 가져오는데 실패했을 때 표시.
+- title : 이미지에 마우스를 올렸을 때 나타나는 해당 이미지의 정보. 
+
+=====================================
