@@ -1,0 +1,38 @@
+Flex Layouts
+1) flexDirection : "column"  
+- 디폴트로 main axis가 위아래. portrait 모드를 가정.
+     
+2) flex: 1  
+- take all the space available
+- 형제들 사이에서 비율에 따라 나눠가지게 됨. ex) flex:1 / flex:3  =>  25% / 75%
+
+3) paddingHorizontal & paddingVertical 속성 존재.
+- paddingHorizontal : 20, // 좌우에만 적용 
+- paddingVertical: 100,  // 상하에만 적용. padding: 100 20; 
+
+4) size: 자동으로 px 단위로 조정.
+- fontSize: 20, 
+- fontSize: "20px", 
+
+================================================ 
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.yellowView}></View>
+      <View style={styles.blueView}></View> 
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#fff",
+  },
+  yellowView: { flex: 1, backgroundColor: "yellow" },
+  blueView: { flex: 3, backgroundColor: "blue" },
+});

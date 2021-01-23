@@ -1,0 +1,16 @@
+1) Fully Native way
+- Swift, Objective-C로 iOS 앱 개발. (Xcode)
+- Java Kotlin으로 안드로이드 앱 개발. (Android Studio)
+
+2) 웹뷰 기반. Web View Based App.
+- 앱 내부에서 웹사이트를 작동시키는 방식. 하이브리드 방식.
+- Cordova, PhoneGap 등으로 간단한 앱 개발 후 그 내부에 html, CSS, JS 추가.
+- 이미 개발된 반응형 웹사이트를 앱으로 전환하고 싶을 때 사용. 
+  알람 기능 등 몇 가지 native 기능들만 추가. (ex. Amazon 앱)
+
+3) React Native  : JavaScript Code -> JS 엔진 -> Native 엔진
+- 안드로이드, iOS 모두 자바스크립트 엔진을 보유하고 있음. 
+- JS 엔진을 통해 Native 엔진에 자바스크립트 메시지를 전달하는 방식으로 구동.
+   컴포넌트 내부에 <Text>, <View>와 같은 bridge 기능을 하는 컴포넌트들이 존재.
+- 단점: 성능 저하. 데이터를 많이 보낼 경우 bridge에 traffic jam 발생.
+   ex) 인스타그램 등 간단한 기능의 앱은 RN으로 충분. 3D 증강현실 앱은 불가.

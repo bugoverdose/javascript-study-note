@@ -1,0 +1,27 @@
+[Expo]
+- 핸드폰만으로 모바일 앱 시뮬레이션 가능. 
+- create-react-app의 모바일 버전.
+
+사전 준비
+- [npm install -g expo-cli] 
+- Expo 계정 생성
+- Expo 앱 설치 (phone)
+
+=========================================================
+1) expo init <프로젝트명>  
+- 외부 터미널에서 실행 (주의: npm이 아님)
+- 별도로 npm init 불필요.
+
+1-1) Choose template
+- blank : zero에서 시작. 별도의 설정 없이 시작.
+- blank (TypeScript) : TypeScript 설정 대신 해주기.
+------------------------------------------
+2) github 사이트에서 repo 생성
+- 이미 만든 프로젝트명과 repo 이름 동일하게 하는 것을 권장. (혼란 예방)
+- URL 복사
+
+3) git remote add origin <repoURL>
+
+4) git pull origin master --allow-unrelated-histories
+
+

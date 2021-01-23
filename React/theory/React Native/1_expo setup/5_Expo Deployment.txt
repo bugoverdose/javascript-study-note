@@ -1,0 +1,4 @@
+Expo 개인 계정에 배포하는 방법
+- Expo DevTools 창에서 [Publish or repulbish project] 클릭
+- 프로필에서 QR 코드로 앱 구동 가능.
+-> App Store에 배포하기 전 다양한 폰에서 결과물 확인 가능.

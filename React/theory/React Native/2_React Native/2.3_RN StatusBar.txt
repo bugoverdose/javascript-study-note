@@ -1,0 +1,44 @@
+StatusBar 컴포넌트
+: 핸드폰 최상단의 배터리, 시간 등 정보가 있는 status bar 수정 가능
+- 설치 불필요. import해서 사용.
+
+사용방법: 다른 컴포넌트 내부에 들어가야 함.
+- 앱의 화면에는 영향X. 핸드폰 자체적으로 제공하는 status bar의 색상 등 수정 가능.
+  ex) barStyle prop
+
+============================== 
+import { StatusBar } from "react-native";
+
+<StatusBar barStyle="light-content" />  // 앱 배경이 어두울 때, 밝도록
+<StatusBar barStyle="dark-content" />  // 앱 배경이 밝을 때, 어둡도록
+
+=============================================================
+import { StyleSheet, Text, View, StatusBar } from "react-native"; 
+
+export default Weather = ({ temp, condition }) => {
+  return (
+    <LinearGradient
+      colors={["#4c669f", "#3b5998", "#192f6a"]}
+      style={styles.container}
+    >
+      <StatusBar barStyle="light-content" />
+      <View style={styles.inner_container}>
+        <Ionicons name="rainy-outline" size={90} color="white" /> 
+      </View> 
+    </LinearGradient>
+  );
+};
+=============================================================
+[Loading.js]
+import React from "react";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
+
+export default Loading = () => {
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="default" />
+      <Text style={styles.text}>Getting the current weather...</Text>
+    </View>
+  );
+};
+=============================================================

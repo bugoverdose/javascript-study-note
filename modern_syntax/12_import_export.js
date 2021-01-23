@@ -10,6 +10,13 @@ import from : Node.js의 require 함수
 export default : Node.js의 module.exports
 */
 
+// import 문법의 유형
+import React from "react";
+import { Alert, Text } from "react-native";
+import * as Location from "expo-location";
+import Loading from "./Loading";
+
+// ---------------------------------------
 import { odd, even } from "./var";
 // ./var : 사용할 모듈이 위치한 파일 디렉토리
 // var 모듈의 객체를 가져와서 odd와 even이라는 함수를 odd, even이라는 변수에 저장.

@@ -1,0 +1,33 @@
+[expo init <프로젝트명>] 실행결과
+- package.json 
+- node_modules
+- app.json : expo에서 읽는 configuration 파일.
+- App.js : React Component
+- assets 폴더 : png 파일들
+
+=========================================
+[package.json]
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",             // Expo DevTools를 실행시킴.
+    "android": "expo start --android", // 시뮬레이터 실행 (Run on Android device/emulator)
+    "ios": "expo start --ios",         // 시뮬레이터 실행 (Run on iOS simulator)
+    "web": "expo start --web",          
+    "eject": "expo eject"  // eject from Expo. 되돌아올 수 없음. 업데이트 등 전부 스스로 처리해야 함. configuration 파일들 노출.
+  },
+  "dependencies": {
+    "expo": "~40.0.0",
+    "expo-status-bar": "~1.0.3",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-web": "~0.13.12"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.9.0"
+  },
+  "private": true
+}
+=========================================
+ 

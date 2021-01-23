@@ -1,0 +1,31 @@
+[@expo/vector-icons]
+- expo에서 지원해주는 아이콘 기능. 
+- 별도의 npm 설치 과정 불필요.
+: https://icons.expo.fyi/ 
+
+=============================================================
+1) icons directory에서 icon families 중 하나 선택
+- AntDesign               
+- MaterialCommunityIcons 
+- Entypo
+- EvilIcons
+- Feather 
+- FontAwesome 등
+
+2) import { Ionicons } from "@expo/vector-icons";
+
+3) <Ionicons name="rainy-outline" size={24} color="black" />
+- 컴포넌트처럼 사용. name에 특정 아이콘명 지정. 
+- style값 없이도 곧바로 스타일링 가능.
+
+=============================================================
+import { Ionicons } from "@expo/vector-icons";
+
+export default Weather = ({ temp, condition }) => {
+  return (
+    <View style={styles.container}> 
+        <Ionicons name="rainy-outline" size={90} />
+    </View>
+  );
+};
+=============================================================

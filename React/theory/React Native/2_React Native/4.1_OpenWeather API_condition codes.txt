@@ -1,0 +1,12 @@
+Weather condition codes
+: https://openweathermap.org/weather-conditions
+
+- 2xx: Thunderstorm
+- 3xx: Drizzle
+- 5xx: Rain
+- 6xx: Snow
+- 7xx: Atmosphere : "Mist", "Haze", "Dust", "Fog", "Sand", "Dust", "Ash", "Squall", "Tornado"
+- 800: Clear
+- 80x: Clouds
+
+=========================================================================

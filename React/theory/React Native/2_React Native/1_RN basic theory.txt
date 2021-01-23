@@ -1,0 +1,41 @@
+React Native
+- View 컴포넌트 : 일종의 <div> 태그. 모든 것을 <View></View> 내부에 넣어야 함.
+- Text 컴포넌트 : 일종의 <span> 태그. 모든 텍스트를 <Text></Text> 사이에 넣어야 함.
+- StyleSheet API : css 코드 적용 목적. 브라우저와 좀 다르게 적용됨. 규칙이 좀 다름.
+
+====================================================
+[App.js] 
+import React from "react";
+import Loading from "./Loading";
+
+// 무명 클래스
+export default class extends React.Component {
+  render() {
+    return <Loading />;
+  }
+}
+
+====================================================
+[App.js] 
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+// App 함수
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Hello World!</Text> 
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+====================================================

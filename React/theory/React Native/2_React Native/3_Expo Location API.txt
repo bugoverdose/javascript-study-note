@@ -1,0 +1,81 @@
+[React Native geolocation API]
+- 적은 수의 메서드들. less powerful. 
+- 설치 및 import 불필요. 
+- https://reactnative.dev/docs/geolocation
+
+> geolocation.getCurrentPosition
+
+================================================
+[Expo Location API]
+- 더 다양한 기능들 존재. 별도 설치 필요.
+  - ex) Geofencing : 특정 지역에 현재 들어왔는지, 나갔는지를 체크.
+- expo install expo-location 
+- import * as Location from "expo-location"
+- https://docs.expo.io/versions/latest/sdk/location/
+
+> Location.requestPermissionsAsync() : 권한 요청. Promise를 return함. 
+                                       접근권한 거절시 throw Error() 실행.
+> Location.getCurrentPositionAsync(options) : 현재 위치 정보 얻기.
+
+================================================
+[DevTools 출력]
+* const result = await Location.requestPermissionsAsync();
+  console.log(result);
+Object {
+  "android": Object {
+    "scope": "fine",
+  },
+  "canAskAgain": true,
+  "expires": "never",
+  "granted": true,
+  "status": "granted",
+}
+
+* const location = await Location.getCurrentPositionAsync(); // 위치 정보 객체 반환.
+  console.log(location); // DevTools에 location 객체 출력 
+Object {
+  "coords": Object {
+    "accuracy": 16.391000747680664,
+    "altitude": 66.4000015258789,
+    "altitudeAccuracy": 1.3333333730697632,
+    "heading": 274.3006286621094,
+    "latitude": 37.4496237,
+    "longitude": 127.0564026,
+    "speed": 0.004484163131564856,
+  },
+  "mocked": false,
+  "timestamp": 1611381182192,
+}
+
+=============================================================================
+=============================================================================
+[App.js]
+import React from "react";
+import { Alert, Text } from "react-native";
+import Loading from "./Loading";
+import * as Location from "expo-location";
+
+export default class extends React.Component {
+  state = {
+    isLoading: true,
+  };
+  getLocation = async () => {
+    try {
+      await Location.requestPermissionsAsync();
+      const {
+        coords: { latitude, longitude }, // 위치정보객체.coords에서 구조분해.
+      } = await Location.getCurrentPositionAsync();
+      this.setState({ isLoading: false });
+      console.log(latitude, longitude);
+    } catch (error) {
+      Alert.alert("Can't find you. Access Denied.");
+    }
+  };
+  componentDidMount() {
+    this.getLocation();
+  }
+  render() {
+    const { isLoading } = this.state;
+    return isLoading ? <Loading /> : <Text>Loaded!</Text>;
+  }
+}

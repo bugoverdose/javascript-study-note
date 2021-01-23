@@ -1,0 +1,34 @@
+기본 원리 
+방법1) style={{css 코드}} : 중괄호 두개. css 객체 그대로 대입 가능.
+        : <Text style={{color: "blue"}}>I am a text!</Text>
+
+방법2) StyleSheet.create로 스타일시트 객체 생성.
+        => 컴포넌트의 style 값으로 스타일시트 내의 css 객체 속성 지정하여 대입.
+        : <Text style={styles.text}>Hello World!</Text>
+
+- css 속성명은 전부 camelcase
+
+=============================================
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Hello World!</Text>
+      <Text style={{color: "blue"}}>I am a text!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    color: "red",
+  },
+});

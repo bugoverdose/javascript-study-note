@@ -1,0 +1,156 @@
+[Open Weather API]
+: https://openweathermap.org/
+
+구조: URL?parameter1&parameter2&parameter3
+`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric` 
+ // units=metric는 섭씨(C)
+
+===================================================
+import axios from "axios";
+
+const API_KEY = "8fef165e0aa57017faf4708137db044a";
+
+  getWeather = async (lat, lon) => {
+    const { data } = await axios.get(
+      `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+    );
+    console.log(data);
+  };
+=========================================================================
+[http://api.openweathermap.org/data/2.5/weather?lat=37.4496188&lon=127.0564214&appid=8fef165e0aa57017faf4708137db044a&units=metric]
+: axios.get를 통해 fetch되는 데이터의 data 객체.
+: 브라우저에 해당 URL로 직접 접속하면 실질적으로 동일한 결과 출력.
+Object {
+  "base": "stations",
+  "clouds": Object {
+    "all": 75,
+  },
+  "cod": 200,
+  "coord": Object {
+    "lat": 37.4496,
+    "lon": 127.0564,
+  },
+  "dt": 1611388963,
+  "id": 6573457,
+  "main": Object {
+    "feels_like": 9.42,
+    "humidity": 47,
+    "pressure": 1018,
+    "temp": 12.6,           // units=metric 파라미터 추가 결과. 섭씨 기준.
+    "temp_max": 13,
+    "temp_min": 12,
+  },
+  "name": "Wonteo",
+  "sys": Object {
+    "country": "KR",
+    "id": 8096,
+    "sunrise": 1611355299,
+    "sunset": 1611391507,
+    "type": 1,
+  },
+  "timezone": 32400,
+  "visibility": 10000,
+  "weather": Array [
+    Object {
+      "description": "broken clouds",
+      "icon": "04d",
+      "id": 803,
+      "main": "Clouds",
+    },
+  ],
+  "wind": Object {
+    "deg": 60,
+    "speed": 2.06,
+  },
+}
+
+=============================================================================
+=============================================================================
+[axios.get를 통해 fetch되는 데이터 전체 구조]
+Object {
+  "config": Object {
+    ~
+  },
+  "data": Object {
+    ~
+  },
+  "headers": Object {
+    ~
+  },
+  "request": XMLHttpRequest {
+    ~
+  },
+  "status": 200,
+  "statusText": undefined,
+}
+
+=============================================================================
+=============================================================================
+[App.js]
+import axios from "axios";
+import React from "react";
+import { Alert, Text } from "react-native";
+import * as Location from "expo-location";
+import Loading from "./Loading";
+import Weather from "./Weather";
+
+const API_KEY = "8fef165e0aa57017faf4708137db044a";
+
+export default class extends React.Component {
+  state = {
+    isLoading: true,
+    temp: "",
+  };
+  getWeather = async (lat, lon) => {
+    const { data } = await axios.get(
+      `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+    );
+    this.setState({ isLoading: false, temp: data.main.temp });
+    // 객체.data.main.temp :
+    // 객체.data.weather[0].main : 날씨
+  };
+  getLocation = async () => {
+    try {
+      await Location.requestPermissionsAsync();
+      const {
+        coords: { latitude, longitude }, // 위치정보객체.coords에서 구조분해.
+      } = await Location.getCurrentPositionAsync();
+      this.getWeather(latitude, longitude);
+    } catch (error) {
+      Alert.alert("Can't find you. Access Denied.");
+    }
+  };
+  componentDidMount() {
+    this.getLocation();
+  }
+  render() {
+    const { isLoading, temp } = this.state;
+    return isLoading ? <Loading /> : <Weather temp={Math.round(temp)} />;
+  }
+}
+=============================================================================
+[Weather.js]
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import PropTypes from "prop-types";
+
+export default Weather = ({ temp }) => {
+  return (
+    <View style={styles.container}>
+      <Text>{temp}℃</Text>
+    </View>
+  );
+};
+
+Weather.propTypes = {
+  temp: PropTypes.number.isRequired,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+=============================================================================

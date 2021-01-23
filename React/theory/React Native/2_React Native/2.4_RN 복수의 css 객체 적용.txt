@@ -1,0 +1,19 @@
+펼치기 연산자 활용.
+- {...object1, ...object2}
+
+=======================================
+import React from "react";
+export default Weather = () => {
+  return <View style={{ ...styles.inner_container, ...styles.textContainer }}></View>
+};
+const styles = StyleSheet.create({
+  inner_container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textContainer: {
+    paddingHorizontal: 20,
+  },
+};
+=======================================
