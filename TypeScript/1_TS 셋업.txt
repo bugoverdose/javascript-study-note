@@ -1,0 +1,44 @@
+npm install typescript -g
+========================================================
+1) npm link typescript       
+- tsc-watch 등 다양한 에러 예방.
+
+========================================================
+2) npm install tsc-watch --dev
+- 지속적으로 주시하면서 저장할 때마다 컴파일 진행.
+
+========================================================
+3) tsconfig.json 파일 생성
+: 자바스크립트를 어떻게 컴파일해야 하는지 알려주기.
+
+[tsconfig.json]
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES3",
+    "sourceMap": true,
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+
+- target : 어떤 JS 버전으로 컴파일 다운하고 싶은가. (ex. "target": "ES2015" 등)
+- sourceMap : sourceMap 처리 여부
+- outDir : 컴파일된 파일들이 오게 되는 위치.
+- include : 컴파일시킬 파일들의 배열
+- exclude : 컴파일 과정에서 제외될 파일들의 배열
+
+========================================================
+4) 명령어 지정.
+- tsc : 타입스크립트 컴파일 진행하는 디폴트 명령어
+ 
+[package.json]
+  "scripts": {
+    "start": "tsc-watch --onSuccess \" node dist/index.js\" "
+  },
+
+> tsc               // tsconfig.json 파일을 기준으로 컴파일 진행.
+> node index.js     // node.js에서 index.js 파일 실행
+
+========================================================

@@ -1,0 +1,21 @@
+Resolver : 특정 Query가 왔을 때 실행할 JS 코드. Query에 대한 반응.
+
+================================================
+[graphql/resolvers.js]
+const nicolas = {
+  name: "Nico",
+  age: 18,
+  gender: "female",
+};
+
+const resolvers = {
+  Query: {
+    person: () => nicolas,
+    num: () => 123,
+  },
+};
+// 누군가가 person Query 혹은 num Query를 요청하면 어떻게 반응할 것인가.
+
+export default resolvers;
+
+================================================

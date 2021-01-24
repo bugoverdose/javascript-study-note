@@ -1,0 +1,58 @@
+Playground : 백엔드 개발도구
+1) 데이터베이스 사전 테스트 기능.
+2) SCHEMA & DOCS를 통해 API 정보 확인.
+
+npm install graphql-playground
+
+http://localhost:4000/ : 서버 구동시키고 접속
+
+=============================================
+1) query 혹은 mutation 입력하고 실행(POST).
+query{
+  name
+}
+
+2) 해당 query에 대한 resolver를 data로 출력. 
+{
+  "data": {
+    "name": "Response to Name Query"
+  }
+}
+
+2-1) 잘못 입력시 에러 출력. 
+ex) Query에서 Int 타입을 줄거라고 지정. But Resolver에서 문자열 반환하는 경우.
+{
+  "data": null,
+  "errors": [
+    {
+      "message": "Int cannot represent non-integer value: \"Response to name Query\"",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "name"
+      ]
+    }
+  ]
+}
+=============================================
+1) person의 age와 gender만 요청
+query{
+  person{
+    age,
+    gender
+  }
+}
+
+2) data 출력
+{
+  "data": {
+    "person": {
+      "age": 18,
+      "gender": "female"
+    }
+  }
+}

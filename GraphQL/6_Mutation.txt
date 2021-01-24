@@ -1,0 +1,2 @@
+Mutation : 서버, 데이터베이스, 메모리의 데이터 변경 작업. 
+- mutate data. (Create, Upadate, Delete)
