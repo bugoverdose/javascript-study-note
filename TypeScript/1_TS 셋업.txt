@@ -1,7 +1,8 @@
 npm install typescript -g
+cf) npm link typescript       
+    : tsc-watch 관련 에러 해결용.
 ========================================================
-1) npm link typescript       
-- tsc-watch 등 다양한 에러 예방.
+1) npm install typescript
 
 ========================================================
 2) npm install tsc-watch --dev
@@ -17,9 +18,9 @@ npm install typescript -g
     "module": "commonjs",
     "target": "ES3",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist"              // dist 폴더로 모든 컴파일 결과 정리.
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*"],        // src 폴더 내부에 모든 ts 파일 작성.
   "exclude": ["node_modules"]
 }
 

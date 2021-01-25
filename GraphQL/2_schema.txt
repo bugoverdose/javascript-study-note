@@ -1,0 +1,17 @@
+[schema.graphql]
+type Person {
+  name: String!
+  age: Int!
+  gender: String!
+}
+
+type Query {
+  people: [Person]!          
+  person(id: Int): Person    
+}
+
+// people Query는 Person 타입의 데이터들의 배열을 반환하는 것이 필수. (!: required)
+// person Query는 Int 타입의 인자 id를 받고, Person 타입의 데이터를 반환. null 반환 가능.
+
+
+ 

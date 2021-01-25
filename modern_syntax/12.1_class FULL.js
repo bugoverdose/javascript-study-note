@@ -4,20 +4,27 @@
 [클래스 생성]
 class {
     constructor(){}
-    static 스태틱메서드들(){}
-    프로토타입메서드들(){}
+    static staticMethod(){}
+    prototypeMethod(){}
 };
+
 - {중괄호} 내부에서는 function 키워드 생략해도 전부 메서드로 인식.
   - 각각의 메서드들은 쉼표(,)로 구분되지 않음.
-- constructor라는 이름의 메서드는 생성자함수로 인식
-- static 키워드가 앞에 붙으면 static 메서드를 생성
-  - 이렇게 생성된 static 메서드는 생성자함수(클래스) 본인만이 접근 가능.
+
+메서드 종류 
+1) constructor : 생성자함수로 인식되는 메서드
+
+2) static 키워드가 앞에 붙으면 static 메서드
+  - 생성자함수(클래스) 본인만이 접근 가능.
   - 클래스.staticMethod()
-- 그 외 메서드는 prototype 객체 내부에 할당되는 메서드
-  - 프로토타입 체이닝으로 통해 인스턴스에서도 접근 가능한 프로토타입 메서드들.
+
+3) 일반적인 메서드는 prototype 객체 내부에 할당되는 메서드
+  - 프로토타입 체이닝으로 통해 인스턴스에서도 접근 가능.
   - 인스턴스.prototypeMethod() 
   - 클래스.prototype.prototypeMethod() 
+*/
 
+/*
 [인스턴스 생성]
 var 인스턴스 = new 클래스;      // 생성자함수를 사용하는 것과 동일
 

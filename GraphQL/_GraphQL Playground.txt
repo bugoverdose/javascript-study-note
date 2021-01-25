@@ -1,26 +1,33 @@
 Playground : 백엔드 개발도구
 1) 데이터베이스 사전 테스트 기능.
 2) SCHEMA & DOCS를 통해 API 정보 확인.
+3) ctrl + 엔터 : 실행 단축키.
 
+=============================================
 npm install graphql-playground
 
 http://localhost:4000/ : 서버 구동시키고 접속
 
 =============================================
 1) query 혹은 mutation 입력하고 실행(POST).
+// person query에 id:1 대입한 결과의 name 데이터는? 
 query{
-  name
-}
-
-2) 해당 query에 대한 resolver를 data로 출력. 
-{
-  "data": {
-    "name": "Response to Name Query"
+  person(id:1){
+    name
   }
 }
 
-2-1) 잘못 입력시 에러 출력. 
-ex) Query에서 Int 타입을 줄거라고 지정. But Resolver에서 문자열 반환하는 경우.
+2) 해당 query에 대한 resolver 실행결과를 data로 출력. 
+{
+  "data": {
+    "person": {
+      "name": "Mico"
+    }
+  }
+}
+
+2-1) 스키마 - resolver 대응이 잘못된 경우 에러 출력. 
+// 스키마에서 Int 타입을 줄거라고 지정. But Resolver에서 문자열 반환하는 경우.
 {
   "data": null,
   "errors": [
@@ -37,22 +44,4 @@ ex) Query에서 Int 타입을 줄거라고 지정. But Resolver에서 문자열 
       ]
     }
   ]
-}
-=============================================
-1) person의 age와 gender만 요청
-query{
-  person{
-    age,
-    gender
-  }
-}
-
-2) data 출력
-{
-  "data": {
-    "person": {
-      "age": 18,
-      "gender": "female"
-    }
-  }
 }

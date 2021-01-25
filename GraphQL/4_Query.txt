@@ -6,23 +6,9 @@ Query : 데이터베이스에 요청할 구체적인 정보를 GraphQL 언어로
 
 => 스키마에서는 typeDefs에 Query들 지정
 ============================================
-형식: 'query명: return될 데이터의 타입'
+형식: [query명: return될 데이터의 타입]
 1) Int, String만이 아니라 Nicolas처럼 새로운 데이터타입 정의 가능.
 ex) 사용자가 num query를 요청하면 Int타입을 응답해준다. (! : isRequired)
+2) 쉼표, 주석이 없음. not JS
 
-2) 쉼표가 없음. JS 문법과 다소 다름.
 ============================================
-[graphql/schema.graphql]
-type Nicolas {
-  name: String!
-  age: Int!
-  gender: String!
-}
-
-type Query {
-  person: Nicolas!
-  num: Int!
-}
-============================================
-
-
