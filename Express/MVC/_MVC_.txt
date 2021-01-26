@@ -1,0 +1,3 @@
+Model : what stores the data
+View : what we show to the user
+Controller : what handles the logic

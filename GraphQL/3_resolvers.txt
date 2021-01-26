@@ -1,19 +1,23 @@
 Resolvers
-: 특정 Query 혹은 Mutation를 받았을 때 GraphQL 서버가 실행하는 JS 함수. 
-: 각 Type Definition에 대한 GraphQL 서버의 반응.
+: 특정 Query 혹은 Mutation를 받았을 때 GraphQL 서버가 실행하는 JS 함수.
+: 특정 요청에 대해 GraphQL 서버가 해결하는 방식.
 
 args: 두번째 매개변수에 인자들이 담김. 
   query명: (_, args) => console.log(args)
   
 ================================================
 [graphql/resolvers.js]
-import { people, getById } from "../db";
+import { getMovies, getById, addMovie, deleteMovie } from "./db";
 
-// resolvers: 누군가가 person Query 혹은 num Query를 요청하면 어떻게 반응할 것인가.
+// resolvers: 누군가가 특정 Query 혹은 Mutation을 요청하면 어떻게 반응할 것인가.
 const resolvers = {
   Query: {
-    people: () => people,
-    person: (_, { id }) => getById(id),
+    movies: () => getMovies(), // getMovies 함수 실행
+    movie: (_, { id }) => getById(id), // id 인자를 받아, getById 함수 실행.
+  },
+  Mutation: {
+    addMovie: (_, { name, score }) => addMovie(name, score), // name, score 인자를 받아 addMovie 함수 실행.
+    deleteMovie: (_, { id }) => deleteMovie(id), // id 인자를 받아 deleteMovie 함수 실행.
   },
 };
 
@@ -21,15 +25,30 @@ export default resolvers;
 
 ================================================
 [db.js]
-export const people = [
-  { id: 0, name: "Nico", age: 18, gender: "female" },
-  { id: 1, name: "Mico", age: 18, gender: "female" },
-  { id: 2, name: "Tico", age: 18, gender: "female" },
-  { id: 3, name: "Pico", age: 18, gender: "female" },
-];
+export const getMovies = () => movies;
 
 export const getById = (id) => {
-  const filteredPeople = people.filter((person) => id === person.id);
-  return filteredPeople[0];
+  const filteredMovies = movies.filter((movie) => movie.id === id);
+  return filteredMovies[0];
 };
-// 배열.filter(조건) : 해당 조건에 해당되는 요소들만 걸러주는 배열 메서드.
+
+export const deleteMovie = (id) => {
+  const cleanedMovies = movies.filter((movie) => movie.id !== id);
+  console.log(cleanedMovies);
+  if (movies.length > cleanedMovies.length) {
+    movies = cleanedMovies;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const addMovie = (name, score) => {
+  const newMovie = {
+    id: movies.length + 1,
+    name,
+    score,
+  };
+  movies.push(newMovie);
+  return newMovie;
+};

@@ -1,0 +1,29 @@
+Schema & Resolvers : GraphQL 서버에 설정하는 설명(Subscriptions).
+- Schema : 사용자와 주고 받을 데이터의 '타입'에 대한 설명. 
+         : 틀. 행동양식. Describe what's gonna happen.
+         => GraphQL 서버에 typeDefs 속성 값으로 설정. 
+
+- Resolvers : 스키마에서 정의된 각 Query 및 Mutation에 대해 실행될 함수들.
+            : 서버의 실제 행동. Make it happen.
+            => GraphQL 서버에 resolvers 속성 값으로 설정.
+
+=============================================================
+Query & Mutation
+- Queries : 데이터베이스로부터 특정 데이터 요청하기. get data (Read)
+          : GrqphQL 백엔드에 Query를 전송하고, 그에 맞는 JS 객체 데이터를 응답받음. 
+
+- Mutations : 서버, 데이터베이스, 메모리의 데이터 변경 작업. mutate database. 
+            : 데이터베이스의 상태를 변화시키는 함수. changes of state.
+              (Create, Update, Delete)
+
+=============================================================
+=============================================================
+[index.js]
+import { GraphQLServer } from "graphql-yoga";
+import resolvers from "./graphql/resolvers";
+
+const server = new GraphQLServer({
+  typeDefs: "graphql/schema.graphql",          // "./graphql/schema.graphql"도 인식 가능.
+  resolvers,
+});
+=============================================================

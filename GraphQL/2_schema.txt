@@ -1,17 +1,58 @@
+Schema
+- 데이터베이스에 보낼 수 있는 요청들에 대한 정보를 GraphQL 언어로 기술한 내용.
+- 그 자체로는 아무런 기능이 없음. 그냥 api 설명문. 도식.
+- Resolver를 통해 해결되어야 하는 질문.
+
+* type Query & type Mutation 내부에 기술해야 GraphQL이 resolver로 반응 가능.
+
+* 기본 문법: query명(인자: 타입): return될 데이터의 타입
+  1) Int, String만이 아니라 Movie처럼 새로운 데이터타입 정의 가능.
+  2) ! : isRequired. null 값 인정하지 않는다는 의미.
+  3) 쉼표, 주석이 없음. not JS
+
+================================================
 [schema.graphql]
-type Person {
+type Movie {
+  id: Int!
   name: String!
-  age: Int!
-  gender: String!
+  score: Int!
 }
 
 type Query {
-  people: [Person]!          
-  person(id: Int): Person    
+  movies: [Movie]!
+  movie(id: Int!): Movie
 }
 
-// people Query는 Person 타입의 데이터들의 배열을 반환하는 것이 필수. (!: required)
-// person Query는 Int 타입의 인자 id를 받고, Person 타입의 데이터를 반환. null 반환 가능.
+type Mutation {
+  addMovie(name: String!, score: Int!): Movie!
+  deleteMovie(id: Int!): Boolean!
+}
 
+// movies Query는 Movie 타입의 데이터들의 배열을 반환하는 것이 필수. (!: required)
+// movie Query는 Int 타입의 인자 id를 받고, Movie 타입의 데이터를 반환. null 반환 가능.
+// addMovie Query는 name과 score를 인자로 받고, Movie 타입의 데이터를 반환.
 
- 
+================================================
+[db.js]
+let movies = [
+  {
+    id: 0,
+    name: "Star Wars - The new one",
+    score: 1,
+  },
+  {
+    id: 1,
+    name: "Avengers - The new one",
+    score: 8,
+  },
+  {
+    id: 2,
+    name: "The Godfather I",
+    score: 99,
+  },
+  {
+    id: 3,
+    name: "Logan",
+    score: 2,
+  },
+]; 

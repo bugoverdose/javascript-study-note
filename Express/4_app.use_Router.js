@@ -1,3 +1,7 @@
+/*
+  express.Router : routes을 작게 쪼개는 기능.
+*/
+
 import express from "express";
 
 const app = express();

@@ -8,6 +8,58 @@ npm install graphql-playground
 
 http://localhost:4000/ : 서버 구동시키고 접속
 
+==============================================================================
+[여러 탭에서 데이터베이스 변화 과정 확인 가능]
+mutation{
+  addMovie(name: "LalaLand", score:10){     // mutation명(인자로 대입할 값)
+    name                                    // {return 받을 대상}
+  }
+}
+
+실행결과
+{
+  "data": {
+    "addMovie": {
+      "name": "LalaLand"
+    }
+  }
+}
+=========================================
+query{
+  movies{                            // query명(인자로 대입할 값)
+    name, score                      // {return 받을 대상}
+  }
+}
+
+실행결과
+{
+  "data": {
+    "movies": [
+      {
+        "name": "Star Wars - The new one",
+        "id": 0
+      },
+      {
+        "name": "Avengers - The new one",
+        "id": 1
+      },
+      {
+        "name": "The Godfather I",
+        "id": 2
+      },
+      {
+        "name": "Logan",
+        "id": 3
+      },
+      {
+        "name": "LalaLand",
+        "id": 5
+      }
+    ]
+  }
+}
+
+=============================================
 =============================================
 1) query 혹은 mutation 입력하고 실행(POST).
 // person query에 id:1 대입한 결과의 name 데이터는? 

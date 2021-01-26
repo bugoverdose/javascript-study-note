@@ -9,6 +9,8 @@ console.log({ ...part1, ...part2 });
 // {h: "head", s: "shoulders", k: "knees", t: "toes"}
 
 // ---------------------------------------
+
+// ---------------------------------------
 // React Native. style prop에 복수의 css 객체 적용하기.
 import React from "react";
 export default Weather = () => {
