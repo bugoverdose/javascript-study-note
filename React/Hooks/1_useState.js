@@ -1,5 +1,5 @@
 /*
-  useState
+  useState : state 설정 및 변경 기능
   1) 인자로 해당 item의 초기값 설정 가능.
   2) 두 가지 값의 배열을 return. 명칭은 자유.
      - item. state의 특정 변수. 
@@ -14,8 +14,6 @@
 */
 import { useState } from "react";
 import ReactDOM from "react-dom";
-
-import "./styles.css";
 
 const App = () => {
   const [item, setItem] = useState(1);

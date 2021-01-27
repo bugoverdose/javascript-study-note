@@ -1,3 +1,11 @@
+/* 
+  app.set("views", "/dist")
+  : express에 템플릿 엔진을 찾아볼 디폴트 폴더 설정(/views에서 /dist로 변경)
+
+  res.render(<TEMPLATE>, { varName: "value" })
+  : controller에서 변수에 값을 전달하면서 템플릿 렌더링하는 방법.
+*/
+
 import express from "express";
 import path from "path";
 import { localVariables } from "./middleware";
