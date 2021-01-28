@@ -8,17 +8,16 @@ useState : state & setState의 기능. state 설정 및 변경 기능
 useEffect : componentDidMount & componentDidUpdate & componentWillUnmount의 기능. 
           : 컴포넌트 생성, 변화, 소멸시 특정 함수 실행. API에서 데이터 요청시 주로 사용.
 useContext 
-
 useRef : 컴포넌트의 특정 부분을 선택하고 조작하는 방법. 
        : 특정 html element를 선택하는 기능. document.querySelector()의 기능.
 useReducer
 useCallback
 useMemo
-useImperativeHandle 덜 중요
 useLayoutEffect
+
+useImperativeHandle 덜 중요
 useDebugValue 덜 중요
 
-https://codesandbox.io/s/practical-curran-t64xr?file=/src/index.js
 =====================================================
 [활용방법]
 - useInput : input 태그에 입력되는 내용 제약 + 이벤트 활용.
@@ -39,8 +38,10 @@ https://codesandbox.io/s/practical-curran-t64xr?file=/src/index.js
 - useFadeIn : 컴포넌트가 서서히 나타나도록. 모든 element에 적용 가능한 fade in 애니메이션.
 - useNetwork : navigator가 online/offline 상태가 변화했을 때 특정 함수 실행.
 
-- useScroll : 스크롤 업/다운할 때를 감지. 
-- useFullscreen : 모든 element에 적용 가능한 풀스크린 <-> 일반크기 모드
+- useScroll : 사용자가 스크롤 다운하여 특정 지점을 지나갈 때 색상 변경 등.
+- useFullscreen : 모든 element에 적용 가능한 풀스크린 <-> 일반크기 모드 + 콜백함수 실행
 
-- useNotification : notification API를 활용하여 사용자에게 알림 기능.
-- useAxios : HTTP 요청 클라이언트 axios 기능 활용.
+- useNotification : notification API를 활용한 사용자에게 알랑 기능. 알람 권한 요청 등.
+- useAxios : axios로 api fetch 및 refetch 기능.
+
+챌린지: geolocation, 브라우저 넓이 변화, local storage 관리 등을 위한 hook 만들어보기.

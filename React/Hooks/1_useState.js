@@ -1,6 +1,6 @@
 /*
   useState : state 설정 및 변경 기능
-  1) 인자로 해당 item의 초기값 설정 가능.
+  1) 인자로 state로 사용할 item의 초기값 설정 가능.
   2) 두 가지 값의 배열을 return. 명칭은 자유.
      - item. state의 특정 변수. 
      - setItem. 해당 item의 값을 변경하는 modifier.

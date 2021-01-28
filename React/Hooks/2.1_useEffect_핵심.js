@@ -4,7 +4,8 @@
     : componentDidMount & componentDidUpdate의 기능.
   - effect 내부에서 다시 함수 return : 컴포넌트 소멸시 해당 함수 실행.
     : componentWillUnmount와 동일한 기능.
-  - deps가 빈 배열인 경우 componentDidMount일 때만 기본 JS 코드 실행
+  - 컴포넌트 업데이트 방지 방법: deps를 빈 배열로 설정. (= componentDidMount일 때만 기본 JS 코드 실행)
+    - 아예 두번째 인자가 없으면 디폴트로 모든 컴포넌트에 대해 생성 + 변화시 실행.
 */
 import { useEffect } from "react";
 import ReactDOM from "react-dom";
