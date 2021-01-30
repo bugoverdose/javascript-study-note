@@ -1,5 +1,6 @@
 /*
-  addEventListener 메서드
+  addEventListener("이벤트", 콜백함수)
+  - 발생한 "이벤트"에 대한 정보가 콜백함수의 인자로 들어오게 됨.
   - 콜백함수를 호출할 때 메서드 자신의 this를 상속하도록 정의되어있음.
   - htmlElement.addEventListener 메서드의 this는 htmlElement이므로
     addEventListener 메서드의 콜백함수의 this도 htmlElement
