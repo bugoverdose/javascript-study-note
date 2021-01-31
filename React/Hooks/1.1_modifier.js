@@ -1,12 +1,16 @@
 /*
-  state를 변경시키는 modifier에 함수 전달 가능.
-  + 함수의 인자에는 현재 state 값 접근 가능. (prev)
+  state를 변경시키는 modifier에 인자로 함수 설정 가능.
+  + 해당 함수의 인자에는 현재 state 값이 담기게 됨. (prev)
 
   const [tweetList, setTweetList] = useState([]);
   dbTweets.forEach((document) => {
     setTweetList((prev) => [document.data(), ...prev]);
   });
 */
+const [editing, setEditing] = useState(false);
+const toggleEditing = () => setEditing((prev) => !prev);
+
+// ==================================================
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 

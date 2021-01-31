@@ -1,0 +1,8 @@
+https://www.npmjs.com/package/uuid
+
+npm install uuid
+
+import { v4 as uuidv4 } from 'uuid';
+
+uuidv4(); // 임의의 문자열 생성. 
+
