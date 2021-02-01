@@ -1,0 +1,17 @@
+MongoDB : NoSQL Database. JSON 형식으로 데이터 저장.
+Mongoose : how we talk to the database using JS
+
+Schema : an object that tells Mongoose the shape of the data that we will save
+
+1) Save a link to the location of the file on the database
+2) 별도의 storage에 해당 파일들 업로드. 
+: 데이터베이스 혹은 서버에 직접 파일 업로드하는 것은 지양하기
+
+===============================================================
+mongoose.model("Movie", MovieSchema)
+: tells Mongoose that the "Movie" model will have the shape of the MovieSchema
+
+ObjectId 타입 : 다른 Model의 ID를 저장할 것이라는 것을 Mongoose에 알리는 용도.
+
+중요: Import the models in the init.js file
+: because we need to make the mongoose connection 'aware' of the Models that we will save in the future.

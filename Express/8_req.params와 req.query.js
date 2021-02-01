@@ -1,9 +1,10 @@
 /*
   req.params : 다양한 route를 동적으로 사용 가능.
-  ex) controller의 req.params.id == '/route/:id' 라우트의 id 변수에 대입된 값
+  - req.params.id == '/route/:id' 라우트의 id 변수에 대입된 값
   
   req.query : query에 따라 검색, 필터링 등의 방식으로 활용 가능.
-  ex) `/route?ABC=123` => req.query == {ABC: "123"}
+  - `/route?ABC=123` => req.query == {ABC: "123"}
+  - "/user?id=123"   => req.query.id == 123
 */
 import {
   getMovieById,

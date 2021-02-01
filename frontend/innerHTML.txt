@@ -1,0 +1,9 @@
+<div class="abc"></div>
+===========================================
+const div = document.querySelector(".abc");
+
+div.innerHTML = 123;
+// div.innerText = 123;
+// div.textContent = 123;
+===========================================
+<div class="abc">123</div>

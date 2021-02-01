@@ -1,0 +1,18 @@
+<script src="https://kit.fontawesome.com/6478f529f2.js" crossorigin="anonymous"></script>
+
+==========================================================================
+svg : 픽셀이 없는 이미지 파일형식. 좌표, 수학만으로 구성됨 + 코드 복붙하고 css로 디자인 수정
+	: 일반적인 이미지도 .svg 형식으로 저장 가능.
+	 
+fontawesome.com : 가장 대표적. 유료 & 무료. 이메일 제공하여 code kit을 받아야 사용 가능.
+- code kit : 다양한 class명과 font들을 import하는 javascript 파일.
+- 1단계. body 태그 내부(가장 아래쪽)에 <script src="~~~~~></script>의 형식으로 code kit 복붙
+  : <script src="https://kit.fontawesome.com/6478f529f2.js" crossorigin="anonymous"></script>
+- 2단계. 사용하고 싶은 아이콘의 html 코드(<i>태그)를 복붙하여 사용. <i class="~"></i>
+
+- 각 아이콘의 클래스명은 code kit에 포함된 내용. 임의로 수정 불가. 
+
+==========================================================================
+heroicons.com : 로그인 불필요. html 코드로 그대로 복붙하여 사용 가능.
+- <svg xmlns="~~~~> <path ~~~~~~~~0" /> </svg>
+- 단점: html element의 크기가 너무 큼. 코드 가독성 감소.
