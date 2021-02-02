@@ -1,5 +1,22 @@
-// typeof 대상 === "function" // 대상이 함수인 경우 true
+/* 
+  typeof 대상 === "타입" // 대상의 타입에 따라 true/false 출력
+  - typeof title === "string" // 문자열이면 true
+  - typeof onClick === "function" // 함수면 true
 
+  cf) genres instanceof Array // 생성자 함수 Array의 인스턴스, 즉 배열이면 true
+*/
+export const addMovie = ({ title, synopsis, genres }) => {
+  if (typeof title !== "string" || typeof synopsis !== "string") {
+    throw Error("❌  title and synopsis should be strings  ❌");
+  }
+  if (!genres instanceof Array) {
+    throw Error("❌  genres should be an array  ❌");
+  }
+  const id = Math.floor(Math.random() * (title.length + Date.now())); // 매우 낮은 가능성이지만 id 중복될 가능성 존재.
+  movies = [{ id, title, synopsis, genres }, ...movies];
+};
+
+// ==============================================================
 import { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 

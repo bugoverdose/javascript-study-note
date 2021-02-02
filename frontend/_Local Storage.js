@@ -1,6 +1,12 @@
 /*
 localStorage.setItem("currentUser", "text");
+- local storage의 "currentUser" key에 "text" value를 저장.
 localStorage.getItem("currentUser")
+- local storage의 "currentUser" key의 value 가져오기
+
+주의: local storage에는 문자열 형식만 저장 가능.
+- JSON.stringify(객체) : 문자열로 변환.
+- JSON.parse(문자열) : 객체로 변환.
 */
 
 const form = document.querySelector(".js-form");

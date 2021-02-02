@@ -2,6 +2,9 @@
   react-router-dom의 useHistory
   - 세부적인 redirection 실행.
 
+  * Redirect : used for overall route protection
+  * useHistory : used for specific redirection
+
   const history = useHistory();
   history.push("/");
 */
