@@ -1,0 +1,60 @@
+[src]
+1) main.ts : 최종적으로 app 구동. app.listen(3000). (파일명 변경 금지)
+           : app.service.ts로부터 AppModule를 받음.
+2) app.module.ts : @Module 데코레이터 - imports, controllers, providers
+                 : AppController & AppService를 받음.
+3) app.controller.ts : AppService를 받음.
+4) app.service.ts : AppService 클래스 존재. 해당 클래스 내부에 getHello 함수 존재.
+
+cf) 데코레이터는 클래스에 기능을 추가해줌. 클래스를 위해 동작. 클래스 위의 함수들.
+
+==================================================
+// 1) main.ts
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+
+==================================================
+// 2) app.module.ts
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+==================================================
+// 3) app.controller.ts
+import { Controller, Get } from "@nestjs/common";
+import { AppService } from "./app.service";
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+
+==================================================
+// 4) app.service.ts
+import { Injectable } from "@nestjs/common";
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return "Hello World!";
+  }
+}
+==================================================
