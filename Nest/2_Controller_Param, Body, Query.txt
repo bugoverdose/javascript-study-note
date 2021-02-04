@@ -1,0 +1,66 @@
+nestjs/cli를 통해 nest generate 명령어 사용 가능.
+
+[컨트롤러 생성 명령]
+> nest g co        // nest generate controller
+> 컨틀로러명 입력: movies
+
+==> movies 폴더 + movies.controller.ts + movies.controller.spec.ts 생성 
+==> app.module로의 import 과정 자동 실행.
+==> http://localhost:3000/movies 기준. '/컨트롤러명'을 entry point로 사용하게 됨.
+
+====================================================================
+Post : create
+Get : read
+Patch : 업데이트. 특정 데이터의 모든 리소스 중 일부분만 수정해줌.
+Delete : 삭제.
+
+====================================================================
+원칙: If you want something, You have to ask for it. (Express처럼 req 객체에 자동으로 담겨있지 않음)
+- @Param : /:id의 id와 같은 파라미터를 원하면 @Param으로 요청 필요. 
+         : Path Variable을 받아올 때 사용. - /users/123
+         : 즉, 요청 주소에 포함되어있는 변수가 담김. 특정 리소스를 식별하고 싶을 때 사용.
+         : req.params와 동일. 
+
+- @Query : /movies/search?year=2020처럼 query argument를 원하면 @Query로 요청 필요.
+         : Query Parameter를 받아올 때 사용. - /users?id=123 
+         : 즉, 요청 주소 이후에 "?" 뒤에 있는 특정 변수의 값이 담김. 정렬 및 필터링에 사용.
+         : req.query와 동일. 
+
+- @Body : form에 submit되어 전달받은 정보를 원하면 @Body로 요청 필요.
+        : req.body와 동일. 다만 별도의 작업 없이 json 주고 받을 수 있음.
+
+====================================================================
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+
+@Controller('movies') // Router. url의 entry point는 '/movies' 라우트.
+export class MoviesController {
+  @Get() // Router 내 개별 route
+  getAll() {
+    return 'This will return all movies';
+  }
+
+  // @Param 데코레이터를 통해 id 파라미터를 요청. movieID로 받아서 사용.
+  // @Get과 @Param의 파라미터는 동일해야 함. 받은 값은 다른 변수명으로 사용 가능.
+  @Get('/:id')
+  getOne(@Param('id') movieId: string) {
+    return `This will return one movie with the id: ${movieId}`;
+  }
+
+  @Post()
+  createMovie() {
+    return 'This will create a movie';
+  }
+
+  @Patch('/:id')
+  updateMovie(@Param('id') movieId: string) {
+    return `This will update a movie with the id: ${movieId}`;
+  } // @Patch : 리소스의 일부분만 업데이트해줌. 특정 영화의 일부 정보만 수정.
+  // @Put : 모든 리소스를 업데이트. 사용 지양하기.
+
+  @Delete('/:id')
+  deleteMovie(@Param('id') movieId: string) {
+    return `This will delete a movie with the id: ${movieId}`;
+  }
+}
+
+====================================================================

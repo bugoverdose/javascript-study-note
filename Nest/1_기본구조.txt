@@ -1,6 +1,6 @@
 [src]
 1) main.ts : 최종적으로 app 구동. app.listen(3000). (파일명 변경 금지)
-           : app.service.ts로부터 AppModule를 받음.
+           : app.service.ts로부터 AppModule를 받음.          
 2) app.module.ts : @Module 데코레이터 - imports, controllers, providers
                  : AppController & AppService를 받음.
 3) app.controller.ts : AppService를 받음.
@@ -8,17 +8,25 @@
 
 cf) 데코레이터는 클래스에 기능을 추가해줌. 클래스를 위해 동작. 클래스 위의 함수들.
 
-==================================================
+============================================================================== 
+[각 기능들]
+1) app : 앱 구동 
+2) AppModule : 모든 것의 root 모듈. controllers & services 등을 전부 받음.
+3) AppController : handles routing
+4) AppService : stores controllers for the routers
+
+============================================================================== 
 // 1) main.ts
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule); 
   await app.listen(3000);
 }
 bootstrap();
 
+- AppModule로부터 app을 생성.
 ==================================================
 // 2) app.module.ts
 import { Module } from "@nestjs/common";
@@ -27,14 +35,16 @@ import { AppService } from "./app.service";
 
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController], // url 요청을 받아서 함수를 실행하는 기능. router/controller의 기능.
+  providers: [AppService], // 
 })
 export class AppModule {}
 
+- AppModule은 모든 것의 root 모듈. 
+: 모듈은 특정 기능을 하는 코드. 앱의 한 부분. controllers & providers를 받음.
 ==================================================
-// 3) app.controller.ts
-import { Controller, Get } from "@nestjs/common";
+// 3) app.controller.ts 
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from "./app.service";
 
 @Controller()
@@ -43,10 +53,23 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return this.appService.getHello(); // 같은 이름 사용하는게 관습. 필수는 아님.
+  }
+
+  @Get('/hello')        // '/hello' 라우트로 접근시, sayHello 함수 실행. (maps urls into functions)
+  sayHello(): string {
+    return 'Hello Everyone!';
+  }                   // app.get('/hello', sayHello) (in Express)
+
+  @Post('/hello')     // app.post('/hello', postHello) (in Express)
+  postHello(): string {
+    return 'This will cause an error';
   }
 }
 
+- controllers: url을 받아서 함수 실행하는 기능. Express의 router + controller의 기능.
+- @Get: get 데코레이터. Express의 app.get, Router.get과 같은 역할.
+- 주의: 데코레이터 바로 다음줄에 꾸며지는 함수/클래스가 바로 존재해야 함. (공백 금지)
 ==================================================
 // 4) app.service.ts
 import { Injectable } from "@nestjs/common";
@@ -57,4 +80,11 @@ export class AppService {
     return "Hello World!";
   }
 }
-==================================================
+
+- AppService : AppController의 데코레이터가 사용할 함수들 내부에서 실행할 함수들.
+             : return this.appService.함수명(); 형식으로 함수 내부에 가져와서 사용.
+- AppModule의 providers에 대입. 
+- nestjs는 controllers를 business logic(=services)와 구분하고 싶어함.
+============================================================================== 
+
+
