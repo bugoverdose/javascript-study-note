@@ -1,0 +1,59 @@
+[특정 Dto와 동일 형식. 다만 모든 field를 선택사항으로 지정하고 싶은 경우]
+
+방법1) PartialType을 통해 CreateMovieDto에서 상속받기.
+> npm i @nestjs/mapped-types   // DTO를 변환하고 작업할 수 있도록 해주는 패키지.
+
+[dto/update-movie.dto.ts]
+import { PartialType } from '@nestjs/mapped-types'; 
+import { CreateMovieDto } from './create-movie.dto';
+
+export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
+// 인자: CreateMovieDto를 base 타입으로 사용하여 상속
+
+============================================================
+방법2) 변수명?: 선택사항 지정. 모든 field를 입력하지 않아도 되도록 지정.
+[dto/update-movie.dto.ts]
+import { IsNumber, IsString } from 'class-validator';
+
+export class UpdateMovieDto {
+  @IsString()
+  readonly title?: string;
+
+  @IsNumber()
+  readonly year?: number;
+
+  @IsString({ each: true })
+  readonly genres?: string[];
+}
+
+============================================================
+[movies.service.ts]
+@Injectable()
+export class MoviesService {
+  private movies: Movie[] = [];  
+
+  updateMovie(id: number, updateData: UpdateMovieDto) {
+    const movie = this.getOne(id);
+    this.deleteMovie(id);
+    this.movies.push({ ...movie, ...updateData });  
+  }
+}
+
+============================================================
+[movies.controller.ts]
+ 
+@Controller('movies') // Router. url의 entry point는 '/movies' 라우트.
+export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+ 
+  @Patch(':id') // '/movies/:id'
+  updateMovie(
+    @Param('id') movieId: number,
+    @Body() updateData: UpdateMovieDto,
+  ) {
+    return this.moviesService.updateMovie(movieId, updateData);
+  } 
+  // @Patch : 리소스의 일부분만 업데이트해줌. 특정 영화의 일부 정보만 수정.
+  // @Put : 모든 리소스를 업데이트. 사용 지양하기.
+============================================================
+

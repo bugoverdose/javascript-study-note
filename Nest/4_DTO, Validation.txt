@@ -1,0 +1,78 @@
+DTO : Data Transfer Object. 데이터 전송 객체.
+- 별도의 validation 작업으로 사용자들이 전송 가능한 데이터의 타입 지정 가능.
+
+[Validtion 기초]
+- [npm i class-validator class-transformer]
+- dto에 @IsNumber, @IsString 등으로 필수 데이터타입 지정.
+- ValidationPipe : app.useGlobalPipes(new ValidationPipe());
+
+cf) pipe : middleware의 기능. 코드들이 지나가는 중간단계.
+=================================================================
+사용자가 dto에서 지정한 방식과 다른 데이터를 전송한 경우
+{
+  "statusCode": 400,
+  "message": [
+    "title must be a string",
+    "year must be a number conforming to the specified constraints",
+    "each value in genres must be a string"
+  ],
+  "error": "Bad Request"
+}
+==> 타입스크립트를 통해 input값의 코드 유효성을 실시간으로 체크. 즉, 개발과정만이 아니라 사용자가 보내는 데이터의 유효성 검사.
+=================================================================
+[dto/create-movie.dto]
+ 
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+ 
+export class CreateMovieDto {
+  @IsString() // 문자열 validation 데코레이터.
+  readonly title: string;
+
+  @IsNumber() // 숫자 validation 데코레이터.
+  readonly year: number;
+
+  @IsOptional() // 아래의 field를 선택사항으로 지정.
+  @IsString({ each: true }) // each 옵션: 배열의 각 요소가 문자열인지 체크
+  readonly genres: string[];
+}
+
+=================================================================
+[movies.service.ts]
+
+@Injectable()
+export class MoviesService {
+  private movies: Movie[] = [];  
+
+  createMovie(movieData: CreateMovieDto) {
+    this.movies.push({
+      id: this.movies.length + 1,
+      ...movieData,
+    }); // 배열.push로 배열 끝에 해당 데이터 추가.
+  }
+}
+
+=================================================================
+[movies.controller.ts]
+
+@Controller('movies') 
+export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+
+  @Post() 
+  createMovie(@Body() movieData: CreateMovieDto) {
+    return this.moviesService.createMovie(movieData);
+  }
+}
+
+=================================================================
+[main.ts]
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  await app.listen(3000);
+}
+bootstrap();
+
+=================================================================

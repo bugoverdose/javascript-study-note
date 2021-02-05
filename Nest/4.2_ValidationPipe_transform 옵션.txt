@@ -1,0 +1,64 @@
+transform 옵션
+- 클라이언트에서 보낸 데이터의 타입을 
+  entity에서 지정한 타입들을 기준으로 자동 변환해줌. 
+- @Param으로 들어오는 id값은 url이기 때문에 기본적으로 string 타입이지만 
+  transform 옵션 적용시 entity에서 지정된 number 타입으로 자동변환됨.
+
+=================================================================
+[main.ts]
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+  await app.listen(3000);
+}
+bootstrap();
+
+=================================================================
+[movie.entity.ts] 
+export class Movie {
+  id: number;
+  title: string;
+  year: number;
+  genres: string[]; // 문자열들로 구성된 배열
+}
+
+=================================================================
+[movies.controller.ts]
+// @Param으로 들어오는 id값은 url이기 때문에 기본적으로 string 타입이지만 
+// transform 옵션 적용시 entity에서 지정된 number 타입으로 자동변환됨.
+
+@Controller('movies')  
+export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+
+  @Get(':id')  
+  getOne(@Param('id') movieId: number): Movie {
+    // Param으로 들어오는 id값을 movieId라는 이름으로 사용. Movie를 반환.
+    return this.moviesService.getOne(movieId);
+  }
+
+=================================================================
+[movies.controller.ts]
+// transformer 덕분에 getOne에서 별도의 데이터타입 변환 불필요
+
+@Injectable()
+export class MoviesService {
+  private movies: Movie[] = [];  
+
+  getOne(id: number): Movie {  // number타입의 id를 인자로 받고, Movie 하나를 반환.
+    const movie = this.movies.find((movie) => movie.id === id); 
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`);  
+    }  
+    return movie;
+  }
+
+=================================================================

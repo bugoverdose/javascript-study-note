@@ -11,6 +11,9 @@
   (1) [npm install express]       => import express from "express";
   (2) [npm install expo-location] => import * as Location from "expo-location";
 */
+// (1) export default home => import home from "./movieController";
+// (2) export const home => import { home } from "./movieController";
+
 import express from "express";
 import routes from "./routes";
 

@@ -1,0 +1,121 @@
+Single-responsibility principle
+: 하나의 모듈/클래스/함수는 한가지 기능만을 담당해야 함. 한가지 일만 제대로 하기.
+
+컨트롤러: mapping the urls, 요청을 받고 query, body 등을 주는 기능.
+서비스 : handling the logic. query 처리 등.
+
+===============================================================
+[서비스 생성 명령]
+> nest g s        // nest generate service
+> 서비스명 입력: movies
+
+==> movies 폴더 내부에 movies.service.ts + movies.service.spec.ts 생성.
+==> app.module로의 import 과정 자동 실행.
+==> http://localhost:3000/movies 기준. '/컨트롤러명'을 entry point로 사용하게 됨.
+
+===============================================================
+원칙: If you want something, You have to ask for it. 
+- MoviesController 클래스 내부에서 MoviesService를 사용하려면 constructor에서 추가해줘야 함.
+
+===============================================================
+Entity : 대체로 데이터베이스의 Model 작성.
+- 서비스로 보내고 받을 class/interface 형식을 작성하여 export.
+
+[movies/entities/movie.entity.ts] 
+export class Movie {
+  id: number;
+  title: string;
+  year: number;
+  genres: string[]; // 문자열들로 구성된 배열
+}
+
+===============================================================
+[movies/movies.service.ts]
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Movie } from './entities/movie.entity';
+
+@Injectable()
+export class MoviesService {
+  private movies: Movie[] = []; // movies는 Movie들의 배열. 초기값은 빈 배열.
+
+  getAll(): Movie[] {
+    // Movie들의 배열을 반환.
+    return this.movies; // fake db. 실제로는 데이터베이스에 대한 query.
+  }
+
+  getOne(id: string): Movie {
+    // string타입의 id를 인자로 받고, Movie 하나를 반환.
+    const movie = this.movies.find((movie) => movie.id === +id); // +id는 parseInt(id)과 동일 효과. 문자열=>숫자.
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`); // Nest 자체 예외처리 기능.
+    } // { "statusCode": 404, "message": "Movie with ID 113 not found.", "error": "Not Found" }
+    return movie;
+  }
+
+  createMovie(movieData) {
+    this.movies.push({
+      id: this.movies.length + 1,
+      ...movieData,
+    }); // 배열.push로 배열 끝에 해당 데이터 추가.
+  }
+
+  deleteMovie(id: string): void {
+    // string타입의 id를 인자로 받고, boolean을 반환.
+    this.getOne(id); // getOne으로 해당 id의 영화 존재여부 사전체크 & 에러처리.
+    this.movies = this.movies.filter((movie) => movie.id !== +id);
+  }
+
+  updateMovie(id: string, updateData) {
+    const movie = this.getOne(id);
+    this.deleteMovie(id);
+    this.movies.push({ ...movie, ...updateData }); // 기존 movie + 업데이트된 정보로 새로 생성.
+  }
+}
+
+===============================================================
+[movies/movies.controller.ts]
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { Movie } from './entities/movie.entity';
+import { MoviesService } from './movies.service';
+
+@Controller('movies') // Router. url의 entry point는 '/movies' 라우트.
+export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+  // Controller의 constructor에 MoviesService 추가 => moviesService라는 명칭으로 클래스 내부에서 서비스의 함수들 접근 가능해짐.
+
+  @Get() // Router 내 개별 route. '/movies'
+  getAll(): Movie[] {
+    // Movie의 배열을 반환.
+    return this.moviesService.getAll();
+  }
+ 
+  @Get(':id') // '/movies/:id'
+  getOne(@Param('id') movieId: string): Movie {
+    // Movie를 반환.
+    return this.moviesService.getOne(movieId);
+  }
+
+  @Post() // '/movies'
+  createMovie(@Body() movieData) {
+    return this.moviesService.createMovie(movieData);
+  }
+
+  @Patch(':id') // '/movies/:id'
+  updateMovie(@Param('id') movieId: string, @Body() updateData) {
+    return this.moviesService.updateMovie(movieId, updateData);
+  }  
+
+  @Delete(':id')
+  deleteMovie(@Param('id') movieId: string) {
+    return this.moviesService.deleteMovie(movieId);
+  }
+}

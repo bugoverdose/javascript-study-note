@@ -1,0 +1,60 @@
+1) 옵션X: @isString 데코레이터 등이 지정된 데이터들이 전부 존재해야만 데이터 저장됨.
+        : 해당 데이터들이 제대로 입력되지 않으면 400. Bad Request.
+        : 문제점: 최소 조건만 충족되면 다른 데이터들도 그대로 저장됨. 
+2) whitelist 옵션: dto에서 데코레이터를 지정하지 않은 속성이 있는 경우,
+                   해당 데이터는 제외하고 dto에서 지정된 데이터들로만 저장.
+3) forbidNonWhitelisted 옵션: dto에서 데코레이터를 지정하지 않은 속성이 있다면
+                              400. Bad Request. 아예 저장하지 않음.
+- forbidNonWhitelisted를 사용하기 위해서는 whitelist가 먼저 true가 되어야 함.
+
+=================================================================
+[main.ts]
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
+  await app.listen(3000);
+}
+bootstrap();
+
+=================================================================
+[클라이언트 측에서 전송한 데이터]
+{
+　 "title": "Tenet",
+　 "year": 2020,
+　 "genres": ["Action", "Sci-Fi"],
+　 "hack": "by me"
+}
+==================================
+1. no option
+- dto에서 지정한 title, year, genres가 제대로 존재하므로 그대로 저장.
+{
+  "id": 1,
+  "title": "Tenet",
+  "year": 2020,
+  "genres": ["Action", "Sci-Fi"],
+  "hack": "by me"
+}
+==================================
+2. { whitelist: true }
+- dto에서 데코레이터를 지정하지 않은 속성("hack")은 제외하고 저장.
+{
+　 id: 1,
+　 title: 'Tenet',
+　 year: 2020,
+　 genres: ['Action', 'Sci-Fi'],
+}
+==================================
+3. { whitelist: true, forbidNonWhitelisted: true }
+- "hack"이라는 속성은 화이트리스트에 존재하지 않으므로 HttpException을 던짐.
+{
+  "statusCode": 400,
+  "message": [
+    "property hack should not exist"
+  ],
+  "error": "Bad Request"
+}
+====================================================================
