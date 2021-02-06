@@ -1,0 +1,43 @@
+Unit Testing
+- describe : 테스트 내용에 대한 설명. nesting 가능.
+- it : individual test의 약자 혹은 'it should be defined' 같은 느낌.
+  - 인자1: 임의로 작성한 문구. 해당 테스트명.
+  - 인자2: 테스트하고 싶은 코드 작성. 
+    - expect: 해당 테스트에서 기대하는 조건.
+
+- beforeEach : 각 테스트 이전에 실행되는 코드
+- 그 외 afterEach, beforeAll, afterAll 등의 hook으로 코드 중복 제거 가능.
+
+==================================================================
+[movies.service.spec.ts]
+import { Test, TestingModule } from '@nestjs/testing';
+import { MoviesService } from './movies.service';
+
+describe('MoviesService', () => {
+  let service: MoviesService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [MoviesService],
+    }).compile();
+
+    service = module.get<MoviesService>(MoviesService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('should be 4', () => {
+    expect(2 + 2).toEqual(5); // (2+2)가 5와 같기를 기대한다는 말 그대로의 의미.
+  });
+
+  describe("getAll()", () => {
+    it("should return an array", () => {
+      const result = service.getAll();
+      expect(result).toBeInstanceOf(Array); // getAll 함수가 배열 타입을 반환하는지 확인.
+    });
+  });
+});
+
+==================================================================

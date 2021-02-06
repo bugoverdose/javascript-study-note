@@ -1,0 +1,36 @@
+Dependency Injection
+: @Module에서 providers에 MoviesService를 주입했기 때문에
+  MoviesController에서 moviesService 변수에 MoviesService 타입을 지정한 것만으로도
+  this.moviesService.getAll();처럼 MoviesService 클래스의 함수들 사용 가능한 현상. 
+
+1) @Injectable 데코레이터가 MoviesService를 꾸밈. 
+   - @Injectable: a decorator that marks a class as a provider
+2) providers(MoviesService)를 import하여 controllers(MoviesController)에 주입.
+
+=====================================================
+[movies.module.ts]
+@Module({
+  controllers: [MoviesController],
+  providers: [MoviesService],
+})
+export class MoviesModule {}
+
+=====================================================
+[movies.service.ts]
+@Injectable()
+export class MoviesService {
+
+=====================================================
+[movies.controller.ts]
+~~
+@Controller('movies')  
+export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+ 
+  @Get()  
+  getAll(): Movie[] { 
+    return this.moviesService.getAll();
+  }
+
+=====================================================
+ 

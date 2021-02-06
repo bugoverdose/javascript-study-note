@@ -1,0 +1,41 @@
+app.module.ts에서 
+- AppModule는 AppController & AppService만 지니고 있어야 함.
+- 그 외 컨트롤러 & 서비스는 전부 모듈화하여 import.
+
+=============================================================
+> nest g mo           // nest generate module
+- 모듈명: movies
+
+> nest g co           // nest generate controller
+- 컨트롤러명: app
+================================================
+[movies/movies.module.ts]
+
+@Module({
+  controllers: [MoviesController],
+  providers: [MoviesService],
+})
+export class MoviesModule {}
+
+================================================
+[app.module.ts]
+
+@Module({
+  imports: [MoviesModule],
+  controllers: [AppController],
+  providers: [],
+})
+export class AppModule {}
+
+=============================================================
+[app.controller.ts]
+
+@Controller('')
+export class AppController {
+  @Get()
+  home() {
+    return 'Welcome to my Movie API';
+  }
+}
+
+================================================

@@ -1,0 +1,25 @@
+Nest.js는 두 가지 프레임워크 Express & Fastify 위에서 실행됨.
+- Express 혹은 Fastify의 기능들에 직접 접근할 수는 있지만 가급적 지양해야 함.
+  : Express <=> Fastify 사이를 오가야 하는 경우 성능 저하 혹은 문제 발생 가능.
+
+=> Nest.js 자체 기능들만 사용해야 Express <=> Fastify 전환이 용이함.
+
+=======================================================================  
+기본적으로 Express 위에서 동작하므로 별도의 작업 없이 req 객체나 res 객체 접근 가능.
+- @Req & @Res 데코레이터 활용.
+- 다만, 가급적 Express의 req, res 객체를 사용하지 않는 것이 좋음.
+
+cf) Fastify는 Express처럼 동작하지만 성능이 2배 더 빠른 프레임워크.
+
+==============================================
+[movies.controller.ts]
+@Controller('movies')  
+export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+  
+  @Get() 
+  getAll(@Req() req, @Res() res): Movie[]{
+    res.json()
+  }
+
+=======================================================================  

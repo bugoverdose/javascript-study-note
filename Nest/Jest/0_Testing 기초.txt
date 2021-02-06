@@ -1,0 +1,39 @@
+Testing
+1) Unit Testing : 서비스의 각 단위를 각각 독립적으로 테스트. (createMovie, getOne 등)
+                : 예를 들어 MoviesService 클래스의 개별 함수들을 미시적으로 테스트.
+       
+2) e2e Testing : end-to-end test. 시스템 전체를 종합적으로 테스트.
+               : 사용자가 취할 만한 행동들을 처음부터 끝까지 테스트.
+               : 사용자 관점. 사용자가 특정 페이지로 가면 무엇을 보아야 한다 등.
+               : 기본적으로 controller.ts의 각 @Get, @Post, @Patch 등.
+
+=========================================================================
+jest : 자바스크립트 테스팅 프레임워크. TS, node, React 등을 테스트하기 위한 npm 패키지. 
+     : nest에서 jest는 .spec.ts 형식의 파일을 참고하도록 configure됨.
+
+~.spec.ts : Unit Testing 코드 파일. 
+ex) app.controller.spec.ts에는 app.controller.ts 파일을 유닛 테스트하는 코드가 담김.
+
+=========================================================================
+[package.json]
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },  
+=========================================================================
+npm run test:watch
+- 모든 test 코드들을 찾아서 주시. 저장할 때마다 다시 테스트 진행.
+- a, f 등 테스트 방식 설정.
+
+npm run test:cov 
+- 전체 프로젝트에서 파일들이 현재 얼마나 테스트 완료되었는지 알려주는 기능.
+- 어떤 파일의 몇번째 줄들이 아직 테스트되지 않았는지 알려줌.
+
+npm run test:e2e
+- app.e2e-spec.ts 파일을 기준으로 e2e 테스트를 1회 실행.
+
+=========================================================================
+

@@ -1,0 +1,62 @@
+E2E Testing 
+- 일반적으로 테스트 전용 DB를 따로 생성해서 사용.
+- ex) 특정 url 요청에 따른 Controller, Service, Pipe 등의 결과를 테스트
+
+==================================================================
+* 주의: 실제 어플리케이션 환경을 Testing 환경에서 재현해줘야 함.
+- E2E 테스트시, 테스팅 app을 생성하여 사용. 
+- inSomnia를 사용하면 main.ts의 app 사용. 
+
+1) 디폴트 설정: 각 테스트마다 새로운 app이 매번 생성됨.
+- beforeEach => beforeAll로 변경해줘야 DB에 생성된 데이터 등이 유지됨.
+
+2) main.ts에서 설정한 pipe들을 app.e2e-spec.ts에서도 설정해줘야만 함.
+
+==================================================================
+cf) it.todo() : 테스트 코드 내부에 To Do List 작성 기능.
+  describe('/movies:id', () => {
+    it.todo('GET');
+    it.todo('DELETE');
+    it.todo('PATCH');
+  });
+
+==================================================================
+[app.e2e-spec.ts]
+
+describe('AppController (e2e)', () => {
+  let app: INestApplication;
+
+  // 1) beforeEach면 각 테스트마다 app을 매번 생성. main.ts의 실제 app과는 다름.
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true, // id의 타입으로 string => number로 자동 변환해주는 기능.
+      }), // 2) main.ts에서 설정된 pipe 구현
+    );
+    await app.init();
+  });
+
+==================================================================  
+[main.ts]
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true, // controller의 타입 자동변환 기능.
+    }),
+  );
+  await app.listen(3000);
+}
+bootstrap();
+
+==================================================================  
