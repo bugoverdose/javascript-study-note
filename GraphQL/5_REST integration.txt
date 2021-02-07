@@ -1,3 +1,35 @@
-[GraphQL 서버를 통한 REST API 활용 방법]
+[GraphQL 서버를 통한 REST API 활용 방법(Wrapping a REST API with GraphQL)]
+- 특정 query에 대해 REST API를 활용하도록 resolver를 설정 가능.
 
-[Wrapping a REST API with GraphQL]
+===============================================================
+[db.js]
+import fetch from "node-fetch";
+
+const API_URL = "https://yts-proxy.now.sh/list_movies.json/?";
+
+export const getMovies = (limit, rating) => {
+  let REQUEST_URL = API_URL;
+  if (limit > 0) {
+    REQUEST_URL += `&limit=${limit}`;
+  }
+  if (rating > 0) {
+    REQUEST_URL += `&minimum_rating=${rating}`;
+  }
+  return fetch(REQUEST_URL)
+    .then((res) => res.json())
+    .then((json) => json.data.movies);
+};
+
+===============================================================
+[resolvers.js]
+import { getMovies } from "./db";
+
+const resolvers = {
+  Query: {
+    movies: (_, { rating, limit }) => getMovies(limit, rating),
+  },
+};
+
+export default resolvers;
+
+===============================================================

@@ -1,4 +1,4 @@
-import { getMovies, getById, addMovie, deleteMovie } from "./db";
+import { getMovies, getById, addMovie, deleteMovie } from "./2_db";
 
 // resolvers: 누군가가 특정 Query 혹은 Mutation을 요청하면 어떻게 반응할 것인가.
 const resolvers = {

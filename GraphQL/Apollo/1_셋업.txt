@@ -1,0 +1,49 @@
+REST API : url을 요청하면 즉시 JSON을 받아서 활용 가능.
+GraphQL API : url 대신 query로 원하는 정보를 구체적으로 요청.
+ 
+===========================================================
+Apollo : GraphQL API를 활용하는 최선의 방법.
+
+1) create-react-app 셋업 진행     // 외부 터미널에서 진행.
+
+2) npm install @apollo/client     // 프로젝트 내에서 진행.
+   npm install graphql
+
+- @apollo/client: This single package contains virtually everything you need 
+                  to set up Apollo Client. It includes the in-memory cache, 
+                  local state management, error handling, and a React-based view layer.
+- graphql: This package provides logic for parsing GraphQL queries.
+
+===========================================================
+3) ApolloClient 생성
+
+[src/apollo.js] 
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/", // 구동중인 백엔드 서버의 url을 설정. 한번만 설정해놓으면 됨.
+  cache: new InMemoryCache(),
+});
+
+export default client;
+
+===========================================================
+4) ApolloProvider에 client 주입 + App 감싸기.
+
+[src/index.js]
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./components/App";
+import { ApolloProvider } from "@apollo/client";
+import client from "./apollo";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+===========================================================

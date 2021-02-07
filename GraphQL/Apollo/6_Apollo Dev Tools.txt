@@ -1,0 +1,4 @@
+Apollo Client Dev Tools
+- GraphQL의 경우 Redux에 비해 개발자 도구가 아직 별로임.
+
+개발자도구의 Apollo 탭에서 현재 브라우저에서 실행된 query & 저장된 cache 확인 가능.
