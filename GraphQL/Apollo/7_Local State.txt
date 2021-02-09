@@ -1,0 +1,83 @@
+Local State
+- API에서 넘어온 데이터에 변형을 가하는 방법. 
+
+1) gql에서 @client로 query 내 field 설정: 클라이언트 측에서 사용할 field 설정.
+2) ApolloClient에 resolvers 설정 
+- apollo cache 데이터 내부에 새로운 필드 생성. (Movie 타입 내부에 isLiked 생성)
+- Mutation : 클라이언트 측에서 query를 resolve할 방법 설정. (toggleLikeMovie 함수 생성)
+           : cache.modify - id: 변경대상 & fields: 해당 대상을 변경할 방식(함수).
+3) useMutation
+- gql에서 @client로 mutation 정의 
+- useMutation에서 인자1에 mutation 설정, 인자2에 mutation에 대입할 변수 설정.
+const [likeMovie] = useMutation(LIKE_MOVIE, {
+    variables: { id: parseInt(id) },
+  });
+
+===============================================================
+[apollo.js]
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/", // 구동중인 백엔드 서버의 url을 설정하여 연결.
+  cache: new InMemoryCache(),
+  resolvers: {
+    Movie: {
+      isLiked: () => false, // 디폴트로 false 값 지니도록.
+    }, // Movie. Apollo Cache에 사용되는 타입명 그대로 사용
+    Mutation: {
+      likeMovie: (_, { id, isLiked }, { cache }) => {
+        // 인자들: root은 무시. args에서 id 얻기. context에서 cache 얻기.
+        cache.modify({
+          id: `Movie:${id}`, // 변경할 대상.
+          fields: {
+            isLiked: (isLiked) => !isLiked, 
+            // 해당 대상의 현재 isLiked 값을 받아서 true-false 토글
+          },
+        });
+      },
+    },
+  },
+});
+
+export default client;
+
+===============================================================
+[Home.js]
+const GET_MOVIES = gql`
+  query getMovies {
+    movies {
+      id
+      title
+      medium_cover_image
+      isLiked @client
+    }
+  }
+`; 
+// isLiked의 경우 백엔드에서 오지 않음. 클라이언트 측에서 생성할 필드(local state)
+
+===============================================================
+[Movie.js]
+const LIKE_MOVIE = gql`
+  mutation likeMovie($id: Int!) {
+    likeMovie(id: $id) @client
+  }
+`; 
+
+const Movie = ({ id, movieName, img, isLiked }) => {
+  const [likeMovie] = useMutation(LIKE_MOVIE, {
+    variables: { id: parseInt(id) },
+  }); // useMutation은 첫번째 요소에 실핼될 mutation을 반환. likeMovie 등 이름은 자유 지정.
+  return (
+    <Container>
+      <Link to={`/${id}`}>
+        <h1>{movieName}</h1>
+        <Poster img={img} />
+      </Link>
+      <button onClick={likeMovie}>{isLiked ? "Unlike" : "Like"}</button>
+    </Container>
+  );
+};
+
+export default Movie;
+
+===============================================================

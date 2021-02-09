@@ -1,0 +1,41 @@
+getMovie에서 movie 내부에 id를 설정해주면 getMovies의 각 movie로부터 extend 가능.
+=> 같은 id의 movie끼리 isLiked 등의 데이터 공유 가능해짐.
+- 주의: 먼저 getMovies를 요청해야 연결이 됨.
+
+===============================================
+const GET_MOVIE = gql`
+  query getMovie($id: Int!) {
+    movie(id: $id) {
+      id
+      title
+      rating
+      description_intro
+      language
+      medium_cover_image
+      isLiked @client
+    }
+    suggestions(id: $id) {
+      title
+      medium_cover_image
+      rating
+    }
+  }
+`;
+
+const Detail = () => {
+  const { id } = useParams();
+  const { loading, data } = useQuery(GET_MOVIE, { variables: { id: +id } });
+  return (
+    <>
+    <Title>
+      {loading ? <div>Loading...</div> : data?.movie?.title}
+    </Title>
+    <Subtitle>
+      {data?.movie?.language} {!loading && "·"} {data?.movie?.rating}
+      {data?.movie?.isLiked ? "🧡" : "❌"}
+    </Subtitle>
+    </>
+   );
+};
+
+export default Detail;

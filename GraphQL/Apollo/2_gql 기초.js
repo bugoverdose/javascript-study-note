@@ -15,6 +15,8 @@ import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 
+// 1) query getMovies{ 형식으로 시작해야 apollo dev tools 사용시 편리함.
+// 다만, 변수 활용하지 않는 경우 생략 가능.
 const GET_MOVIES = gql`
   {
     movies {
@@ -25,7 +27,7 @@ const GET_MOVIES = gql`
   }
 `; // => const { loading, data } = useQuery(GET_MOVIES);
 
-// 1) param으로 받은 id 값을 query에서 사용하기 위한 추가 작업.
+// 2) param으로 받은 id 값을 query에서 사용하기 위한 추가 작업.
 // apollo에서 id를 $id라는 값으로 사용하도록 설정.
 const GET_MOVIE = gql`
   query getMovie($id: Int!) {
@@ -43,7 +45,7 @@ const GET_MOVIE = gql`
     }
   }
 `;
-// 2) const { loading, data } = useQuery(GET_MOVIE, { variables: { id: +id } });
+// 3) const { loading, data } = useQuery(GET_MOVIE, { variables: { id: +id } });
 // => data.movie & data.suggestions // data에 복수의 query 요청 결과가 담기게 됨.
 
 const Detail = () => {

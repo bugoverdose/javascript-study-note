@@ -26,6 +26,12 @@ export class UpdateMovieDto {
   readonly genres?: string[];
 }
 
+cf) "?" vs @IsOptional?
+@IsOptional()                   // class-transformer 목적
+readonly genres: string[];
+
+readonly genres?: string[];     // TS 목적
+
 ============================================================
 [movies.service.ts]
 @Injectable()
