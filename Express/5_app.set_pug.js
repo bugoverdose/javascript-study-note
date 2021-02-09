@@ -4,6 +4,8 @@
 
   res.render(<TEMPLATE>, { varName: "value" })
   : controller에서 변수에 값을 전달하면서 템플릿 렌더링하는 방법.
+
+  cf) pug 패키지 필요(npm)
 */
 
 import express from "express";

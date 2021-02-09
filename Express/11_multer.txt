@@ -1,0 +1,93 @@
+multer 
+- file의 URL을 반환해주는 middleware. 주소 형식으로 파일에 접근가능해짐.
+- req.file에 form으로 submit된 파일의 정보를 담아줌 + 해당 파일 업로드해줌.
+
+1단계) upload.pug 파일의 form 설정.
+2단계) middlewares.js : multer 미들웨어 설정. form의 input에 대응되도록.
+3단계) Router : app.post("/", multerUploadVideo, postUpload);
+              : post 요청에 대해 multer 미들웨어 설정.
+              : multer 미들웨어를 거치면서 req.file에 업로드된 파일 정보가 담기게 됨.
+              : postUpload는 업로드된 파일에 file이 아니라 URL 형식으로 접근 가능해짐.
+4단계) Controller : postUpload에서 파일 데이터를 조작하여 DB에 저장 등 최종 작업. 
+
+========================================================================
+1단계) form에서 enctype 설정 + input name 설정.
+
+enctype="multipart/form-data" 
+: multer를 위해 file을 받을 수 있도록 form의 encoding 변경.
+: 추가하지 않으면 video 폴더에 파일 생성 불가 + req.file에 값은 undefined가 됨.
+
+input(type="file", id="file", name="textFile", ~)
+: 이때 사용된 name에 multer를 대응시켜줘야 함.
+
+[views/upload.pug]
+doctype html
+html
+    head
+        title #{pageTitle}
+    body
+        h1 #{pageTitle}!
+        form(action="/", method="post", enctype="multipart/form-data")
+            div
+                label(for="file") Choose File
+                input(type="file", id="file", name="textFile", required, accept=".txt")
+            input(type="submit", value="Convert!")
+
+
+cf) accept=video/* // 비디오 파일만 받도록 지정(BUT override 가능. 다른 유형의 파일 업로드 가능함)
+cf) accept=".mkv,.avi,.mp4,.mpg,.flv,.wmv,.asf,.asx,.ogm,.ogv,.mov") : 가급적 확장자를 명시해야 함.
+ 
+========================================================================
+2) multer 미들웨어 설정
+> npm install multer 
+
+[middleware.js]
+import multer from "multer";
+
+const multerVideo = multer({ dest: "textFile/" });
+// textFile/  : 현재 프로젝트에 textFile 폴더 생성(상대경로)
+// /textFile/ : 내 컴퓨터의 root에 textFile 폴더 생성(절대경로)
+
+export const multerUploadVideo = multerVideo.single("textFile");
+// single : 오직 하나의 파일만 업로드 가능함을 의미.
+// "textFile" : upload.pug의 input(type="file", name="textFile", ~)에 대응.
+
+========================================================================
+3단계) Router에서 post 요청에 대해 multer 미들웨어 설정.
+
+[Router]
+import { getUpload, postUpload, readFile } from "./controller.js";
+import { multerUploadVideo } from "./middlewares.js";
+
+app.route("/").get(getUpload).post(multerUploadVideo, postUpload); 
+// multer 미들웨어를 거치면서 req.file에 업로드된 파일 정보가 담기게 됨.
+// postUpload는 업로드된 파일에 file이 아니라 URL의 형식으로 접근 가능해짐.
+
+========================================================================
+4단계) Controller : postUpload에서 파일 데이터를 조작하여 DB에 저장 등 최종 작업. 
+
+[controller.js]
+import fs from "fs";
+
+export const getUpload = (req, res) =>
+  res.render("upload", { pageTitle: "TXT2HTML" });
+
+export const postUpload = (req, res) => {
+  console.log(req.file); // multer 미들웨어 없으면 undefined 출력
+  fs.readdir(req.file.destination, (err, files) => {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    console.log(files); // files : textFile 폴더의 모든 파일명들의 배열
+  });
+  
+  fs.readFile(req.file.path, "utf-8", (err, data) => {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    console.log(data); // data : textFile 폴더의 해당 파일의 내용
+    res.render("read", { pageTitle: "read", content: data });
+  });
+};
