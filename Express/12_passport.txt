@@ -1,0 +1,17 @@
+PassportJS
+- an authentication middleware
+- Strategy : an authentication mechanism
+- Provider : an external website that will authenticate the user
+
+- passport stores the sessions in Cookies
+
+- cookies sent to the server on Every Request
+
+- local strategy : username/password auth
+
+serialization : a function where we can decide what information the cookie will have
+deserialization : a function where we turn the cookie into an user object
+- After deserialization, passport puts the user object in 'req.user'
+
+If we don't use a CookieStore, the cookies will not be persistent.
+- ex) 서버가 죽으면 쿠키들 전부 리셋됨.

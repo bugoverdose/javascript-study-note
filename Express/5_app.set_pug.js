@@ -6,6 +6,7 @@
   : controller에서 변수에 값을 전달하면서 템플릿 렌더링하는 방법.
 
   cf) pug 패키지 필요(npm)
+  비교) res.send("Hello World!"); // 템플릿 엔진 없이 글자 프린트하는 방법
 */
 
 import express from "express";

@@ -8,8 +8,9 @@
   (2) export const localVariables => import { localVariables } from "./middleware";
   
   node_modules의 패키지 가져오기.
-  (1) [npm install express]       => import express from "express";
-  (2) [npm install expo-location] => import * as Location from "expo-location";
+  (1) [npm i express]       => import express from "express";
+  (2) [npm i expo-location] => import * as Location from "expo-location";
+      [npm i joi]           => import * as Joi from 'joi'; // 그 자체로 export되지 않음.
 */
 // (1) export default home => import home from "./movieController";
 // (2) export const home => import { home } from "./movieController";
