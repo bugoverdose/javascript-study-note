@@ -4,7 +4,7 @@
   - 마우스를 가져다 대면 문제 확인 가능
 
   [optional argument]
-  - 매개변수? : 특정 매개변수명 뒤에 ?를 붙이면 not required 설정 적용. (TS 기능)
+  - 변수? : 특정 변수명 뒤에 ?를 붙이면 not required 설정 적용. (TS 기능)
     ex) gender?: string
 */
 const sayHello1 = (name: string, age: number, gender: string) => {
