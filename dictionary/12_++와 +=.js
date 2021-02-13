@@ -1,8 +1,25 @@
 /*
   Increment(++)  
   - ++변수 : 해당 변수에 1을 더하고, 더해진 후의 값을 return.
-  - 변수++ : 해당 변수에 1을 더하고, 더해지기 전의 값을 return.
+  - 변수++ : 변수의 현재 값을 return하면서, 해당 변수에 1을 더하기.
 */
+let idNumbers = 0;
+const newId1 = idNumbers;
+idNumbers += 1;
+// newId1 : 0
+// idNumbers : 1
+
+let idNumbers = 0;
+const newId2 = idNumbers++;
+// newId2 : 0
+// idNumbers : 1
+
+let idNumbers = 0;
+const newId3 = ++idNumbers;
+// newId3 : 1
+// idNumbers : 1
+
+// ===========================================================
 
 let a = 3;
 const b = ++a;
