@@ -4,6 +4,10 @@
    
   setTimeout(함수A, time);
    - [time]ms만큼 시간 지연 이후 콜백함수 A를 실행시키는 함수.
+
+  clearTimeout
+  - const ID = setTimeout(함수A, time);
+  - clearTimeout(ID);
 */
 
 setTimeout(function () {

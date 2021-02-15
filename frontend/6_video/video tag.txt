@@ -1,12 +1,10 @@
 <video src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-   controls=true>
-</video>
+   controls=true></video>
 - src : 영상 파일의 주소
-- controls : 영상 재생, 전체화면 등 기본 조작 기능 제공.
+- controls : 영상 재생, 전체화면 등 기본 조작 기능 제공. 
 
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
-=====================================
-
+cf) video tag mdn : https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+===========================================================================
 [Exprss Middlewares]
 app.use(helmet());
 app.use(function (req, res, next) {

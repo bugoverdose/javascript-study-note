@@ -1,0 +1,15 @@
+HTMLMediaElement: audio/video 태그를 querySelector로 선택하고 그대로 메서드 실행 가능. 
+                : 직접 속성 값에 접근하여 활용 및 변경 가능.
+- video.play();  // 영상 재생 시작.
+- video.pause(); // 영상 재생 중단.
+- video.muted = true;  // 음소거.
+- video.volume = 0.5;  // 볼륨 지정. (0.0 ~ 1.0)
+- video.duration // 영상 총 길이. 초 단위.
+- video.currentTime // 영상 현재 재생 시점. 초 단위.
+
+HTMLMediaElement : https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
+- The HTMLMediaElement interface adds to HTMLElement the properties and methods 
+  needed to support basic media-related capabilities that are common to audio and 
+  video. The HTMLVideoElement and HTMLAudioElement elements both inherit this interface.
+
+================================================================
