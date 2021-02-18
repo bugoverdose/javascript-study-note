@@ -19,7 +19,7 @@ isAbstract 옵션: GraphQL 스키마에는 포함시키지 말라는 의미. 동
 @Entity()  
 export class UserEntity extends CoreEntity { ~ }
 ================================================================================
-[DTO]
+[DTO] GraphQL Resolver에서 활용됨.
 @InputType: MappedTypes를 통해 엔티티로 dto 생성하기 위해 필요. (extends OmitType, extends PartialType 등)
           : 상속하는 GraphQL entity & 상속받는 dto 양쪽에 @InputType 필요.
 
@@ -29,6 +29,23 @@ cf) @ArgsType: Mapped Types를 통해 entity를 기반으로 dto 클래스 생�
 export class EditProfileInputDto extends PartialType(
   PickType(UserEntity, ['email', 'password']),
 ) {}
+-------------------------------------------------------------------------------
+@ObjectType: 다른 DTO를 상속하여 DTO를 생성하려는 경우 필요. 
+             : 상속하는 엔티티/DTO & 상속받는 엔티티/DTO 양쪽에 @ObjectType 필요.
+
+import { Field, ObjectType } from '@nestjs/graphql';
+
+@ObjectType()
+export class CoreOutputDto {
+  @Field((type) => String, { nullable: true })
+  error?: string; // error는 값이 undefined일 수 있기 때문에 선택사항. TS 기능.
+
+  @Field((type) => Boolean)
+  ok: boolean;  
+}
+
+@ObjectType()
+export class CreateAccountOutputDto extends CoreOutputDto {}
 ================================================================================
 [Resolver]
 @Args(): 해당 Query/Mutation에서 인자로 DTO를 받을 수 있도록 설정.
