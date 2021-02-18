@@ -1,0 +1,11 @@
+[Video Player]
+
+조건
+- Record / Stop Recording Button. Should start/stop recording
+- Time indicator of the recording's progress in seconds
+- When I stop recording trigger a download the file
+- Don't use Async/Await
+- When saving the audio use {type:"audio/webm;codecs=opus"}
+ 
+- MediaRecorder: https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder
+- MediaDevices: https://developer.mozilla.org/ko/docs/Web/API/MediaDevices

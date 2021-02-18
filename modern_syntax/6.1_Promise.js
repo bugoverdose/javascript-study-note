@@ -21,7 +21,7 @@ Promise: 즉시 실행하지만, 결과값은 실행이 완료된 후 then, catc
 - 각각의 콜백함수에서 매번 따로 에러를 처리할 필요 없이 
   마지막에 catch 메서드 하나만 사용해도 모든 에러 처리 가능.
 */
-const condition = true;
+const condition = true; // const condition = false;
 const promise = new Promise((resolve, reject) => {
   if (condition) {
     resolve("성공");
@@ -32,10 +32,10 @@ const promise = new Promise((resolve, reject) => {
 // 다른 코드들 실행 가능
 promise
   .then((message) => {
-    console.log(message); // message == '성공' // resolve(인자) => then(매개변수)
+    console.log(message); // message == '성공' // resolve의 인자 => then의 매개변수에 대입
   })
   .catch((error) => {
-    console.log(error); // error == '실패' // reject(인자) => error(매개변수)
+    console.log(error); // error == '실패' // reject의 인자 => catch의 매개변수에 대입
   })
   .finally(() => {
     console.log("무조건");

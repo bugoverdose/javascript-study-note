@@ -1,5 +1,11 @@
 <video src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
    controls=true></video>
+<video
+        autoplay
+        loop
+        width="700px"
+        src="https://serranoarevalo.github.io/notflix/9bfd1023900e31286103369c803c7ee9.ogv"
+      ></video>   
 - src : 영상 파일의 주소
 - controls : 영상 재생, 전체화면 등 기본 조작 기능 제공. 
 
