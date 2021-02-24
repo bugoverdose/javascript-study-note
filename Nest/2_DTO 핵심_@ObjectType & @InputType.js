@@ -14,7 +14,7 @@ import { CoreOutputDto } from 'src/common/dtos/output.dto';
 import { VerificationEntity } from '../entities/verificaton.entity';
 
 @InputType() // Entity를 MappedTypes로 상속하여 DTO 생성하기 위해 양쪽에 필요.
-export class VerifyEmailInput extends PickType(VerificationEntity, ['code']) {}
+export class VerifyEmailInputDto extends PickType(VerificationEntity, ['code']) {}
 
 @ObjectType() // DTO를 상속하여 DTO 생성하기 위해 양쪽에 필요.
 export class VerifyEmailOutputDto extends CoreOutputDto {}

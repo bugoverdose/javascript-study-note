@@ -1,5 +1,5 @@
 [서비스]
-@Injectable: a decorator that marks a class as a provider. 컨트롤러에서 사용가능하도록 모듈에 주입 가능해짐.
+@Injectable: 모듈에 주입 가능해지는 설정. a decorator that marks a class as a provider. 
 : 특정 서비스를 꾸미고, 해당 서비스를 모듈의 providers로 주입. (Dependency Injection)
   => 컨트롤러에서 사용 가능. constructor에 인자로 설정하면 컨트롤러 내에서 사용 가능.
 ================================================================================
@@ -7,14 +7,20 @@
 @Entity: 클래스를 TypeORM 측면의 엔티티로 설정.
 
 @ObjectType: 클래스를 GraphQL 엔티티로 설정. GraphQL 스키마에 @ObjectType의 entity 생성. 
-             : 상속하는 엔티티 & 상속받는 엔티티 양쪽에 @ObjectType 필요.
+             : extends CoreEntity하는 경우, CoreEntity & 상속받는 엔티티 양쪽에 @ObjectType 추가 필요.
+             
 @InputType: MappedTypes를 통해 GraphQL 엔티티로 dto 생성하기 위해 필요.
           : 상속하는 GraphQL entity의 경우 isAbstract:true 옵션 필요.
 
-isAbstract 옵션: GraphQL 스키마에는 포함시키지 말라는 의미. 동명의 스키마 생성 방지용.
-               : 상속을 위해서만 해당 엔티티가 활용된다는 의미.
+@InputType 주의 : 스키마에 동일명의 InputType과 ObjectType이 생성되는 에러 예방.
+- isAbstract 옵션: 해당 엔티티로는 ObjectType만 생성. 
+                 : 상속을 위해서만 해당 엔티티가 활용된다는 의미. 
+                 : GraphQL 스키마에는 포함시키지 말라는 의미.
+- 엔티티들 사이에 1대다 관계 등 설정시, @InputType에 별도의 타입명 부여 필요.
+  - TypeORM : @ObjectType. 필드들 + CoreEntity를 상속받아 'UserEntity' 생성.
+  - GraphQL : @InputType. UserEntity의 필드들만으로 'UserInputType' 생성.
 
-@InputType({ isAbstract: true })  
+@InputType('UserInputType', { isAbstract: true })  // [참고. DB Relationship/0_InputType & ObjectType.ts]
 @ObjectType()  
 @Entity()  
 export class UserEntity extends CoreEntity { ~ }

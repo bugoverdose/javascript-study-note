@@ -73,6 +73,11 @@ export class UserEntity extends CoreEntity {
   @IsEnum(UserRole)
   role: UserRole; // Client, Owner, Delivery
 
+  @Field((type) => Boolean) // GraphQL
+  @Column({ default: false }) // TypeORM: DB에 기본값으로 false 설정.
+  @IsBoolean()
+  emailVerified: boolean;
+
   @BeforeInsert() // UserEntity를 Repo.create => Repo.save시키기 전에 자동실행.
   @BeforeUpdate() // UserEntity를 Repo.save시킬 때 자동실행.
   async hashPassword(): Promise<void> {
