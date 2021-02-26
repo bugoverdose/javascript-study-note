@@ -3,12 +3,14 @@
   - findOne으로 찾아와진 데이터에는 관계를 맺은 다른 데이터들이 담기지 않음.
   => TyprORM에게 관련 relationship을 불러와달라고 요구 필요.
   
-  { loadRelationIds: true }
-  - verification.user에 user.id 데이터만 담아줌.
-
   { relations: ['user'] }  // verification의 user 칼럼. not Entity명.
-  - verification.user 값 전체를 담아줌. 즉, 연결된 UserEntity 데이터 전체를 담아줌.
+  - verification의 user 칼럼 값 전체를 담아줌. 즉, 연결된 UserEntity 데이터 전체를 담아줌.
   - 즉, verification.user에 연결된 UserEntity 데이터 전체를 담아줌.
+
+  { loadRelationIds: true } 
+  - verification.user에 user.id 데이터만 담아줌.
+  - 성능 저하 예방. 누구와 연결되었는지만 알면 될 때 필요.
+  ==> 다만, 실제로는 @RelationId 활용하여 별개의 필드 생성하면 해당 옵션 불필요.
 */
 // [verification.entity.ts]
 export class VerificationEntity extends CoreEntity {
@@ -26,7 +28,7 @@ console.log(verification.user); // undefined
 // ======================================================
 const verification = await this.verificationRepo.findOne(
   { code },
-  { loadRelationIds: true },
+  { loadRelationIds: true }
 );
 console.log(verification.user); // 5  // user.id 값만 대입됨.
 console.log(verification);
@@ -41,7 +43,7 @@ console.log(verification);
 // ======================================================
 const verification = await this.verificationRepo.findOne(
   { code },
-  { relations: ['user'] },
+  { relations: ["user"] }
 );
 console.log(verification.user);
 /* UserEntity {

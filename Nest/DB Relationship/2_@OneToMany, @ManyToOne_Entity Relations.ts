@@ -2,7 +2,7 @@
         <One>          <Many> 
       category1 --- restaurant1
                 --- restaurant2
-                --- restaurant3  
+                --- restaurant3          
     (@OneToMany)    (@ManyToOne)  // TypeORM
 
   중요: 양쪽 Entity에서 대응되는 필드에 inverse로 상대방 Entity에 대한 정보 적기.
