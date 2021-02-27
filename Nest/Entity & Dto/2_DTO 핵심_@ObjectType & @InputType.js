@@ -3,6 +3,7 @@
   1) Entity를 상속하여 MappedTypes로 DTO 생성: @InputType
      : 상속하는 GraphQL entity & 상속받는 dto 양쪽에 @InputType() 필요. 
      : Resolver에서는 @Args('input')처럼 매개변수명 지정 필요.
+  - 그냥 InputDto면 전부 다 @InputType로 통일하는 것도 괜찮은 방법. (MappedTypes 아니어도)
 
   2) 다른 DTO를 상속하여 DTO 생성: @ObjectType
      : 상속하는 dto & 상속받는 dto 양쪽에 @ObjectType() 필요.

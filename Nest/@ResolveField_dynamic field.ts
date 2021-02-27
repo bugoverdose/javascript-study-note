@@ -23,7 +23,7 @@ export class CategoryResolver {
   restaurantCount(@Parent() category: CategoryEntity): Promise<number> {
     // @Parent() : restaurantCount 필드의 부모인 CategoryEntity에 접근.
     return this.restaurantService.countRestaurants(category);
-  } // 각 category에 대해 countRestaurants 실행한 값으로 restaurantCount 필드 생성
+  } // 각 category 데이터에 대해 restaurantCount 필드 생성 + countRestaurants 실행 결과를 값으로 대입.
 
   @Query((returns) => AllCategoriesOutputDto)
   allCategories(): Promise<AllCategoriesOutputDto> {

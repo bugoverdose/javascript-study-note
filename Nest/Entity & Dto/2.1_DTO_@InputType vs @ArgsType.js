@@ -1,5 +1,5 @@
 /*  
-  [DTO]
+  [DTO] 전부 @InputType로 통일하는 것도 괜찮은 방법.
   - 기본적으로 dto 사용하지 않아도 @Mutation 작성 가능.
   - 다만, @InputType() 혹은 @ArgsType()을 사용해야 인자 부분의 코드 중복 제거 가능
   - 또한 dto에 대해 class-validator 활용도 가능해짐. 
