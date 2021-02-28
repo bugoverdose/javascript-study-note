@@ -6,7 +6,7 @@
     (@OneToMany)    (@ManyToOne)  // TypeORM
 
   중요: 양쪽 Entity에서 대응되는 필드에 inverse로 상대방 Entity에 대한 정보 적기.
-  중요: Many쪽의 필드에 관계id가 하나 담기게 됨.
+  중요: Many쪽의 필드에 관계id가 하나 담기게 됨. => @RelationId 활용하여 자동 접근 가능.
         One쪽의 필드에는 관계id들의 리스트가 생성되지 않음.
 
 (RestaurantEntity 입장 - Many쪽 entity) - 하나의 음식점은 하나의 카테고리에만 속할 수 있음.

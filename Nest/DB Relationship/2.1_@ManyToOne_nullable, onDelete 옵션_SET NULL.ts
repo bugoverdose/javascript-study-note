@@ -1,7 +1,7 @@
 /*
   양쪽 모두 연결된 Entity 데이터가 없어도 되는 옵션. => Many쪽에 설정.
    {
-    nullable: true, 
+    nullable: true, // 애초에 @ManyToOne는 디폴트값이 {nullable: true}이므로 사실 불필요.
     onDelete: 'SET NULL', 
    }
    // Many: 카테고리 데이터 없이 restaurant 데이터 생성시, null 담김.

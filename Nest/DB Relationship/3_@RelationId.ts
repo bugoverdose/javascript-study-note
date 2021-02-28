@@ -4,6 +4,9 @@
   - 원리: 내부참조: DB상 관계id가 담긴 TypeORM Entity(본인)의 필드에 접근하여 값 복사.
   - 주의: TypeORM Entity에만 생성하고 GraphQL Entity에는 불필요. 
 
+  cf) @Field를 안 붙이는 경우 InputDto에서는 별도의 @Field로 restaurantId 받아야 함.
+      - MappedType 활용하여 받을 수 없음. (GraphQL 스키마에 없어서)
+
   =======================================================================
   cf) Entity에서 관계를 맺는 필드에는 서로 상대방측의 Entity가 담겨야 함.
     - 해당 필드를 통해 실제로 연결된 Entity에 접근 가능하지만
@@ -24,6 +27,16 @@ export class RestaurantEntity extends CoreEntity {
 
   @RelationId((restaurant: RestaurantEntity) => restaurant.owner) // TypeOrm 목적. // GraphQL - @Field 불필요.
   ownerId: number; // 내부참조: DB상 관계id가 담기게 되는 필드의 값을 복사해오는 필드.
+   // @Field가 아니므로 InputDto에서는 별도로 @Field로 restaurantId 받아야 함.
+}
+// ================================================
+// [edit-restaurant.dto.ts]
+@InputType() // => MappedType으로 dto로 dto 생성도 가능.
+export class EditRestaurantInputDto extends PartialType(
+  CreateRestaurantInputDto,
+) {
+  @Field((type) => Number)
+  restaurantId: number; // 수정할 음식점의 id은 필수로로 받기
 }
 // ================================================
 // [restaurants.service.ts]
