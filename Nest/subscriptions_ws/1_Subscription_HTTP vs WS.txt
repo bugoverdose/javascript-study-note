@@ -1,0 +1,79 @@
+0) npm i graphql-subscriptions
+  
+1) @Resolver에서 @Subscription 설정. 
+   - 해당 메서드는 return pubsub.asyncIterator(triggers) 필요.
+
+2) AppModule에서 GraphQLModule - context에는 req 혹은 connection이 담김.
+   - query/mutation시 req 객체에 정보들 담김.
+   - subscription시 connection에 정보들 담김. 
+     : connection.context : HTTP HEADERS에 넣은 정보 접근 가능('X-JWT' 등).
+
+=====================================================================
+=====================================================================
+npm i graphql-subscriptions
+
+Subscription : listens for changes & updates on a resolver
+- @Query, @Mutation, @Subscription 모두 @Resolver 클래스 내부에 메서드로 생성.
+
+PubSub : publish & subscribe. 앱 내부에서 message 교환 기능.
+- const pubsub = new PubSub();
+- return pubsub.asyncIterator('kimchi');
+
+=====================================================================
+http & ws는 서로 다른 프로토콜 => 서버가 양쪽 모두에서 돌아갈 수 있도록 설정 필요.
+- ws : real-time을 처리를 위한 웹소켓 프로토콜
+
+=====================================================================
+GraphQL API 연결 방법 & GraphQL Subscription 연결 방법은 다름.
+- Query & Mutation : HTTP 프로토콜 필요. HTTP Route를 거침. 요청.
+- Subscription : 웹소켓 활성화 필요. Web Socket Route를 거침. 연결.
+
+[AppModule]
+GraphQLModule.forRoot({
+  installSubscriptionHandlers: true, // ws 프로토콜 대응 설정. 서버가 웹소켓 기능 지니도록 설정.
+  // ~~
+}),
+
+=====================================================================
+주의: 웹소켓 연결은 request 개념이 없음. 쿠키를 보내고 받는 작업 등이 없음.
+- http 요청과 달리 웹소켓은 한번 연결되면 그 연결을 계속 유지하게 됨.
+- 웹소켓 연결시, req 객체는 undefined => 에러 발생 가능.
+
+[AppModule]
+GraphQLModule.forRoot({
+    installSubscriptionHandlers: true, // ws 프로토콜 대응 설정. 서버가 웹소켓 기능 지니도록 설정.
+    // ~~
+    context: ({ req }) => ({ user: req['user'] }), // http 요청시 문제X
+    // req에 담긴 user 내용을 받아서 resolver들에서도 사용 가능하도록 전달.
+}), // ws 프로토콜에서는 req 객체에 undefined가 담기게 되어 에러 발생.
+
+=====================================================================
+GraphQL Context 
+- http : request => http 요청시 req 객체에 정보들 담김.
+- ws : connection => ws 연결시 connection 객체에 정보들 담김.
+
+[AppModule]
+@Module({
+  imports: [
+    // ~~
+    GraphQLModule.forRoot({
+      installSubscriptionHandlers: true, // ws 프로토콜 대응 설정. 서버가 웹소켓 기능 지니도록 설정.
+      autoSchemaFile: true, // schema.gql 파일을 메모리에 생성 + 저장.
+      context: ({ req, connection }) => {
+        if (req) {
+          console.log(req); // http 요청시 존재
+          return { user: req['user'] }; // req에 담긴 user 내용을 받아서 resolver들에서도 사용 가능하도록 전달.
+        } else {
+          console.log(connection); // ws 연결시 존재
+        }
+      },
+    }),
+    // ~~
+})
+export class AppModule implements NestModule { ~~ }
+=====================================================================
+주의: Authentication 목적으로 Header로 토큰을 보내는 경우
+- http는 매 요청마다 매번 토큰을 보내게 됨.
+- ws는 처음에 연결할 때 딱 한번에 토큰을 보냄.
+
+=====================================================================
