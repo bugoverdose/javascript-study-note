@@ -1,0 +1,29 @@
+호출 순서: Middleware => Guard => Decorator => Query/Mutation/Subscriptions => Services
+
+http header의 토큰 
+1) Middleware는 생략 
+2) AppModule의 GraphQLModule의 context로 전달. 
+   : http vs ws에 따라 다른 형식으로 http header의 정보에 접근 가능.
+3) Guard에서 gqlContext로 받아 처리.
+
+==================================================================
+[Guard]
+1) const gqlContext = GqlExecutionContext.create(context).getContext();
+   // AppModule의 GraphQLModule의 context이 return한 값 받기
+   // ExecutionContext(= http req 혹은 ws connection)의 정보를 GraphQL context로 받기.
+
+1-1) context로 받은 토큰 해석 => user 정보 찾기
+
+2) role metadata & user.role에 따라 1차적으로 auth 판단.
+
+3) gqlContext['user'] = user;
+   // gqlContext의 user key에 토큰으로 찾은 user 정보 대입.
+   // => Decorator => Resolver => Services로 자동으로 전달됨. 
+      별도의 return, export 작업 없이 그대로 gqlContext로 접근 가능.
+
+==================================================================
+graphQL context의 흐름 
+: GraphQLModule의 context => Guard => Decorator => Resolver => Services
+: Guard에서 gqlContext에 데이터 새로 대입.
+
+==================================================================
