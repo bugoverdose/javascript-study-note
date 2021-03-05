@@ -1,0 +1,28 @@
+TailwindCSS 
+: utility-first framework. 기본적으로 다양한 클래스들로 구성된 매우 긴 css 코드 파일.
+: html 태그들에 특정 클래스들 그대로 적용하는 방식으로 사용.
+: production 단계에서 사용하지 않은 클래스들의 css 코드들은 제거 가능 => 성능 향상.
+: responsive desing, shadow, hover state, gradient 등 
+cf) NodeJS 12버전 이상에서만 가능.
+
+===============================================================
+[기능 1] 캡슐화(encapsulation)
+1) react components 활용.
+
+2) tailwindcss 클래스들을 하나의 클래스명으로 합쳐서 적용 가능. (코드 중복 제거)
+
+// [tailwindcss.css] 서순 주의.
+@tailwind base;
+@tailwind components;
+.btn {
+  @apply text-base font-medium rounded-lg p-3;
+}
+@tailwind utilities;
+
+<button class="btn">Decline</button>
+
+===============================================================
+[기능 2] tailwindcss 클래스를 상속하여 나만의 클래스 자체 제작 가능. 
+- 별도의 셋업 필요하지만 효과적인 작업.
+
+=============================================================== 

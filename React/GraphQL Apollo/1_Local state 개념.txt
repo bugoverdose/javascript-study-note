@@ -1,0 +1,16 @@
+Local-Only Fields
+- GraphQL 서버의 스키마에 정의되지 않은 Field
+- Apollo client(프론트엔드)에서 graphqL state 다루는 방법.
+- cache, local state 등 
+- https://www.apollographql.com/docs/react/local-state/managing-state-with-field-policies/
+
+=============================================================
+Local state : 백엔드 서버에는 없지만 앱에서 사용하는 state 
+            : 프론트엔드에서만 사용하는 정보. 
+            : 브라우저에서 서버로 보낼 필요가 없는 정보. 
+
+- 현재 사용자가 로그인하면 local state 업데이트 => LoggedInRouter 사용.
+- 다크모드 설정에 따라 모든 컴포넌트들 색상 변경.
+- 유튜브: 사용자가 설정한 음량 그대로 기억하고 다른 영상들에 적용.
+
+=============================================================

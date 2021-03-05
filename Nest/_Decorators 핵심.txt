@@ -1,15 +1,31 @@
 [서비스]
-@Injectable: 모듈에 주입 가능해지는 설정. a decorator that marks a class as a provider. 
+@Injectable(): 모듈에 주입 가능해지는 설정. a decorator that marks a class as a provider. 
 : 특정 서비스를 꾸미고, 해당 서비스를 모듈의 providers로 주입. (Dependency Injection)
   => 컨트롤러에서 사용 가능. constructor에 인자로 설정하면 컨트롤러 내에서 사용 가능.
+==================================
+[서비스 - TypeORM: @InjectRepository]
+@Injectable()
+export class PodcastService {
+  constructor(
+    @InjectRepository(Podcast)
+    private readonly podcastRepo: Repository<Podcast>,
+  ) {}
+=================
+@Module({
+  imports: [TypeOrmModule.forFeature([Podcast])], // Service에 @InjectRepository할 entity들 가져오기.
+  providers: [PodcastService, PodcastResolver],
+})
+export class PodcastModule {}
 ================================================================================
 [엔티티 생성]
-@Entity: 클래스를 TypeORM 측면의 엔티티로 설정.
+@Entity: 클래스를 TypeORM 엔티티로 설정. (TypeORM 관련하여 클래스에 설정하는 유일한 데코레이터?)
+       : @Column(), @OneToMany(), @PrimaryGeneratedColumn() 등을 각 필드에 설정. 
 
 @ObjectType: 클래스를 GraphQL 엔티티로 설정. GraphQL 스키마에 @ObjectType의 entity 생성. 
-             : extends CoreEntity하는 경우, CoreEntity & 상속받는 엔티티 양쪽에 @ObjectType 추가 필요.
-             
-@InputType: MappedTypes를 통해 GraphQL 엔티티로 dto 생성하기 위해 필요.
+           : extends CoreEntity하는 경우, CoreEntity & 상속받는 엔티티 양쪽에 @ObjectType 추가 필요.
+           : @Field((type)=>String) 등을 각 필드에 설정.
+
+@InputType: DTO. MappedTypes를 통해 GraphQL 엔티티로 dto 생성하기 위해 필요.
           : 상속하는 GraphQL entity의 경우 isAbstract:true 옵션 필요.
 
 @InputType 주의 : 스키마에 동일명의 InputType과 ObjectType이 생성되는 에러 예방.

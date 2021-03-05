@@ -1,0 +1,41 @@
+[GraphQL 셋업] https://www.apollographql.com/docs/react/get-started/
+
+1) npm install @apollo/client graphql
+
+===============================================================
+2) ApolloClient 생성 : 별도의 파일 생성하고, GraphQL Playground에 연결.
+- 프론트엔드 port 번호는 3000 그대로 사용.
+- 백엔드 port 번호는 4000로 수정. (중복되면 안됨)
+
+// src/apollo.ts
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+ 
+export const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql", // 백엔드의 playground 주소. (프론트엔드와 포트 번호는 달라야 함)
+  cache: new InMemoryCache(),
+});
+
+===============================================================
+3) ApolloProvider 사용 : apollo client를 통해 playground에 연결.
+
+// src/index.tsx
+import { ApolloProvider } from "@apollo/client"; 
+import { client } from "./apollo";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+===============================================================
+4) http://localhost:3000/
+- 개발자도구 > Apollo Client dev tools 익스텐션: doc에서 query & mutations 확인 가능.
+
+cf) 프론트 & 백엔드 함께 실행 중일 때, 백엔드의 서버와 연결되는 순간
+    프론트에서 Apollo는 Reconnaissance query를 보내서 백엔드의 schema를 가져오게 됨. (IntrospectionQuery를 감지)
+
+===============================================================

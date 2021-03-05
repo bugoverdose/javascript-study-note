@@ -7,6 +7,8 @@
   cf) @Field를 안 붙이는 경우 InputDto에서는 별도의 @Field로 restaurantId 받아야 함.
       - MappedType 활용하여 받을 수 없음. (GraphQL 스키마에 없어서)
 
+  참고: find 메서드의 where로 접근하고 싶은 경우, nested relationships 활용.
+
   =======================================================================
   cf) Entity에서 관계를 맺는 필드에는 서로 상대방측의 Entity가 담겨야 함.
     - 해당 필드를 통해 실제로 연결된 Entity에 접근 가능하지만
