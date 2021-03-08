@@ -1,7 +1,8 @@
 [TailwindCSS 셋업]
 0) Tailwind CSS intelliSense : 필수 VSC extention. 클래스명 자동완성 기능.
 - tailwind.config.js 파일을 자동으로 주시함.
- 
+  => extend하여 추가로 사용 가능해진 클래스 옵션들을 자동으로 제공해줌.
+
 ===============================================================
 각 프로젝트에서 실행할 설치 작업들: https://tailwindcss.com/docs/installation
 
@@ -29,8 +30,22 @@ module.exports = {
 
 // => postCSS는 해당 코드 3줄을 토대로 Tailwind의 모든 css 코드들로 전부 대체해줌. 
 ===============================================================
-4) npx tailwindcss init               
-// => tailwind customization하고 싶으면 필요.  
+4) "tailwind build 인풋경로 -o 아웃풋경로" 형식의 명령어 생성
+// package.json
+"scripts": {
+    "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
+    "start": "npm run tailwind:build & react-scripts start",
+}
+
+// npm run tailwind:build 실행시, 아웃풋경로에 모든 tailwind 클래스들 + 추가로 생성한 클래스들 생성됨.
+// npm run start : 실행할 때마다 tailwind:build가 필요한 경우 자동으로 재실행되도록 설정. (캡슐화 작업 진행한 경우)
+===============================================================
+5) index.tsx 파일에서 아웃풋경로 그대로 import. => tailwind 클래스들 그대로 사용 가능.
+import "./styles/styles.css";
+
+===============================================================
+===============================================================
+6) npx tailwindcss init        //  tailwind customization하고 싶으면 필요.
 
 // tailwind.config.js 파일 & 코드 자동 생성됨. 
 module.exports = {
@@ -43,20 +58,30 @@ module.exports = {
   plugins: [],
 }
 
-// => postCSS는 해당 파일에서 추가로 설정한 클래스명들도 전부 생성해줌.
-===============================================================
-5) "tailwind build 인풋경로 -o 아웃풋경로" 형식의 명령어 생성
-// package.json
-"scripts": {
-    "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
-    "start": "npm run tailwind:build & react-scripts start",
-}
+// => postCSS는 해당 파일에서 추가로 설정한 클래스명들도 전부 생성해줌. 
 
-// npm run tailwind:build 실행시, 아웃풋경로에 모든 tailwind 클래스들 + 추가로 생성한 클래스들 생성됨.
-// npm run start : 실행할 때마다 tailwind:build가 필요한 경우 자동으로 재실행되도록 설정. (캡슐화 작업 진행한 경우)
 ===============================================================
-6) index.tsx 파일에서 아웃풋경로 그대로 import. => tailwind 클래스들 그대로 사용 가능.
-import "./styles/styles.css";
+7) Customizing Colors (https://tailwindcss.com/docs/customizing-colors)
+- extend 객체 내부에 추가로 사용하고 싶은 것들을 지정해줘야 함.
+
+// [tailwind.config.js] colors.lime 속성들을 사용하고 싶은 경우.
+const colors = require("tailwindcss/colors");
+
+module.exports = {
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {
+      colors: {
+        lime: colors.lime,
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
 
 ===============================================================
 ===============================================================

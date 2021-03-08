@@ -6,10 +6,8 @@ TailwindCSS
 cf) NodeJS 12버전 이상에서만 가능.
 
 ===============================================================
-[기능 1] 캡슐화(encapsulation)
-1) react components 활용.
-
-2) tailwindcss 클래스들을 하나의 클래스명으로 합쳐서 적용 가능. (코드 중복 제거)
+[기능 1] 캡슐화(encapsulation) : 나만의 클래스 자체 제작 방법. 
+tailwindcss 클래스들을 하나의 클래스명으로 합쳐서 적용 가능. (코드 중복 제거)
 
 // [tailwindcss.css] 서순 주의.
 @tailwind base;
@@ -22,7 +20,26 @@ cf) NodeJS 12버전 이상에서만 가능.
 <button class="btn">Decline</button>
 
 ===============================================================
-[기능 2] tailwindcss 클래스를 상속하여 나만의 클래스 자체 제작 가능. 
-- 별도의 셋업 필요하지만 효과적인 작업.
+[기능 2] tailwindcss 클래스를 상속하여 추가로 클래스들 더 받을 수 있음.
 
+> npx tailwindcss init   
+
+// [tailwind.config.js] colors.lime 속성들을 사용하고 싶은 경우.
+const colors = require("tailwindcss/colors");
+
+module.exports = {
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {
+      colors: {
+        lime: colors.lime,
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
 =============================================================== 

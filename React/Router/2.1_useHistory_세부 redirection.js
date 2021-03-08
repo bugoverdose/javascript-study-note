@@ -5,8 +5,9 @@
   * Redirect : used for overall route protection
   * useHistory : used for specific redirection
 
-  const history = useHistory();
-  history.push("/");
+1) import { useHistory } from "react-router-dom";
+2) const history = useHistory();
+3) history.push("/");
 */
 import { authService } from "fbase";
 import React from "react";

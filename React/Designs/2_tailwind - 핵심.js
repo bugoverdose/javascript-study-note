@@ -1,6 +1,9 @@
 /*
   CTRL+SPACE : Tailwind 자동완성 기능 활성화
 
+  h-screen : 스크린 크기만큼. 각 컴포넌트의 가장 부모인 태그에 최우선 적용. height: 100vh
+  // h-full : 부모 태그의 높이만큼. 내부 태그들에 적용. height 100%.
+
   w-full max-w-lg 
   // width: 100% & max-width: 32rem // 좌우 넓이 반응형 디자인
 
@@ -11,7 +14,40 @@
   // 해당 input이 선택되었을 때 outline 대신 2px짜리 border 색 변경.
 
   hover:opacity-90 bg-gray-800 // 마우스가 위에 있을 때 배경 투명도 변경.
+
+  tracking-wide // 텍스트 간 좌우 간격 적용. 좌우로 넓게.
 */
+
+import React from "react";
+
+export const Login = () => {
+  return (
+    <div className="h-screen flex items-center justify-center bg-gray-800 px-5">
+      <div className="bg-white w-full max-w-lg py-10 rounded-lg text-center">
+        <h3 className="text-3xl text-gray-800">Log In</h3>
+        <form className="flex flex-col mt-5 px-5">
+          <input
+            className="bg-gray-100 focus:outline-none focus:ring-opacity-50 focus:ring-2 focus:ring-gray-500 shadow-md mb-3 py-3 px-5 rounded-lg"
+            type="email"
+            placeholder="Email"
+            name="email"
+            required
+          />
+          <input
+            className="bg-gray-100 focus:outline-none border-2 focus:border-opacity-50 focus:border-gray-500 shadow-md py-3 px-5 rounded-lg"
+            type="password"
+            placeholder="Password"
+            name="password"
+            required
+          />
+          <button className="bg-gray-800 hover:opacity-90 focus:outline-none text-white text-xl py-3 px-5 rounded-lg mt-5">
+            Log In
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 /*
 <Tailwind Basic Dictionary>
 
@@ -75,33 +111,3 @@ border-opacity-50 border-green-600 border // 반투명하면서 녹색
 focus:outline-none border-2 focus:border-gray-500 
 // 해당 input이 선택되었을 때 outline 대신 border 색 변경.
 */
-import React from "../GraphQL Apollo/node_modules/react";
-
-export const Login = () => {
-  return (
-    <div className="h-screen flex items-center justify-center bg-gray-800 px-5">
-      <div className="bg-white w-full max-w-lg py-10 rounded-lg text-center">
-        <h3 className="text-3xl text-gray-800">Log In</h3>
-        <form className="flex flex-col mt-5 px-5">
-          <input
-            className="bg-gray-100 focus:outline-none focus:ring-opacity-50 focus:ring-2 focus:ring-gray-500 shadow-md mb-3 py-3 px-5 rounded-lg"
-            type="email"
-            placeholder="Email"
-            name="email"
-            required
-          />
-          <input
-            className="bg-gray-100 focus:outline-none border-2 focus:border-opacity-50 focus:border-gray-500 shadow-md py-3 px-5 rounded-lg"
-            type="password"
-            placeholder="Password"
-            name="password"
-            required
-          />
-          <button className="bg-gray-800 hover:opacity-90 focus:outline-none text-white text-xl py-3 px-5 rounded-lg mt-5">
-            Log In
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-};

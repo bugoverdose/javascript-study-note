@@ -6,7 +6,7 @@
   - 컴포넌트답게 props를 받아서 css 코드로 특정 prop 값 직접 사용 가능.
   - ex) background-image: url(${(props) => props.img});
 */
-import React from "react";
+import React from "../GraphQL Apollo/node_modules/react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 

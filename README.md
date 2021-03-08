@@ -1,3 +1,9 @@
 # Javascript Study Note
 
-Vanilla JS, Node, React, and GraphQL study notes
+- Vanilla JS
+- TypeScript
+- NodeJS
+- React
+- Express
+- Nest
+- GraphQL

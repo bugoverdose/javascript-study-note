@@ -1,6 +1,6 @@
 [GraphQL 셋업] https://www.apollographql.com/docs/react/get-started/
 
-1) npm install @apollo/client graphql
+1) npm install @apollo/client graphql         
 
 ===============================================================
 2) ApolloClient 생성 : 별도의 파일 생성하고, GraphQL Playground에 연결.
@@ -18,7 +18,7 @@ export const client = new ApolloClient({
 ===============================================================
 3) ApolloProvider 사용 : apollo client를 통해 playground에 연결.
 
-// src/index.tsx
+// [src/index.tsx]
 import { ApolloProvider } from "@apollo/client"; 
 import { client } from "./apollo";
 
@@ -30,12 +30,68 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
-
+ 
 ===============================================================
-4) http://localhost:3000/
+http://localhost:3000/
 - 개발자도구 > Apollo Client dev tools 익스텐션: doc에서 query & mutations 확인 가능.
 
 cf) 프론트 & 백엔드 함께 실행 중일 때, 백엔드의 서버와 연결되는 순간
     프론트에서 Apollo는 Reconnaissance query를 보내서 백엔드의 schema를 가져오게 됨. (IntrospectionQuery를 감지)
 
+===============================================================
+===============================================================
+cf) reactive variable로 local only field 사용 방법 예시
+- local state 셋업 + read + update 방법.
+
+// 5-1) ApolloClient의 cache에 typePolicies 옵션으로 local only field 설정.
+// [apollo.ts]
+import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+
+const isLoggedInVar = makeVar(false); // reactive variable 생성. 디폴트값은 false.
+
+export const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql", // 백엔드의 playground 주소. (프론트엔드와 포트 번호는 달라야 함)
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          isLoggedIn: {
+            // local only field명: isLoggedIn
+            read() {
+              return isLoggedInVar(); // 실행하는 방법으로 reactive variable 값 설정.
+            }, // read 메서드: 해당 isLoggedIn 필드에 담기는 값을 return
+          },
+        },
+      },
+    },
+  }),
+});
+
+===========================================
+// 5-2) useReactiveVar 훅 : gql문 없이 해당 local only field에 직접 접근 + 업데이트되면 re-render되는 Hook.
+// [App.tsx]
+function App() {
+  const isLoggedIn = useReactiveVar(isLoggedInVar); // gql문 없이 해당 local only field에 직접 접근 + 업데이트되면 re-render되는 Hook.
+  return isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />;
+}
+
+export default App;
+
+===========================================
+// 5-3) reactive variable의 값 업데이트.
+// [routers/logged-out-router.tsx]
+import React from "react";
+import { isLoggedInVar } from "../apollo";
+
+export const LoggedOutRouter = () => {
+  const onClick = () => {
+    isLoggedInVar(true); // 해당 reactive variable의 값을 true로 변경.
+  };
+  return (
+    <div>
+      <h1>Logged Out</h1>
+      <button onClick={onClick}>Click to Login</button>
+    </div>
+  );
+};
 ===============================================================
