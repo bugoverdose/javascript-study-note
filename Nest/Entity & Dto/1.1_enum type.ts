@@ -5,8 +5,14 @@
   - TypeORM: 기본적으로 DB에는 0, 1, 2라는 값으로 전달됨. 다만 수정 가능. 
 
   1) enum 타입명 { ~, ~, ~ } : enum 타입 생성.
+  
   2) registerEnumType(enum타입명) : GraphQL. 필드에서 사용하기 위해 사전 등록.
-  3) @IsEnum(enum타입명) : class validation 목적. 필드에서 사용하려면 해당 데코레이션 필요.
+  
+  3) @Column({ type: 'enum', enum: UserRole }) : TypeORM. DB에 저장하기 위해 필요.
+     @Column({ type: 'simple-enum', enum: UserRole})
+     // enum 타입 지원을 안해주는 DB의 경우 simple-enum 활용.
+
+  4) @IsEnum(enum타입명) : class validation 목적. 필드에서 사용하려면 해당 데코레이션 필요.
 */
 // [user.entity.ts]
 import {
@@ -22,7 +28,8 @@ enum UserRole {
   Client,
   Owner,
   Delivery,
-} // TypeORM용 필드타입. DB에는 각각 0, 1 ,2라는 값이 전달됨.
+} // TypeORM용 필드타입. 기본적으로 DB에는 각각 0, 1 ,2라는 값이 전달됨.
+// Client = "Client"처럼 값을 지정해줘야 해당 문자열이 담기게 됨.
 
 registerEnumType(UserRole, { name: 'UserRole' }); // GraphQL용 필드타입. Client, Owner, Delivery 그대로 사용됨.
 
@@ -30,17 +37,20 @@ registerEnumType(UserRole, { name: 'UserRole' }); // GraphQL용 필드타입. Cl
 @ObjectType() // GraphQL 스키마에 @ObjectType만 생성. (동일명 스키마 중복 생성 금지)
 @Entity() // TypeORM
 export class UserEntity extends CoreEntity {
-  @Field((type) => String) // GraphQL
-  @Column() // TypeORM
-  @IsEmail() // class-validator
-  email: string;
-
   // ~~
 
   @Field((type) => UserRole) // GraphQL
   @Column({ type: 'enum', enum: UserRole }) // TypeORM
-  @IsEnum(UserRole)
+  @IsEnum(UserRole) // class-validator
   role: UserRole; // Client, Owner, Delivery
+}
+
+// enum 타입 지원을 안해주는 DB의 경우 simple-enum 활용.
+@Entity()
+export class User extends CoreEntity {
+  @Field((type) => String)// GraphQL
+  @Column({ type: 'simple-enum', enum: UserRole})// TypeORM
+  role: UserRole; // client, owner, delivery
 }
 
 // =======================================================

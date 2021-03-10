@@ -3,8 +3,10 @@
   - const newEntity = Repo.create(inputDto)  // 입력된 정보 객체를 토대로 새로운 데이터 생성
   - Repo.save(newEntity) // 생성된 데이터를 DB에 새롭게 저장.
 
-  Repo.create 메서드: 엔티티(클래스)로 인스턴스 생성. 메서드의 인자로 생성할 데이터 객체 전달.
-  Repo.save 메서드: 엔티티(config된 인스턴스 데이터)를 DB에 저장. Promise를 return.
+  Repo.create 메서드: 엔티티(클래스)로 인스턴스 생성. 메서드의 인자는 생성할 데이터 객체(Entity 정보) 전달.
+  Repo.save 메서드: 엔티티(config된 인스턴스 데이터)를 DB에 저장. 
+                  : Promise 형태로 DB에 생성된 엔티티를 return.
+  - 두 메서드가 반환하는 데이터는 일치. create의 반환값 == save의 인자 == save의 반환값
 
   ======================================================
   Repo.find() // 해당 DB에 있는 모든 데이터 찾기. 
@@ -45,5 +47,32 @@ export class RestaurantService {
     // 인자2. partialEntity: 수정하고 싶은 내용이 포함된 객체 데이터.
 
     // 주의: update 메서드는 해당 엔티티가 DB에 존재하는지는 확인하지 않음.
+  }
+}
+// ==============================================================
+// create의 반환값 == save의 인자 == save의 반환값
+@Injectable()
+export class PodcastsService {
+  constructor(
+    @InjectRepository(Podcast)
+    private readonly podcastRepository: Repository<Podcast>
+  ) {}
+  async createPodcast({
+    title,
+    category,
+  }: CreatePodcastInput): Promise<CreatePodcastOutput> {
+    try {
+      const newPodcast = this.podcastRepository.create({ title, category });
+      const created = await this.podcastRepository.save(newPodcast);
+      console.log(created === newPodcast); // true
+      // const { id } = await this.podcastRepository.save(newPodcast);
+      return {
+        ok: true,
+        id: created.id,
+      };
+    } catch (e) {
+      console.log(e);
+      return this.InternalServerErrorOutput;
+    }
   }
 }

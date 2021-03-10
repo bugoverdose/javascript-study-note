@@ -1,0 +1,21 @@
+create-react-app은 기본적으로 CSR.
+- 크롤러가 js로 그려지는 VirtualDOM을 못 긁어서 CSR이 불리.
+- react-helmet 사용하면 가능은 함.
+
+Next를 사용하면 쉽게 SSR 구현 가능. 
+- SEO 측면에서 이점. 
+ 
+======================================================================== 
+사용자 정보에 따라 보여주는 내용을 다르게 구성하려면 Next
+Gatsby : 홍보, 블로그 등 정적 데이터
+
+======================================================================== 
+https://blog.logrocket.com/next-js-vs-gatsbyjs-a-developers-perspective/
+https://shylog.com/which-is-better-nextjs-or-gatsbyjs/
+
+======================================================================== 
+Next vs Gatsby 
+https://blog.logrocket.com/next-js-vs-gatsbyjs-a-developers-perspective/ 
+https://medium.com/%EC%95%84%EB%AA%BD%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4/csr-ssr-spa-mpa-ede7b55c5f6f
+
+======================================================================== 
