@@ -31,8 +31,20 @@ export default App;
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const ClientRoutes = [
-  <Route path="/" exact>
+  <Route key={1} path="/" exact>
     <Restaurants />
+  </Route>,
+  <Route key={2} path="/confirm">
+    <ConfirmEmail />
+  </Route>,
+  <Route key={3} path="/edit-profile">
+    <EditProfile />
+  </Route>,
+  <Route key={4} path="/search">
+    <Search />
+  </Route>,
+  <Route key={5} path="/category:slug">
+    <CategoryPage />
   </Route>,
 ];
 
