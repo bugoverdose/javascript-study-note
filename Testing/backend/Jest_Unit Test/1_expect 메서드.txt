@@ -1,0 +1,27 @@
+expect(result).toMatchObject({ ok: false, error: '~~' });
+// result의 값은 { ok: false, error: '~~' } 객체와 일치해야 한다.
+
+expect(result).toEqual({ ok: true });
+// result의 값은 { ok: true }와 일치해야 한다.
+
+expect(usersRepository.create).toHaveBeenCalledTimes(1); 
+// 해당 메서드는는 1번 실행되어야 한다.
+// cf) mockRepository를 객체로 설정하여 대입한 경우 verificationRepository.create 메서드 & usersRepository.create 메서드는 동일한 것으로 간주됨. => 2회 실행된 것으로 간주됨.
+
+expect(usersRepository.save).toHaveBeenCalled(); 
+// 해당 메서드는 실행되어야 한다. 실행 회수와 무관.
+
+expect(usersRepository.create).toHaveBeenCalledWith(createAccountArgs); 
+// 해당 메서드는 ~를 인자로 받아 실행되어야 한다.
+
+expect(mailService.sendVerificationEmail).toHaveBeenCalledWith(
+  expect.any(String), // String 타입을 인자로 받는지만 확인.
+  expect.any(String), // 정확한 값X.
+); 
+// 문자열 타입의 인자 2개를 받아 실행되어야 한다.      
+
+expect(usersRepository.findOne).toHaveBeenCalledWith(
+  expect.any(Object),
+  expect.any(Object),
+);
+// 객체 타입의 인자 2개를 받아 실행되어야 한다. 
