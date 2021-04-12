@@ -7,3 +7,4 @@
 - Express
 - Nest
 - GraphQL
+- Jest

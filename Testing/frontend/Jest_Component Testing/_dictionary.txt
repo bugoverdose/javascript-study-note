@@ -1,0 +1,73 @@
+0) userEvent : 사용자의 특정 행동에 따라 keydown, onchange 등 모든 이벤트들이 순차적으로 발생될 것이라고 가정.
+> userEvent.type(htmlElement, "입력 값") // 사용자가 특정 element에 실제로 텍스트를 입력했다고 가정.
+> userEvent.click(document.body); // 어딘가 화면 내부를 클릭했다고 가정.
+> userEvent.clear(email); // 해당 input의 입력 값을 전부 지웠다고 가정 
+
+1) jest.mock("route", ()=>{}) : 특정 라우트에서 import되는 컴포넌트 mock 가능
+
+2) render(<컴포넌트 prop={~} />) : 특정 컴포넌트의 렌더링 결과 테스트 기능.
+- debug() : 콘솔에 렌더링된 element 그대로 출력.
+- getByText("text") : 해당 텍스트가 렌더링된 element들에 존재하는지 확인.
+- container : 바닐라JS처럼 html element에 접근. className 접근 가능.
+
+3) rerender(<컴포넌트 prop={~} />) : state 값의 변화에 따른 실시간 rerendering 과정 구현 가능.
+
+4) waitFor(()=>{
+     render하기 전에 앱 내부에서 발생할 상황(특정 변수 값 변화 등)
+     query문 실행하고 컴포넌트 render 등
+   })
+
+5) 적용된 클래스명 확인하려면 container & toHaveClass 활용
+- expect(container.firstChild).toHaveClass("pointer-events-none");
+
+6) 컴포넌트에 Link 존재하는 경우, 테스트할 때도 Router로 감싸서 render 필요.
+6-1) container로 접근하고 toHaveAttribute를 통해 href속성에 대입된 값 확인 가능.
+- expect(container.firstChild).toHaveAttribute("href", "/restaurant/12345");
+
+7) 렌더링된 결과에 특정 텍스트 존재시 테스트 통과시키는 기능들.
+- getByText("text") : 특정 텍스트가 존재하지 않으면 그대로 테스트 fail.
+- queryByText("text") : 특정 텍스트가 존재하지 않으면 null 값 반환.
+                      : 특정 텍스트가 존재하지 않음을 테스트하기 위해 활용.
+
+8) Helmet 사용하는 컴포넌트 테스트하는 경우.
+- HelmetProvider로 감싸서 rendering 필요.
+- title 태그 내용 테스트할려면 await waitFor 필요. 조금 기다려줘야 Helmet이 값 변경.
+
+9) MockedProvider : apollo client 기능 활용시, MockedProvider로 감싸서 render 필요.
+- ApolloProvider 자체를 mock하는 방법.
+- import { MockedProvider } from "@apollo/client/testing";
+
+9-1) mocks : query, mutation의 요청 & 결과를 mock하는 기능. 얕은 테스트만 가능. (지양)
+- useQuery를 활용한 hook의 결과를 mock하지 말고, gql 요청 과정 자체를 mock.
+- MockedProvider 내부에서 요청한 gql문 + 그에 따라 반환된 값을 mocks prop에 대입.
+- 중요 1) waitFor로 전부 감싸줘야 함. state 값이 변화하므로 rerender되므로.
+       2) await new Promise((resolve) => setTimeout(resolve, 0));  // query 요청+결과가 진행되도록 기다려줘야 함.
+
+10) mock-apollo-client : query/mutation을 제대로 테스트하는 라이브러리. 세부적인 통제. (권장)
+- ApolloProvider 그대로 사용. client만 mock하는 방법.
+- 셋업: npm i mock-apollo-client --save-dev
+
+10-1) mockClient.setRequestHandler(gql문, 요청 결과)
+- 특정 gql문 요청(mutation 등)에 대해 해당 요청 결과가 반환되는 것처럼 mock하기. 
+- const 요청 결과 = jest.fn().mockResolvedValue({ data: { ~ } }) 
+
+11) beforeEach : 각각의 it 실행할 때마다 매번 처음에 재실행.
+- RenderResult 타입으로 컴포넌트 렌더링된 결과 받아서 활용.
+
+12) getByPlaceholderText("특정 값") 
+: placeholder에 특정 값이 적용된 element의 존재 여부 확인. 없으면 테스트 실패.
+: 해당하는 html element를 선택하여 반환. 변수로 받아 userEvent.type 등으로 조작 가능.
+
+13) getByRole("role") : 특정 role에 해당하는 html element 선택.
+- role prop에 "role"을 설정해줘야 함.
+- 적용 가능한 role의 종류는 정해져 있음. not 자유 지정.
+- toHaveTextContent로 내부 텍스트 검증.
+
+14) jest.spyOn(Storage.prototype, "setItem");
+
+14-1) jest.spyOn(window, "alert").mockImplementation(() => null);
+      expect(window.alert).toHaveBeenCalledWith(~) 
+
+15) mocking library/hooks : jest.mock & jest.requireActual 
+: 실제 라이브러리를 그대로 사용하되 일부 메서드만 다른 것으로 덮어쓰는 방법. replace
+: 테스트 종료 후 afterAll(()=>{jest.clearAllMocks()})로 mock 해제해주기 권장. unreplace

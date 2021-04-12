@@ -16,6 +16,12 @@
       - findOne - {loadRelationIds:true} 옵션 사용해야 관계id가 담겨서 찾아와짐.
 */
 
+@RelationId((episode: Episode) => episode.podcast) // TypeOrm 목적.
+@Field((type) => Number) // 프론트에서도 사용하고 싶은 경우에만 필요. query로 받고 싶은 경우.
+podcastId: number; // 내부참조: DB상 관계id가 담기게 되는 필드의 값을 복사해오는 필드.
+
+// ====================================================================
+// ====================================================================
 @ObjectType() // GraphQL 스키마 자동생성 목적 - entity
 @Entity() // TypeORM에서 DB에 저장할 데이터 형식 지정 목적. 일종의 Model - entity
 export class RestaurantEntity extends CoreEntity {

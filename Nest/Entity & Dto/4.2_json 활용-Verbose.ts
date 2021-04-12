@@ -1,13 +1,13 @@
 /* 
- 주의: json 문자열에 어떤 내용이 들어올 수 있는지는 frontend에서 통제 필요.
- - GraphQL로 어떤 데이터든 전달 가능. TypeORM으로는 통제 불가. 
- - service에서 입력된 json 데이터를 토대로 DB의 데이터와 대조 작업은 가능.
- - 장점: 유연성. 별도의 DB 작업 불필요.
+  주의: json 문자열에 어떤 내용이 들어올 수 있는지는 frontend에서 통제 필요.
+  - GraphQL로 어떤 데이터든 전달 가능. TypeORM으로는 통제 불가. 
+  - service에서 입력된 json 데이터를 토대로 DB의 데이터와 대조 작업은 가능.
+  - 장점: 유연성. 별도의 DB 작업 불필요.
 
- DishOption은 DB 간 relation 설정X 
- : 선택한 옵션들에 대한 정보는 json형태의 text로 저장.
- : 해당 옵션들은 각 주문이 생성되고 완료될 때 독립적으로 매번 저장.
- : DishOption의 내용들은 자유롭게 수정해도 문제 없도록.  
+  DishOption은 DB 간 relation 설정X 
+  : 선택한 옵션들에 대한 정보는 json형태의 text로 저장.
+  : 해당 옵션들은 각 주문이 생성되고 완료될 때 독립적으로 매번 저장.
+  : DishOption의 내용들은 자유롭게 수정해도 문제 없도록.  
 */
 @InputType("OrderItemOptionInputType", { isAbstract: true }) // dto. 필요 없으면 삭제 가능.
 @ObjectType() // GraphQL

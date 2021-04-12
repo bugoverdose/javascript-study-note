@@ -5,7 +5,7 @@
   currentUser.password = password;
   await this.usersRepo.save(currentUser);
 
-방법2) 수정할 Entity를 id로 지정하여, 수정할 데이터만 구체적으로 대입.
+방법2) 배열 형식. 수정할 Entity를 id로 지정 => 수정할 데이터만 구체적으로 대입. 
   Repo.save([{ id: 1, name: "asd", nonExistingField: "asd"}]) 
   - 중요: id 필수. id를 지정하지 않을 경우, 새로 생성한다는 의미가 됨.
   - 인자로 Entity들의 배열을 받음. 

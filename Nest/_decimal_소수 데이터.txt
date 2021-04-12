@@ -1,0 +1,18 @@
+@Field((type) => Float)
+@Column('decimal', { precision: 5, scale: 2, default: 0 })
+rating: number;
+// DB에 소수 저장할려면 컬럼 타입 지정 필요 : decimal, float 등
+// scale: 2  // 소수점 2자리까지만 표시. (~~.XX)
+// default: 0 // 기본적으로 생성될 때 값으로 0 대입.
+
+==========================================================================
+// 기본적으로 문자열 형식으로 DB에 담기게 됨. 취급 주의.
+const updatedPodcast = await this.podcastRepository.findOne(podcastId, {
+    relations: ['reviews'],
+});
+updatedPodcast?.reviews?.forEach((review) => {
+    console.log(typeof review.rating);            // string
+    sum += +review.rating;
+});
+
+==========================================================================

@@ -1,5 +1,7 @@
 /*
-  다대다 관계의 경우 한쪽에만 @ManyToMany & @JoinTable 설정.
+  다대다 관계의 경우 기본적으로 한쪽에만 @ManyToMany & @JoinTable 설정.
+  - @JoinTable는 무조건 한쪽에만 설정.
+  - unidirection을 원하면 @ManyToMany를 관계id가 필요한 한쪽에만 설정
   => 자동으로 through table 생성: 연결된 두 entity들의 관계ID 쌍들의 DB
   
   - 비교) 1대1은 한쪽에만 @OneToOne & @JoinColumn 설정. 관계id가 필요한 쪽에 설정.

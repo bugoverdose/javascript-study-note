@@ -1,0 +1,109 @@
+cra는 디폴트로 Testing Library & Jest가 셋업됨.
+- 보이지 않는 곳에 디폴트 설정들 이미 적용됨.
+
+Testing Library - 프론트엔드 테스트
+- 컴포넌트 단위로 테스트. 사용자 입장. 
+- 논리적 흐름이 아니라 input에 따른 output만을 테스트. 
+- 비교) 코드 자체를 테스트하는 것이 아님. 백엔드와 다른 관점. component의 세부 impolementation 과정이 아님.
+
+apollo 테스팅 추가 셋업 (선택) 
+방법1) npm i mock-apollo-client --save-dev 
+방법2) MockedProvider만 사용할 경우 별도 셋업X.
+ 
+=====================================================================
+[package.json] 
+ 
+npm 명령어
+- --verbose 옵션 : it("should ~",()=>{})의 문구 콘솔에 출력. 선택사항.
+- --coverage 옵션 : 테스트 정도 수치화. test:cov 
+
+"jest":{~} 형식으로 디폴트 옵션들도 override 가능. 
+- collectCoverageFrom 옵션 : 테스트 대상 세부 지정.
+
+  "scripts": {
+    "test": "react-scripts test",     // "test": "react-scripts test --verbose",
+    "test:cov": "npm run test -- --coverage --watchAll=false",
+  },
+  "jest": {
+    "collectCoverageFrom": [ 
+      "./src/components/**/*.tsx",
+      "./src/pages/**/*.tsx",
+      "./src/routers/**/*.tsx"
+    ]
+  }
+
+=====================================================================
+테스트 파일 형식 조정. 개인취향.
+__tests__ : test 관련 폴더 별도로 생성하고 내부에 테스트 파일들 정리하는 경우,
+[src/routers/__tests__/app.tsx] 형식으로 테스트 파일들 생성. [app.test.tsx], [app.spec.tsx]도 가능은 함.
+
+__tests__ 폴더 사용하지 않는 경우, [app.test.tsx], [app.spec.tsx] 형식으로 테스트 파일들 생성. 위치 자유.
+
+=====================================================================
+cf) 테스트 대상 파일들 위치 조정 자유.
+- App 컴포넌트 위치 & __tests__ 폴더 구성 등은 자유. 개인 취향.
+
+[src/routers/App.tsx] App 컴포넌트 위치 이동하는 경우, export 형식 변경.
+export const App = () => {/* ~~ */};
+export default App;
+ 
+================================================================================
+================================================================================
+render 함수 커스텀 제작 : https://testing-library.com/docs/react-testing-library/setup
+- HelmetProvider & Router로 감싸는 코드 중복 제거.
+
+[src/test-utils.tsx]
+import React from "react";
+import { render } from "@testing-library/react";
+import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter as Router } from "react-router-dom";
+
+const AllTheProviders: React.FC = ({ children }) => {
+  return (
+    <HelmetProvider>
+      <Router>{children}</Router>
+    </HelmetProvider>
+  );
+};
+
+const customRender = (ui: React.ReactElement, options?: any) =>
+  render(ui, { wrapper: AllTheProviders, ...options });
+
+export * from "@testing-library/react"; // re-export everything
+
+export { customRender as render }; // override render method
+
+================================================================================
+================================================================================
+개별 셋업 : 커스텀 제작된 render 그대로 사용. test-utils에서 import 주의.
+- createMockClient 사용시 from "mock-apollo-client" 주의. (gql 세부 테스트 목적)
+
+import React from "react";
+import { ApolloProvider } from "@apollo/client";
+import { createMockClient, MockApolloClient } from "mock-apollo-client"; // 주의
+import { render, waitFor, RenderResult } from "../../test-utils"; // 주의. "@testing-library/react"는 전부 다시 export됨.
+import { CreateAccount } from "../create-account";
+
+describe("CreateAccount", () => {
+  let renderResult: RenderResult;
+  let mockedClient: MockApolloClient;
+
+  beforeEach(async () => {
+    await waitFor(() => {
+      mockedClient = createMockClient(); // from "mock-apollo-client"
+      renderResult = render(
+        <ApolloProvider client={mockedClient}>
+          <CreateAccount />
+        </ApolloProvider>
+      );
+    });
+  });
+
+  it("should render OK", async () => {
+    await waitFor(() => {
+      expect(document.title).toBe("Create Account | Uber Eats");
+    });
+  });
+});
+
+================================================================================
