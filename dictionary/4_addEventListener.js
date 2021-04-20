@@ -19,7 +19,7 @@ document.body.querySelector("#a").addEventListener("click", function (e) {
    document.body.querySelector('#a').addEventListener(~,~) 내부의 
    콜백함수의 this 값은 document.body.querySelector('#a')이 됨. 즉, <button id="a">Click Me</button>
 */
-// -----------------------------------
+// ================================================
 const getVideo = () => "a callback function";
 
 recordBtn.addEventListener("click", getVideo);
@@ -27,3 +27,14 @@ recordBtn.addEventListener("click", getVideo);
 
 recordBtn.onclick = getVideo;
 // recordBtn.onclick = null;로 제거
+
+// ================================================
+element.addEventListener(
+  "click",
+  (e) => {
+    /* ~~ */
+  },
+  { once: true } // 한번만 실행되도록?
+);
+
+// ================================================
