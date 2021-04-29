@@ -2,6 +2,8 @@
   interface
   : 특정한 객체 형식을 데이터타입의 일종으로 사용하는 방법.
   : JS 코드로 컴파일되지 않음. class의 타입스크립트 버전
+
+  interface: a way of declaring and using a certain object pattern as a data type
 */
 interface Human {
   firstName: string;

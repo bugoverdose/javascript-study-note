@@ -1,0 +1,102 @@
+[기본 흐름] https://docs.github.com/en/developers/apps/authorizing-oauth-apps
+
+1) 사용자가 로그인 버튼 누르면 Github으로 redirect됨
+- GET https://github.com/login/oauth/authorize로 이동 (?client_id 등의 parameter 설정 필요)
+
+2) Github에서 인증 완료시, 사용자는 웹사이트의 콜백URL로 redirect되면서 code를 발급
+- http://localhost:3000/auth/github/callback?code=450f71047565de3f8953 
+- 주의. 같은 사용자여도 로그인버튼 누를 때마다 매번 다른 code 값 발급.
+
+2-1) 발급받은 code를 access_token으로 변경하는 POST 요청 보내기.
+- POST https://github.com/login/oauth/access_token (client_id, client_secret, code를 parameter로 설정하여 요청 필요)
+- 주의. 코드는 한번만 사용 가능. error: 'bad_verification_code' // The temporary code will expire after 10 minutes. 
+
+3) access_token을 통해 깃헙 API에 요청 => 사용자 정보 얻기.
+
+주의: code와 access_token는 매번 변경됨. 깃헙id만 매번 일정.
+
+===============================================================================
+[0] 깃헙에 앱 등록
+- Settings > Developer settings > OAuth Apps : https://github.com/settings/developers
+
+Register a new OAuth application
+
+Homepage URL
+- http://localhost:3000/
+
+Authorization callback URL : 형식 자유. 
+- http://localhost:3000/auth/github/callback
+
+Client ID 확인 - URL에 뜨므로 숨길 필요는 없음.
+Client Secret 발급 - 백엔드의 .env 파일에 숨겨야만 함.
+
+===============================================================================
+[1] FrontEnd에 인증 버튼/라우트 설정
+
+<a href={githubRoute.login}>Github</a> 
+
+[auth-routes.js]
+const GithubBaseUrl = "";
+export const githubRoute = {
+  login: "https://github.com/login/oauth/authorize?client_id=c1e5~~~~~~~~~~~~~~",
+}
+
+[1-1] 깃헙 사용자 계정의 어떤 정보들에 접근할 수 있는가?를 URL로 지정.
+GET https://github.com/login/oauth/authorize?client_id=c1e5~~~~~~~~~~
+    &scope=read:user          // 사용자 정보
+    &allow_signup=false       // 추가 옵션들
+
+cf) client_id는 필수 파라미터
+    scope : 사용자 깃헙 계정으로부터 추가 정보들을 얻고 싶을 때 지정. (ex. 이메일. https://docs.github.com/en/developers/apps/scopes-for-oauth-apps)
+          : 스페이스바로 구분. 보이기에는 %20으로 구분. = "space-delimited list of scopes" (ex. &scope=read:user%20user:email%20delete_repo)
+    allow_signup : 디폴트 값은 true. 현재 깃헙 계정이 없는 사람의 경우 계정을 생성하도록 허용. // false 설정하면 계정 생성 금지. 이미 계정 있는 사람들만 로그인으로 접근 가능.
+
+주의. 복수의 scope를 설정하는 경우, ([1-1]에서 scope 설정한 것은 허가를 얻은 것)
+     [3-1]에서 access token을 활용하여 각 scope 옵션에 대해 개별 요청 필요.
+
+===============================================================================
+[2] FrontEnd에서 콜백 URL에 해당하는 라우트 설정.
+- 해당 라우트의 url에 담긴 code 값을 포함한 Mutation을 백엔드로 보내면서 
+  발급받은 code를 access_token으로 변경하는 POST 요청을 백엔드에서 보내도록 시키기. [3]
+- 그동안 사용자는 해당 라우트(/auth/github/callback)에서 로딩 경험.
+- /auth/github/callback?code=~~~~~
+
+===============================================================================
+[3] Backend : 발급받은 code를 access_token으로 변경하는 POST 요청 보내기.
+- POST https://github.com/login/oauth/access_token?client_id=~~&client_secret=~~&code=~~
+- node-fetch로 보내기. 필수 파라미터 3개.
+- header로 Accept: application/json 설정해줘야 json 형태로 데이터 추출 가능.
+
+* client_id	string	Required. The client ID you received from GitHub for your OAuth App.
+* client_secret	string	Required. The client secret you received from GitHub for your OAuth App.
+* code	string	Required. The code you received as a response to Step 1.
+
+주의. fetch는 node.js가 아니라 브라우저용! 백엔드에서 fetch 실행 불가. => node-fetch 실행.
+// npm i node-fetch
+
+===============================================================================
+[3-1] Backend: 해당 access token을 헤더에 넣고 API 요청. // The access token allows you to make requests to the API on a behalf of a user.
+- 토큰에 해당하는 사용자 정보를 응답받을 수 있게 됨.
+
+Authorization: token OAUTH-TOKEN
+GET https://api.github.com/user
+
+--------------------------------------------------------------------------------
+cf) 복수의 scope 설정시 개별적으로 요청 필요. (doc 확인하여 각각의 api url 확인)
+ if ('access_token' in tokenJson) {
+        const { access_token } = tokenJson;
+
+        // 1) read:user 
+        const userRequest = await fetch('https://api.github.com/user', {
+          headers: { Authorization: `token ${access_token}` },
+        });
+        const foundUser = await userRequest.json();
+
+        // 2) user:email
+        const emailRequest = await fetch('https://api.github.com/user/email', {
+          headers: { Authorization: `token ${access_token}` },
+        });
+        const foundEmail = await emailRequest.json();
+ }
+
+===============================================================================
