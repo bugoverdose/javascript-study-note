@@ -1,4 +1,4 @@
-const github_client_id = "c1e5dca14ce2eec5f4db";
+const github_client_id = "c1e5dca~~~~";
 
 export const authRoute = {
   githubLogin: `https://github.com/login/oauth/authorize?client_id=${github_client_id}&scope=read:user`, // callback UrL에 code값 받아오기.
