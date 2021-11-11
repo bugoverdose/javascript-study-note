@@ -1,0 +1,94 @@
+[공식 문서] 
+- https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite
+- https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api
+
+===============================================================================
+0) 앱 등록. https://developers.kakao.com/console/app
+- 사이트 도메인	등록 : http://172.18.183.172:3000
+- 카카오 로그인 활성화 ON
+- Redirect URI 등록(로그인 이후 돌아올 주소) : http://172.18.183.172:3000/oauth
+
+===============================================================================
+1) Front: 사용자가 로그인 버튼 누르면 카카오 회원가입/로그인 페이지로 이동.
+
+https:/kauth.kakao.com/oauth/authorize?client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}&response_type=code HTTP/1.1
+
+필수 파라미터
+- client_id	:	앱 생성 시 발급받은 REST API 키 (String)
+- redirect_uri : 인가 코드가 리다이렉트될 URI (String)
+- response_type	: code로 고정 (String)
+
+===============================================================================
+1-1) 인가코드 받기: 로그인 완료 후 사용자는 code와 함께 웹사이트의 Redirect URI로 redirect됨.
+- 인가 코드 요청의 응답은 redirect_uri로 HTTP 302 Redirect되며, Location에 인가 코드가 담긴 쿼리 스트링(Query String) 또는 에러 메시지를 포함합니다. 사용자가 [취소] 버튼을 클릭한 경우에는 에러 메시지를 담은 쿼리 스트링이 redirect_uri로 전송됩니다.
+- 서비스 서버는 redirect_uri로 받은 요청을 처리해 인가 코드를 얻거나 상황에 맞는 페이지를 보여주도록 처리해야 합니다. 받은 인가 코드는 토큰 받기에 사용합니다.
+
+Front : redirect uri에 해당되는 라우트에서 코드 받고 처리.
+- /oauth?code=O0QVgstkGyFQteKBLos3UvzkcLuM6mFaT-R6W0oa_sElbHhHRjjD9dwQ0BO57qq-fQc12gopb7gAAAF5p4uKwg
+- 백엔드에 인가코드 활용하여 토큰받고 로그인할 때까지 로딩 중으로 처리.
+
+cf) 같은 사용자여도 로그인버튼 누를 때마다 매번 다른 code 값 발급.
+
+===============================================================================
+2) Backend: 발급받은 인가코드(code)를 access_token으로 변경하는 POST 요청 보내기.
+
+POST https:/kauth.kakao.com/oauth/token 
+Content-type: application/x-www-form-urlencoded;charset=utf-8
+
+필수 파라미터
+- grant_type : authorization_code로 고정 (String)
+- client_id : 앱 생성 시 발급받은 REST API (String)
+- redirect_uri : 인가 코드가 리다이렉트된 URI (String)
+- code : 인가 코드 받기 요청으로 얻은 인가 코드 (String)
+
+cf) 코드는 한번만 사용 가능. 발급받은 즉시 사용. 예외 처리 필요. error: 'bad_verification_code' 
+    code와 access_token 모두 매번 변경됨
+
+ex) 요청에 대한 응답 예시
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+{
+    "token_type":"bearer",
+    "access_token":"{ACCESS_TOKEN}",
+    "expires_in":43199,
+    "refresh_token":"{REFRESH_TOKEN}",
+    "refresh_token_expires_in":25184000,
+    "scope":"account_email profile"
+}
+===============================================================================
+3) Backend: 토큰 정보 보기. access_token에 해당되는 사용자 정보 요청.
+- 엑세스 토큰을 요청 헤더(Header)에 담아 GET Method로 요청
+
+GET https:/kapi.kakao.com/v1/user/access_token_info HTTP/1.1 
+Authorization: Bearer {ACCESS_TOKEN}
+Content-type: application/x-www-form-urlencoded;charset=utf-8
+
+===============================================================================
+보안
+REST API를 이용하여 카카오 로그인을 기능을 구현할 때 
+클라이언트 시크릿 코드(Client secret code)를 사용하여 보안을 강화하는 기능 (선택 항목)
+
+해당 기능을 사용하려면 다음과 같이 설정합니다:
+
+1) [코드 생성] 버튼을 누르면 클라이언트 시크릿 코드가 생성됩니다. 
+   코드를 생성해도 클라이언트 시크릿 기능을 활성화하지 않으면 해당 기능을 이용할 수 없습니다.
+2) '활성화 상태'에서 '설정'을 눌러 활성화 상태를 '사용함'으로 변경합니다.
+3) REST API 가이드를 참고하여 토큰 발급 받기와 토큰 갱신하기 API 요청 시, 
+   요청 파라미터에 client_secret를 추가하여 생성된 코드로 호출합니다.
+
+클라이언트 시크릿 코드가 적용된 앱에서는 토큰 발급시 client_secret 파라미터로 
+클라이언트 시크릿 코드를 전달하지 않으면 OAuth 서버로부터 토큰을 발급받을 수 없습니다. 
+해당 기능을 사용하지 않으려면 '활성화 상태'의 '설정'을 눌러 활성화 상태를 '사용안함'으로 변경합니다.
+
+===============================================================================
+Logout Redirect URI 등록
+서비스 로그아웃 시 '카카오 계정과 함께 로그아웃'을 위한 설정 (선택 항목) 
+
+- [제품 설정] > [카카오 로그인] > [고급] > [Logout Redirect URI]에서 
+  로그아웃 후 리다이렉트될 URI을 등록해야 합니다. 최대 10개의 URI를 등록할 수 있으며, 10개를 초과하는 Logout Redirect URI 등록이 필요한 경우 데브톡으로 문의합니다.
+
+Logout Redirect URI는 다음 규칙에 맞게 등록해야 합니다.
+- Logout Redirect URI는 HTTP/HTTPS 프로토콜 및 80, 443 포트를 허용합니다.
+- Logout Redirect URI는 HTTP/HTTPS 프로토콜을 구분하므로 각각 등록해야 합니다.
+
+===============================================================================

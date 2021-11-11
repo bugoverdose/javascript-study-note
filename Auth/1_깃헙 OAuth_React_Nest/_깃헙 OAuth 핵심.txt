@@ -3,11 +3,11 @@
 1) 사용자가 로그인 버튼 누르면 Github으로 redirect됨
 - GET https://github.com/login/oauth/authorize로 이동 (?client_id 등의 parameter 설정 필요)
 
-2) Github에서 인증 완료시, 사용자는 웹사이트의 콜백URL로 redirect되면서 code를 발급
+1-1) 인가코드 받기: Github에서 인증 완료시, 사용자는 웹사이트의 콜백URL로 redirect되면서 code를 발급
 - http://localhost:3000/auth/github/callback?code=450f71047565de3f8953 
 - 주의. 같은 사용자여도 로그인버튼 누를 때마다 매번 다른 code 값 발급.
 
-2-1) 발급받은 code를 access_token으로 변경하는 POST 요청 보내기.
+2) 인가코드로 토큰 요청하기: 발급받은 code를 access_token으로 변경하는 POST 요청 보내기.
 - POST https://github.com/login/oauth/access_token (client_id, client_secret, code를 parameter로 설정하여 요청 필요)
 - 주의. 코드는 한번만 사용 가능. error: 'bad_verification_code' // The temporary code will expire after 10 minutes. 
 
