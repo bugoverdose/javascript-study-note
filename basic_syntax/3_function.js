@@ -24,9 +24,9 @@ var outer = function () {
   var inner = function () {
     return ++a;
   };
-  return inner();
+  return inner;
 };
-var outer2 = outer();
+var outer2 = outer(); // inner 함수 할당.
 console.log(outer2()); // 2
 console.log(outer2()); // 3
 // outer의 지역변수 a: 1 => 2 => 3. 전역스코프에서 접근 + 조작 가능.
