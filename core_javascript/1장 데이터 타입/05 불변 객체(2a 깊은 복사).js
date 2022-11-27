@@ -1,8 +1,12 @@
 /*
-  (1) 중첩된 객체에 대한 얕은 복사
-    - 원본 객체에 직접 속한 property(user.name)에 대해서는 복사해서 새로운 데이터를 생성
-    - property 내부의 property들(user.urls.blog 등)의 경우 원본 객체의 데이터를 그대로 참조.
-    - user는 표면적으로만 불변. user.urls는 불변 객체가 아님.
+(1) 중첩된 객체에 대한 얕은 복사 => 진정으로 불변성 보장 불가!
+
+- 원본 객체에 직접 속한 property(user.name)에 대해서는 복사해서 새로운 데이터를 생성
+  -> 사본의 name property를 변경한 경우 원본의 name property는 변하지 않음. (불변성)
+- property 내부의 property들(user.urls.blog 등)의 경우 원본 객체의 데이터를 그대로 참조.
+  -> 원본을 수정하면 사본도 함께 변화. 사본을 수정하면 원본도 함께 변화. (가변성)
+- user는 표면적으로만 불변. 
+  - 한 단계 아래까지만 불변. user.urls부터 불변 객체가 아님!
 */
 copyObject = (target) => {
   var result = {};
@@ -22,37 +26,36 @@ var user = {
 
 var user2 = copyObject(user);
 
+// 사본의 name property를 변경한 경우 원본의 name property는 변하지 않음. (불변성)
 user2.name = "Nick";
 console.log(user.name, user2.name); //John Nick
-console.log(user === user2); // false (원본 불변)
+console.log(user === user2); // false (1 depth까지는 원본 불변)
 
+// urls property의 내부 property를 변경하는 경우 (가변성)
+// 원본을 수정하면 사본도 함께 변화.
 user.urls.portfolio = "github.com/Nick"; // (원본 수정)
 console.log(user.urls.portfolio, user2.urls.portfolio); //github.com/Nick github.com/Nick
 console.log(user.urls.portfolio === user2.urls.portfolio); // true (사본도 변화)
 
+// 사본을 수정해도 원본도 함께 변화.
 user2.urls.blog = "blog.com/Nick"; // (사본 수정)
 console.log(user.urls.blog, user2.urls.blog); //blog.com/Nick blog.com/Nick
 console.log(user.urls.blog === user2.urls.blog); // true (원본도 변화)
 
-/*
-  사본의 name property를 변경한 경우 원본의 name property는 변하지 않음. (불변성)
-  
-  urls property의 내부 property를 변경하는 경우 (가변성)
-    - 원본을 수정하면 사본도 함께 변화. 사본을 수정하면 원본도 함께 변화.
-*/
-
 // -----------------------------------
 /*
-  (2) 객체의 깊은 복사를 수행하는 범용 함수 예시: copyObjectDeep
-      - target이 객체인 경우, 내부 property들 각각에 대해 copyObject 함수를 재귀적으로 호출.
-      - target이 객체가 아닌 경우 그대로 빈 객체 result에 저장. 
-      cf) target !== null 조건이 필요한 이유: typeof 명령어가 null에 대해서도 'object'를 반환하는 javascript 자체 버그 때문
+(2) 객체의 깊은 복사를 수행하는 범용 함수 예시: copyObjectDeep
+
+- target이 객체인 경우, 내부 property들 각각에 대해 copyObject 함수를 재귀적으로 호출.
+- target이 객체가 아닌 경우 그대로 result 객체에 저장. 
 */
 copyObjectDeep = (target) => {
   var result = {};
+  // cf) target !== null 조건이 필요한 이유는
+  // typeof 명령어가 null에 대해서도 'object'를 반환하는 javascript 자체 버그 때문
   if (typeof target === "object" && target !== null) {
     for (var prop in target) {
-      result[prop] = copyObjectDeep(target[prop]);
+      result[prop] = copyObjectDeep(target[prop]); // 재귀호출
     }
   } else {
     result = target;
@@ -85,10 +88,10 @@ console.log(obj2);
 
 // -----------------------------------
 /*
-  (3) JSON을 활용한 간단한 깊은 복사: copyObjectViaJSON
-     - 객체를 JSON 문법으로 표현된 문자열로 전환 후 다시 JSON 객체로 전환.
-     - 한계: 메서드(함수), 숨겨진 property인 __proto__, getter, setter 등 
-             JSON으로 변경할 수 없는 property들은 전부 무시됨. 복제되지 않음.
+(3) JSON을 활용한 간단한 깊은 복사: copyObjectViaJSON
+- 객체를 JSON 문법으로 표현된 문자열로 전환 후 다시 JSON 객체로 전환.
+- 한계: 메서드(함수), 숨겨진 property인 __proto__, getter, setter 등 
+       JSON으로 변경할 수 없는 property들은 전부 무시됨. 복제되지 않음.
 */
 copyObjectViaJSON = (target) => JSON.parse(JSON.stringify(target));
 
@@ -118,4 +121,3 @@ console.log(obj3);
 // {a:1, b: {c: 2, d: [3, "원본 변화2"], func: f(x), __proto__: Object}, __proto__: Object}
 console.log(obj4);
 // {a:"사본 변화2", b: {c: "사본 변화2", d: [3, 4], __proto__: Object}, __proto__: Object}
-// __proto__는 무시되지 않은 것으로 보임 + 다만 메서드는 무시됨.

@@ -1,7 +1,6 @@
 /*
-  사용자가 명시적으로 undefined를 지정한 경우 이외에도,
-  사용자가 어떤 값을 지정했을 것이라고 예상되는 상황임에도 
-  실제로는 지정하지 않았을 때 자바스크립트 엔진은 자동으로 undefined를 반환.
+  어떤 값이 지정되었을 것이라고 가정한 상황에서 실제로는 해당 위치에 값이 지정하지 않았을 때 
+  자바스크립트 엔진은 자동으로 undefined를 반환.
 
    (1) 변수: 선언은 했지만 값을 대입하지 않은 변수에 접근할 때.
        즉, 데이터 영역의 메모리 주소를 지정하지 않은 식별자에 접근할 때.
@@ -10,7 +9,7 @@
        즉, return하는 값이 없으면 undefined를 반환한 것으로 간주.
 */
 var a;
-console.log(a); // undefined (1) 값을 대입하지 않은 변수에 접근.
+console.log(a); // undefined (1) 아직 값이 할당되지 않은 변수에 접근.
 
 var obj = { a: 1 };
 console.log(obj.b); // undefined (2) 존재하지 않는 property에 접근.
@@ -18,11 +17,9 @@ console.log(obj.b); // undefined (2) 존재하지 않는 property에 접근.
 func = () => {};
 var c = func(); // (3) return한 값이 없어서 undefined를 반환한 것으로 간주.
 console.log(c); // undefined
-/*
-  cf) console.log(d); // 에러: Uncaught ReferenceError: abc is not defined
-   - 아예 선언된 적 없는 식별자에 접근시 에러 발생
-   - undefined가 출력되지는 않음.
-*/
+
+// cf) 아예 선언되지 않은 식별자(변수명)에 접근시 에러 발생. undefined가 출력되지는 않음.
+// console.log(d); // 에러: Uncaught ReferenceError: abc is not defined
 
 // ---------------------------------------
 /*
@@ -48,32 +45,32 @@ console.log(arr3); // [undefined, undefined, undefined]
   빈 요소와 배열의 순회
   - undefined가 할당된 요소는 메서드가 그대로 결과 출력됨.
   
-  - 비어있는 요소(empty)는 다양한 배열 메서드의 순회 대상에서 제외됨.
+  - 비어있는 요소(empty)는 다양한 배열 메서드의 `순회 대상에서 제외`됨.
      => forEach, map, filter, reduce 등의 메서드는 
         비어있는 요소에 대해 어떠한 처리도 하지 않고 그대로 건너뛰게 됨.   
 */
-var arr10 = [undefined, 1];
+var arr10 = [undefined, 10];
 var arr20 = [];
-arr20[1] = 1;
-console.log(arr10, arr20); // [undefined, 1] [empty, 1]
+arr20[1] = 20;
+console.log(arr10, arr20); // [undefined, 10] [empty, 20]
 
 func1 = (a, b) => {
-  console.log(a, b);
+  console.log(a, b); // value, index
 };
 arr10.forEach(func1);
 // undefined 0
-// 1 1
+// 10 1
 arr20.forEach(func1);
-// 1 1
+// 20 1
 
-arr10.map((a, b) => a + b); // [NaN, 2]
-arr20.map((a, b) => a + b); // [empty, 2]
+arr10.map((a, b) => a + b); // [NaN, 11]
+arr20.map((a, b) => a + b); // [empty, 21]
 
 arr10.filter((a) => !a); // [undefined]
 arr20.filter((a) => !a); // []
 
-console.log(arr10.reduce((a, b, c) => a + b + c, "")); // "undefined011"
-console.log(arr20.reduce((a, b, c) => a + b + c, "")); // "11"
+console.log(arr10.reduce((a, b, c) => a + b + c, "")); // "undefined0101"
+console.log(arr20.reduce((a, b, c) => a + b + c, "")); // "201"
 
 /*
   원인: 배열도 객체. 존재하지 않는 property에 대해서는 순회하지 않음.
@@ -93,29 +90,4 @@ console.log(arr20.reduce((a, b, c) => a + b + c, "")); // "11"
 
   2) 자바스크립트가 반환하는 undefined는 실제로 값이 없다는 의미.
     해당 property의 key값, 배열의 index 자체가 존재하지 않는다는 의미.
-*/
-
-// ---------------------------------------
-/*
-  null은 비어있음을 명시적으로 나타내고 싶을 때 사용하도록 만들어진 데이터타입.
-  
-  null 사용시 주의사항. 
-    typeof null은 object. 어떤 변수의 값이 null인지의 여부를 판별하려면 다르게 접근 필요.
-    undefined == null은 true. 서로 동등함.
-    undefined === null은 false. 서로 일치하지는 않음.
-*/
-
-var n = null;
-console.log(typeof n); // object
-
-console.log(n == undefined); // true
-console.log(n === undefined); // false
-console.log(n == null); // true
-console.log(n === null); // true
-
-console.log(undefined == null); // true
-console.log(undefined === null); // false
-/*
-  == : 동등 연산자. equality operator
-  === : 일치 연산자. identity operator
 */

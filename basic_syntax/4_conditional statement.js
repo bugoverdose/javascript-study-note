@@ -27,13 +27,13 @@ if (condition1) {
   block4;
 }
 */
-const A = "";
+const A = ""; // 빈 문자열은 false
 if (A) {
   console.log("A exists");
 } else if (A == undefined) {
   console.log("A is undefined");
 } else {
-  console.log("A == '' :", A == "");
+  console.log("A == '' :", A == ""); // A == '' : true
 }
 
 // -----------------------------------
@@ -49,10 +49,10 @@ console.log(undefined === null); // false
 // 피연산자 : 여러 조건들을 합치는 기능
 
 // && : And. 두 가지 조건 모두 참이어야 전체가 참.
-console.log("true && true :", true && true);
+console.log("true && true :", true && true);
 console.log("false && true :", false && true);
 console.log("true && false :", true && false);
-console.log("false && false :", false && false);
+console.log("false && false :", false && false);
 
 if (20 > 5 && "abc" === "abc") {
   console.log("Both are True");
@@ -62,10 +62,10 @@ if (20 > 5 && "abc" === "abc") {
 // 출력: Both are True
 
 // || : Or. 두 가지 조건 중 하나만 참이어도 전체가 참. (두 가지 조건 모두 거짓이어야 거짓)
-console.log("true || true :", true || true);
+console.log("true || true :", true || true);
 console.log("false || true :", false || true);
 console.log("true || false :", true || false);
-console.log("false || false :", false || false);
+console.log("false || false :", false || false);
 
 // -----------------------------------
 // !abc : not abc
@@ -83,7 +83,7 @@ if (!(a == 10)) {
 } else {
   console.log("a is 10");
 }
-// !(a == 10)는 (a !== 10)이므로 false. 때문에 else문의 block 실행.
+// !(a == 10)는 (a != 10)이므로 false. 때문에 else문의 block 실행.
 // "a is 10" 출력.
 
 const b = "basket";
